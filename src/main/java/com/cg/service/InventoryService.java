@@ -1,18 +1,11 @@
 package com.cg.service;
-
+import com.cg.dto.InventoryDTO;
 import java.util.List;
 
-import com.cg.entity.Inventory;
-
 public interface InventoryService {
-
-	public Inventory saveInventory(Inventory inventory);
-
-	public Inventory getInventoryById(Long id);
-
-	public List<Inventory> getAllInventories();
-
-	public Inventory updateInventory(Long id, Inventory inventory);
-
-	public void deleteInventory(Long id);
+    List<InventoryDTO> getAllInventories();
+    InventoryDTO getInventoryById(Long id);
+    void saveInventory(InventoryDTO inventoryDTO);
+    void updateInventory(Long id, InventoryDTO inventoryDTO);
+    void deleteInventory(Long id);
 }
