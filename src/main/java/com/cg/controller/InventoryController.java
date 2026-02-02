@@ -1,6 +1,7 @@
 package com.cg.controller;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,6 +54,8 @@ public class InventoryController {
     }
 }
 =======
+=======
+>>>>>>> origin/user
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -92,5 +95,9 @@ public class InventoryController {
         return "redirect:/inventories";
     }
 }
+<<<<<<< HEAD
  
 >>>>>>> origin/author
+=======
+ 
+>>>>>>> origin/user

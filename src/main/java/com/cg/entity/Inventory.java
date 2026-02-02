@@ -72,8 +72,13 @@ public class Inventory {
 	
 	
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
 >>>>>>> origin/author
+=======
+
+
+>>>>>>> origin/user
 }

@@ -1,6 +1,7 @@
 package com.cg.service;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +72,8 @@ public class InventoryServiceImplementation implements InventoryService {
     }
 
 =======
+=======
+>>>>>>> origin/user
 import org.springframework.stereotype.Service;
 
 import com.cg.entity.Inventory;
@@ -97,11 +100,15 @@ public class InventoryServiceImplementation implements InventoryService {
         return inventoryRepository.findById(id).orElse(null);
     }
  
+<<<<<<< HEAD
 >>>>>>> origin/author
+=======
+>>>>>>> origin/user
     @Override
     public List<Inventory> getAllInventories() {
         return inventoryRepository.findAll();
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     @Override
@@ -118,6 +125,8 @@ public class InventoryServiceImplementation implements InventoryService {
     }
 }
 =======
+=======
+>>>>>>> origin/user
  
     @Override
     public Inventory updateInventory(Long id, Inventory inventory) {
@@ -138,5 +147,9 @@ public class InventoryServiceImplementation implements InventoryService {
         inventoryRepository.deleteById(id);
     }
 }
+<<<<<<< HEAD
  
 >>>>>>> origin/author
+=======
+ 
+>>>>>>> origin/user
