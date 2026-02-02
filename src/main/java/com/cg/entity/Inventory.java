@@ -71,4 +71,9 @@ public class Inventory {
 	}
 	
 	
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/author
 }
