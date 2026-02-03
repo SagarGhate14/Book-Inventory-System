@@ -26,10 +26,6 @@ public class PublisherController {
 	private PublisherService publisherService;
 	
 	@GetMapping("/list")
-<<<<<<< HEAD
-	public List<Publisher>getAllPublishers(){
-		return publisherService.getAllPublishers();
-=======
 	public String getAllPublishers(Model model){
        List<Publisher> publishers = publisherService.getAllPublishers();
        List<PublisherDTO> publisherDTO = publisherService.toDTOList(publishers);
@@ -69,7 +65,6 @@ public class PublisherController {
 	public String deletePublisher(@PathVariable("id") int pId) {
 		publisherService.deletePublisher(pId);
 		return "redirect:/publishers/list";
->>>>>>> 5f72c3cbf6c12ebae970a8ecd8bbc5a9f0c700c0
 	}
 
 }
