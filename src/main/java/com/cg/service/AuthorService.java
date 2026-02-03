@@ -46,6 +46,25 @@ public class AuthorService {
     			  author.getAuthorCountry());
     }
     
+    public Author updateAuthor(Author author) {
+    	return authorRepository.save(author);
+    }
+    
+    public Author toEntity(AuthorDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        
+        Author author = new Author();
+        // Map the fields from DTO to Entity
+        author.setAuthorId(dto.getAuthorId());
+        author.setAuthorName(dto.getAuthorName());
+        author.setAuthorEmail(dto.getAuthorEmail());
+        author.setAuthorCountry(dto.getAuthorCountry());
+        
+        return author;
+    }
+    
     public List<AuthorDTO> toDTOList(List<Author> entities){
     	
     	List<AuthorDTO> authorsDTO = new ArrayList<>();

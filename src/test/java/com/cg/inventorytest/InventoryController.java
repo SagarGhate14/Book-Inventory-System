@@ -1,4 +1,4 @@
-package com.cg.test;
+package com.cg.inventorytest;
 
 import com.cg.controller.InventoryController;
 import com.cg.dto.InventoryDTO;
