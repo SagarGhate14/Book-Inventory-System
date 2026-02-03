@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,16 +54,25 @@ public class AuthorController {
     }
     
     @GetMapping("/edit/{id}")
-    public String updateAuthor(@PathVariable int id,Model model) {
+    public String updateAuthor(@PathVariable("id") int id,Model model) {
         Author author = authorService.getAuthorById(id);
         AuthorDTO authorDTO = authorService.toDTO(author);
+        if(authorDTO == null) {
+        	return "redirect:/authors/list";
+        }
         model.addAttribute("authorDTO",authorDTO);
-        return "author-edit";
+        return "author/author-edit";
+    }
+    @PostMapping("update")
+    public String updatedAuthor(@ModelAttribute("authorDTO")AuthorDTO authordto) {
+    	Author author = authorService.toEntity(authordto);
+    	authorService.updateAuthor(author);
+    	return "redirect:/authors/list";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteAuthor(@PathVariable int id) {
         authorService.deleteAuthor(id);
-        return "redirect:/author/list";
+        return "redirect:/authors/list";
     }
 }

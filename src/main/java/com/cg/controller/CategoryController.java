@@ -1,55 +1,74 @@
 package com.cg.controller;
  
 import java.util.List;
+
  
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
- 
+
+import com.cg.dto.CategoryDTO;
 import com.cg.entity.Category;
-import com.cg.repository.CategoryRepository;
+import com.cg.service.CategoryService;
  
 @Controller
 @RequestMapping("/category")
 public class CategoryController {
  
-//    @Autowired
-//     CategoryRepository categoryRepository;
+    @Autowired
+     CategoryService categoryService;
+    
+    @GetMapping("/list")
+    public String allCategory(Model model) {
+    	List<Category> categories = categoryService.getAllCategories();
+    	List<CategoryDTO> categoriesDTO = categoryService.toDTOList(categories);
+    	model.addAttribute("categories",categoriesDTO);
+    	return "Category/category-list";
+    }
+    
+ // Get all categories
+    @GetMapping("/new")
+    public String getAllCategories(Model model) {
+        model.addAttribute("categoryDTO", new CategoryDTO());
+        return "Category/category-add";
+    }
+ 
+    // Add Category
+    @PostMapping("/new")
+    public String addCategory(@ModelAttribute CategoryDTO categoryDTO) {
+       Category category = categoryService.toEntity(categoryDTO);
+       categoryService.addCategory(category);
+       return "redirect:/category/list";
+        
+    }
+ 
+ 
+
 // 
-//    // Add Category
-//    @PostMapping("/add")
-//    public Category addCategory(@RequestBody Category category) {
-//        return categoryRepository.save(category);
-//    }
+    
+   @GetMapping("/update/{id}")
+   public String updateCategory(@PathVariable int id,Model model) {
+	   Category existing = categoryService.getCategoryById(id);
+	   CategoryDTO categoryDTO = categoryService.toDTO(existing);
+	   model.addAttribute("categoryDTO",categoryDTO);
+	   return "category/category-edit";
+   }
+    // Update category
+    @PostMapping("/update")
+    public String updateCategory(@ModelAttribute Category category) {
+        CategoryDTO existing = categoryService.toDTO(category);
+        if (existing != null) {
+            existing.setCategoryName(category.getCategoryName());
+            categoryService.updateCategory(category);
+        }
+        return "redirect:/category/list";
+    }
 // 
-//    // Get all categories
-//    @GetMapping("/add")
-//    public List<Category> getAllCategories() {
-//        return categoryRepository.findAll();
-//    }
-// 
-//    // Get category by id
-//    @GetMapping("/get/{id}")
-//    public Category getCategoryById(@PathVariable int id) {
-//        return categoryRepository.findById(id).orElse(null);
-//    }
-// 
-//    // Update category
-//    @PutMapping("/update/{id}")
-//    public Category updateCategory(@PathVariable int id,
-//                                   @RequestBody Category category) {
-//        Category existing = categoryRepository.findById(id).orElse(null);
-//        if (existing != null) {
-//            existing.setCategoryName(category.getCategoryName());
-//            return categoryRepository.save(existing);
-//        }
-//        return null;
-//    }
-// 
-//    // Delete category
-//    @DeleteMapping("/delete/{id}")
-//    public String deleteCategory(@PathVariable int id) {
-//        categoryRepository.deleteById(id);
-//        return "Category deleted successfully";
-//    }
+    // Delete category
+    @GetMapping("/delete/{id}")
+    public String deleteCategory(@PathVariable int id) {
+         categoryService.deleteCategory(id);
+         return "redirect:/category/list";
+    }
 }

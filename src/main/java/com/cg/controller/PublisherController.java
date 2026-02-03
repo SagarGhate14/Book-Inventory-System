@@ -5,12 +5,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;
 import com.cg.service.IPublisherService;
 import com.cg.service.PublisherService;
@@ -22,10 +26,45 @@ public class PublisherController {
 	private PublisherService publisherService;
 	
 	@GetMapping("/list")
-	public List<Publisher>getAllPublishers(){
-
-		return publisherService.getAllPublishers();
+	public String getAllPublishers(Model model){
+       List<Publisher> publishers = publisherService.getAllPublishers();
+       List<PublisherDTO> publisherDTO = publisherService.toDTOList(publishers);
+       model.addAttribute("publisherDTO",publisherDTO);
+       return "publisher/publisher-list";
+		
 	}
-
+	
+	@GetMapping("/new")
+	public String addPublisher(Model model) {
+		 model.addAttribute("publisherDTO",new PublisherDTO());
+		 return "publisher/publisher-add";
+	}
+      
+	@PostMapping("/add")
+	public String savePublisher(@ModelAttribute PublisherDTO publisherDTO) {
+		Publisher publisher = publisherService.toEntity(publisherDTO);
+		publisherService.savePublisher(publisher);
+		return "redirect:/publishers/list";
+	}
+	@GetMapping("/update/{id}")
+	public String updatePublisher(Model model,@PathVariable("id") int pId) {
+		Publisher publisher = publisherService.findById(pId);
+		PublisherDTO publisherDTO = publisherService.toDTO(publisher);
+		model.addAttribute("publisherDTO",publisherDTO);
+		return "publisher/publisher-edit";
+	}
+	
+	@PostMapping("/update")
+	public String updatedPublisher(@ModelAttribute PublisherDTO publisherDTO) {
+		Publisher publisher = publisherService.toEntity(publisherDTO);
+		publisherService.updatePublisher(publisher);
+		return "redirect:/publishers/list";
+	}
+	
+	@GetMapping("/delete/{id}")
+	public String deletePublisher(@PathVariable("id") int pId) {
+		publisherService.deletePublisher(pId);
+		return "redirect:/publishers/list";
+	}
 
 }
