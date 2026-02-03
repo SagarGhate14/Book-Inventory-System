@@ -9,7 +9,17 @@ public class AuthorDTO {
 	public AuthorDTO() {
 		
 	}
+	
 		
+	public AuthorDTO(int authorId, String authorName, String authorEmail, String authorCountry) {
+		super();
+		this.authorId = authorId;
+		this.authorName = authorName;
+		this.authorEmail = authorEmail;
+		this.authorCountry = authorCountry;
+	}
+
+
 	public int getAuthorId() {
 		return authorId;
 	}

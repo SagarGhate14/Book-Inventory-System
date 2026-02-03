@@ -40,10 +40,7 @@
 </dependency>
  
         <!-- Security -->
-<dependency>
-<groupId>org.springframework.boot</groupId>
-<artifactId>spring-boot-starter-security</artifactId>
-</dependency>
+
  
         <!-- JPA -->
 <dependency>
@@ -63,6 +60,19 @@
 <artifactId>mysql-connector-j</artifactId>
 <scope>runtime</scope>
 </dependency>
+
+<!-- DevTools -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+</dependency>
+<!-- Testing -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+
  
     </dependencies>
  

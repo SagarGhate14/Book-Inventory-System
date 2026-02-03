@@ -1,26 +1,25 @@
 package com.cg.dto;
 
 public class InventoryDTO {
-	private Long id;
+	private int inventoryId;
 	private String status;
 	private int quantity;
 
 	public InventoryDTO() {
 	}
 
-	public InventoryDTO(Long id, String status, int quantity) {
-		this.id = id;
+	public InventoryDTO(int inventoryId, String status, int quantity) {
+		this.inventoryId = inventoryId;
 		this.status = status;
 		this.quantity = quantity;
 	}
 
-	// Getters and Setters must match the Entity exactly for Thymeleaf
-	public Long getId() {
-		return id;
+	public int getInventoryId() {
+		return inventoryId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setInventoryId(int inventoryId) {
+		this.inventoryId = inventoryId;
 	}
 
 	public String getStatus() {

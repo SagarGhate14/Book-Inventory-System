@@ -1,5 +1,8 @@
 package com.cg.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,7 +18,7 @@ import jakarta.persistence.Table;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
+
 	private int userId;
 	@Column
 	private String userName;
@@ -25,16 +29,20 @@ public class User {
 	@Column
 	private Role role;
 
-	public User(int userId, String userName, String email, Role role) {
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Inventory> inventories;
+	
+	public User() {
+		
+	}
+
+	public User(int userId, String userName, String email, Role role, List<Inventory> inventories) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.email = email;
 		this.role = role;
-	}
-
-	public User() {
-		super();
+		this.inventories = inventories;
 	}
 
 	public int getUserId() {
@@ -69,6 +77,14 @@ public class User {
 		this.role = role;
 	}
 
+	public List<Inventory> getInventories() {
+		return inventories;
+	}
+
+	public void setInventories(List<Inventory> inventories) {
+		this.inventories = inventories;
+	}
+	
 	
 }
 	

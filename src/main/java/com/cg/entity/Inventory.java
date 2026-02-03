@@ -8,41 +8,40 @@ public class Inventory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int inventoryId;
+
 	@Column
-	private String status;
+	private String status; // Changed from enum to String
+
 	@Column
 	private int quantity;
+
 	@OneToOne
 	@JoinColumn(name = "book_id")
 	private Book book;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	
 	public Inventory() {
-		super();
 	}
 
-
-	public Inventory(Long id, String status, int quantity, Book book, User user) {
-		super();
-		this.id = id;
+	public Inventory(int inventoryId, String status, int quantity, Book book, User user) {
+		this.inventoryId = inventoryId;
 		this.status = status;
 		this.quantity = quantity;
 		this.book = book;
 		this.user = user;
 	}
-	
 
-	public Long getId() {
-		return id;
+	// Getters and Setters
+	public int getInventoryId() {
+		return inventoryId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setInventoryId(int inventoryId) {
+		this.inventoryId = inventoryId;
 	}
 
 	public String getStatus() {
