@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Author Management - Bookshelf Pro</title>
+    <!-- Modern Google Font -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+    
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --bg-light: #f8f9fc;
+            --danger-soft: #fff1f2;
+            --danger-text: #e11d48;
+        }
+        body { 
+            background-color: var(--bg-light); 
+            font-family: 'Inter', sans-serif;
+            color: #333;
+        }
+        /* Navbar Styling */
+        .navbar {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+        
+        /* Card & Table Styling */
+        .main-card {
+            border: none;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin-top: 2rem;
+        }
+        .table { vertical-align: middle; }
+        .table thead {
+            background-color: #f1f5f9;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .table thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            padding: 1rem;
+        }
+        .table tbody tr { transition: all 0.2s; }
+        .table tbody tr:hover { background-color: #f8fafc; }
+        
+        /* Buttons */
+        .btn-add {
+            background-color: var(--primary-color);
+            border: none;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        .btn-add:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+        .badge-country {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            font-weight: 500;
+        }
+
+        /* Action Buttons Styling */
+        .btn-action {
+            width: 35px;
+            height: 35px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .btn-edit {
+            color: var(--primary-color);
+            background-color: #eff6ff;
+            border: 1px solid #dbeafe;
+        }
+        .btn-edit:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .btn-delete {
+            color: var(--danger-text);
+            background-color: var(--danger-soft);
+            border: 1px solid #fee2e2;
+        }
+        .btn-delete:hover {
+            background-color: var(--danger-text);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link active" th:href="@{/authors}">Authors</a>
+                    <a class="nav-link text-white-50" th:href="@{/books}">Books</a>
+                    <a class="nav-link text-white-50" th:href="@{/inventory}">Inventory</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container pb-5">
+        <div class="card main-card p-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6">
+                    <h3 class="mb-0 fw-bold" style="color: #1e293b;">Authors Directory</h3>
+                    <p class="text-muted small mb-0">Manage and view all registered authors in the system.</p>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <a th:href="@{/authors/new}" class="btn btn-primary btn-add">
+                        <i class="bi bi-person-plus-fill me-2"></i> Add New Author
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Author Name</th>
+                            <th>Contact Email</th>
+                            <th>Origin Country</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through authors -->
+                        <tr th:each="author : ${authors}" class="border-bottom">
+                            <td class="text-muted font-monospace" th:text="${'#' + author.authorId}">#1</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" 
+                                         style="width: 40px; height: 40px; color: #4361ee; font-weight: bold; font-size: 0.9rem;" 
+                                         th:text="${#strings.substring(author.authorName,0,1)}">A</div>
+                                    <span th:text="${author.authorName}" class="fw-semibold">Author Name</span>
+                                </div>
+                            </td>
+                            <td th:text="${author.authorEmail}">email@example.com</td>
+                            <td>
+                                <span class="badge badge-country px-3 py-2 rounded-pill" th:text="${author.authorCountry}">Country</span>
+                            </td>
+                           <!-- Inside your <tbody> <tr> -->
+<td class="text-end">
+    <div class="d-flex justify-content-end gap-2">
+        
+        <!-- Update Button: Outline Style with Text -->
+        <a th:href="@{/authors/edit/{id}(id=${author.authorId})}" 
+           class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
+           style="border-radius: 8px; font-weight: 500;">
+            <i class="bi bi-pencil-square me-2"></i> Edit
+        </a>
+
+        <!-- Delete Button: Soft-Red Style with Text -->
+        <a th:href="@{/authors/delete/{id}(id=${author.authorId})}" 
+           class="btn btn-sm btn-delete-custom d-inline-flex align-items-center px-3">
+            <i class="bi bi-trash3 me-2"></i> Delete
+        </a>
+        
+    </div>
+</td>
+
+                        </tr>
+                        <!-- Empty State -->
+                        <tr th:if="${#lists.isEmpty(authors)}">
+                            <td colspan="5" class="py-5 text-center">
+                                <i class="bi bi-people text-muted opacity-25" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-3">No authors found in your database.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIXED: Complete Bootstrap 5.3.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net"></script>
+</body>
+</html>

@@ -1,6 +1,14 @@
 package com.cg.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "Inventory")
@@ -8,41 +16,46 @@ public class Inventory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private int inventoryId;
 	@Column
-	private String status;
+	private Status status;
 	@Column
 	private int quantity;
+
 	@OneToOne
 	@JoinColumn(name = "book_id")
 	private Book book;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	public Inventory(Long id, String status, int quantity, Book book, User user) {
+	public Inventory() {
+
+	}
+
+	public Inventory(int inventoryId, Status status, int quantity, Book book, User user) {
 		super();
-		this.id = id;
+		this.inventoryId = inventoryId;
 		this.status = status;
 		this.quantity = quantity;
 		this.book = book;
 		this.user = user;
 	}
 
-	public Long getId() {
-		return id;
+	public int getInventoryId() {
+		return inventoryId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setInventoryId(int inventoryId) {
+		this.inventoryId = inventoryId;
 	}
 
-	public String getStatus() {
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Status status) {
 		this.status = status;
 	}
 
@@ -69,16 +82,5 @@ public class Inventory {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
-
->>>>>>> origin/author
-=======
-
-
->>>>>>> origin/user
 }
