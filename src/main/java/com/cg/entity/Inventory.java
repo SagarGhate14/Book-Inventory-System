@@ -1,14 +1,6 @@
 package com.cg.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Inventory")
@@ -17,8 +9,10 @@ public class Inventory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int inventoryId;
+
 	@Column
-	private Status status;
+	private String status; // Changed from enum to String
+
 	@Column
 	private int quantity;
 
@@ -31,11 +25,9 @@ public class Inventory {
 	private User user;
 
 	public Inventory() {
-
 	}
 
-	public Inventory(int inventoryId, Status status, int quantity, Book book, User user) {
-		super();
+	public Inventory(int inventoryId, String status, int quantity, Book book, User user) {
 		this.inventoryId = inventoryId;
 		this.status = status;
 		this.quantity = quantity;
@@ -43,6 +35,7 @@ public class Inventory {
 		this.user = user;
 	}
 
+	// Getters and Setters
 	public int getInventoryId() {
 		return inventoryId;
 	}
@@ -51,11 +44,11 @@ public class Inventory {
 		this.inventoryId = inventoryId;
 	}
 
-	public Status getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -82,5 +75,4 @@ public class Inventory {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
 }
