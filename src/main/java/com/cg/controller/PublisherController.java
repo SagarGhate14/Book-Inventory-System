@@ -22,15 +22,10 @@ public class PublisherController {
 	
 	@GetMapping("/list")
 	public List<Publisher>getAllPublishers(){
-<<<<<<< HEAD
-		return publisherService.getAllPublisher();
+		return publisherService.getAllPublishers();
 	}
 	
 	
 	
 
-=======
-		return publisherService.getAllPublishers();
-	}
->>>>>>> origin/user
 }

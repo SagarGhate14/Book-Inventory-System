@@ -21,6 +21,12 @@ public class Inventory {
 	@JoinColumn(name = "user_id")
 	private User user;
 
+	
+	public Inventory() {
+		super();
+	}
+
+
 	public Inventory(Long id, String status, int quantity, Book book, User user) {
 		super();
 		this.id = id;
@@ -29,6 +35,7 @@ public class Inventory {
 		this.book = book;
 		this.user = user;
 	}
+	
 
 	public Long getId() {
 		return id;
@@ -69,16 +76,4 @@ public class Inventory {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
->>>>>>> origin/author
-=======
-
-
->>>>>>> origin/user
 }

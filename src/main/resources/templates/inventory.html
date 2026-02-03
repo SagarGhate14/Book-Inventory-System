@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<<<<<<< HEAD
-<<<<<<< HEAD
 <head><title>Inventory Dashboard</title></head>
 <body>
     <h2>📦 Inventory Dashboard</h2>
@@ -31,67 +29,3 @@
     </table>
 </body>
 </html>
-=======
-=======
->>>>>>> origin/user
-<head>
-    <title>Inventory Page</title>
-    <style>
-        body { font-family: Arial; margin: 40px; }
-        table { border-collapse: collapse; width: 70%; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        form { margin-bottom: 30px; }
-    </style>
-</head>
-<body>
- 
-<h2>Add Inventory</h2>
- 
-<form th:action="@{/inventories}" th:object="${inventory}" method="post">
-    <label>Quantity:</label>
-    <input type="number" th:field="*{quantity}" required><br><br>
- 
-    <label>Status:</label>
-    <input type="text" th:field="*{status}" required><br><br>
- 
-    <label>Book ID:</label>
-    <input type="number" name="book.id" required><br><br>
- 
-    <label>User ID:</label>
-    <input type="number" name="user.id" required><br><br>
- 
-    <button type="submit">Save</button>
-</form>
- 
-<hr>
- 
-<h2>Inventory List</h2>
- 
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Quantity</th>
-        <th>Status</th>
-        <th>Book</th>
-        <th>User</th>
-    </tr>
- 
-    <tr th:each="inv : ${inventories}">
-        <td th:text="${inv.id}"></td>
-        <td th:text="${inv.quantity}"></td>
-        <td th:text="${inv.status}"></td>
-        <td th:text="${inv.book.id}"></td>
-        <td th:text="${inv.user.id}"></td>
-    </tr>
-</table>
- 
-</body>
-</html>
-
-<<<<<<< HEAD
- 
->>>>>>> origin/author
-=======
- 
->>>>>>> origin/user
