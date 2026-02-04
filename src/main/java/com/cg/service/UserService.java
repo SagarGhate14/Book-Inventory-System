@@ -1,8 +1,10 @@
 package com.cg.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cg.dto.UserDTO;
@@ -12,11 +14,8 @@ import com.cg.repository.UserRepository;
 @Service
 public class UserService implements IUserService {
 
-    private final UserRepository repo;
-
-    public UserService(UserRepository repo) {
-        this.repo = repo;
-    }
+      @Autowired
+      private UserRepository userRepository;
 
     // Entity -> DTO (inside service, NOT a mapper class)
     private UserDTO convertToDTO(User user) {
@@ -24,7 +23,8 @@ public class UserService implements IUserService {
                 user.getUserId(),
                 user.getUserName(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                user.getPassword()
         );
     }
 
@@ -39,30 +39,23 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        return repo.findAll()
-                   .stream()
-                   .map(this::convertToDTO)
-                   .collect(Collectors.toList());
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public UserDTO getUserById(int id) {
-        User user = repo.findById(id).orElseThrow(() ->
-            new RuntimeException("User not found with id: " + id)
-        );
-        return convertToDTO(user);
+    public User getUserById(int id) {
+        return userRepository.findById(id).get();
     }
 
     @Override
-    public UserDTO saveUser(UserDTO userDTO) {
-        User saved = repo.save(convertToEntity(userDTO));
-        return convertToDTO(saved);
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
-
+    
     @Override
-    public UserDTO updateUser(int id, UserDTO userDTO) {
-        User existing = repo.findById(id).orElseThrow(() ->
+    public User updateUser(int id, UserDTO userDTO) {
+        User existing = userRepository.findById(id).orElseThrow(() ->
             new RuntimeException("User not found with id: " + id)
         );
 
@@ -70,12 +63,68 @@ public class UserService implements IUserService {
         existing.setEmail(userDTO.getEmail());
         existing.setRole(userDTO.getRole());
 
-        User updated = repo.save(existing);
-        return convertToDTO(updated);
+        User updated = userRepository.save(existing);
+        return updated;
     }
 
     @Override
     public void deleteUser(int id) {
-        repo.deleteById(id);
+        userRepository.deleteById(id);
+    }
+    
+    public User toEntity(UserDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        User entity = new User();
+        entity.setUserId(dto.getUserId());
+        entity.setUserName(dto.getUserName());
+        entity.setEmail(dto.getEmail());
+        entity.setRole(dto.getRole());
+        // Password handling is usually kept separate for security
+        entity.setPassword(dto.getPassword()); 
+        
+        return entity;
+    }
+    
+    public UserDTO toDTO(User entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        UserDTO dto = new UserDTO();
+        dto.setUserId(entity.getUserId());
+        dto.setUserName(entity.getUserName());
+        dto.setEmail(entity.getEmail());
+        dto.setRole(entity.getRole());
+        // For security, you might choose to omit the password in the DTO
+        
+        return dto;
+    }
+    
+    
+    public List<User> toEntityList(List<UserDTO> dtoList) {
+        if (dtoList == null) {
+            return null;
+        }
+
+        List<User> entityList = new ArrayList<>();
+        for (UserDTO dto : dtoList) {
+            entityList.add(this.toEntity(dto));
+        }
+        return entityList;
+    }
+    
+    public List<UserDTO> toDTOList(List<User> entityList) {
+        if (entityList == null) {
+            return null;
+        }
+
+        List<UserDTO> dtoList = new ArrayList<>();
+        for (User entity : entityList) {
+            dtoList.add(this.toDTO(entity));
+        }
+        return dtoList;
     }
 }

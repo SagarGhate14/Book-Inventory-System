@@ -2,7 +2,7 @@ package com.cg.inventorytest;
 
 import com.cg.controller.InventoryController;
 import com.cg.dto.InventoryDTO;
-import com.cg.service.InventoryService;
+import com.cg.service.IInventoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,7 +25,7 @@ class InventoryControllerTest {
     private MockMvc mockMvc; // This tool mimics a browser (simulates requests)
 
     @MockBean
-    private InventoryService inventoryService; // Create a fake service
+    private IInventoryService inventoryService; // Create a fake service
 
    
 

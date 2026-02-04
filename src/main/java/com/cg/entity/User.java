@@ -25,6 +25,9 @@ public class User {
 	@Column
 	private String email;
 	
+	@Column
+	private String password;
+	
 	@Enumerated(EnumType.STRING)
 	@Column
 	private Role role;
@@ -36,11 +39,12 @@ public class User {
 		
 	}
 
-	public User(int userId, String userName, String email, Role role, List<Inventory> inventories) {
+	public User(int userId, String userName, String email, String password, Role role, List<Inventory> inventories) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.email = email;
+		this.password = password;
 		this.role = role;
 		this.inventories = inventories;
 	}
@@ -69,6 +73,14 @@ public class User {
 		this.email = email;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Role getRole() {
 		return role;
 	}
@@ -84,7 +96,6 @@ public class User {
 	public void setInventories(List<Inventory> inventories) {
 		this.inventories = inventories;
 	}
-	
 	
 }
 	

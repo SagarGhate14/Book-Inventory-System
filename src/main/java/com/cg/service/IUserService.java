@@ -3,14 +3,15 @@ package com.cg.service;
 import java.util.List;
 
 import com.cg.dto.UserDTO;
+import com.cg.entity.User;
 
 public interface IUserService {
 
-    List<UserDTO> getAllUsers();
-    UserDTO getUserById(int id);
+    List<User> getAllUsers();
+    User getUserById(int id);
 
-    UserDTO saveUser(UserDTO userDTO);
-    UserDTO updateUser(int id, UserDTO userDTO);
+    User saveUser(User user);
+    User updateUser(int id, UserDTO userDTO);
 
     void deleteUser(int id);
 }

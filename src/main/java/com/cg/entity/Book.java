@@ -106,4 +106,10 @@ public class Book {
 		this.inventory = inventory;
 	}
 
+	@Override
+	public String toString() {
+		return "Book [bookId=" + bookId + ", title=" + title + ", price=" + price + ", author=" + author
+				+ ", publisher=" + publisher + ", category=" + category + ", inventory=" + inventory + "]";
+	}
+
 }

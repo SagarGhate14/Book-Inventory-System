@@ -3,7 +3,7 @@ package com.cg.inventorytest;
 import com.cg.dto.InventoryDTO;
 import com.cg.entity.Inventory;
 import com.cg.repository.InventoryRepository;
-import com.cg.service.InventoryServiceImplementation;
+import com.cg.service.InventoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +25,7 @@ public class InventoryServiceTest {
     private InventoryRepository inventoryRepository; // Fake Database
 
     @InjectMocks
-    private InventoryServiceImplementation inventoryService; // Service we are testing
+    private InventoryService inventoryService; // Service we are testing
 
     private Inventory sampleInventory;
 

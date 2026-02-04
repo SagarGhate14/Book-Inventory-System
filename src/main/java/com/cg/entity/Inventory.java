@@ -11,12 +11,12 @@ public class Inventory {
 	private int inventoryId;
 
 	@Column
-	private String status; // Changed from enum to String
+	private Status status; // Changed from enum to String
 
 	@Column
 	private int quantity;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER) 
 	@JoinColumn(name = "book_id")
 	private Book book;
 
@@ -27,7 +27,9 @@ public class Inventory {
 	public Inventory() {
 	}
 
-	public Inventory(int inventoryId, String status, int quantity, Book book, User user) {
+	
+	public Inventory(int inventoryId, Status status, int quantity, Book book, User user) {
+		super();
 		this.inventoryId = inventoryId;
 		this.status = status;
 		this.quantity = quantity;
@@ -35,44 +37,64 @@ public class Inventory {
 		this.user = user;
 	}
 
-	// Getters and Setters
+	
+
 	public int getInventoryId() {
 		return inventoryId;
 	}
+
 
 	public void setInventoryId(int inventoryId) {
 		this.inventoryId = inventoryId;
 	}
 
-	public String getStatus() {
+
+	public Status getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+
+	public void setStatus(Status status) {
 		this.status = status;
 	}
+
 
 	public int getQuantity() {
 		return quantity;
 	}
 
+
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+
 
 	public Book getBook() {
 		return book;
 	}
 
+
 	public void setBook(Book book) {
 		this.book = book;
 	}
+
 
 	public User getUser() {
 		return user;
 	}
 
+
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Inventory [inventoryId=" + inventoryId + ", status=" + status + ", quantity=" + quantity + ", book="
+				+ book + ", user=" + user + "]";
+	}
+	
+	
+	
 }

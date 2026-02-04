@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inventory Management - Bookshelf Pro</title>
+    <title>Book Management - Bookshelf Pro</title>
     <!-- Modern Google Font -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+    
     <style>
         :root {
             --primary-color: #4361ee;
@@ -17,23 +18,20 @@
             --bg-light: #f8f9fc;
             --danger-soft: #fff1f2;
             --danger-text: #e11d48;
-            --success-soft: #f0fdf4;
-            --success-text: #16a34a;
         }
-
         body { 
             background-color: var(--bg-light); 
             font-family: 'Inter', sans-serif;
             color: #333;
         }
-
+        /* Navbar Styling */
         .navbar {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
         .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
-
+        
+        /* Card & Table Styling */
         .main-card {
             border: none;
             border-radius: 12px;
@@ -41,12 +39,11 @@
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             margin-top: 2rem;
         }
-
+        .table { vertical-align: middle; }
         .table thead {
             background-color: #f1f5f9;
             border-bottom: 2px solid #e2e8f0;
         }
-
         .table thead th {
             font-weight: 600;
             text-transform: uppercase;
@@ -55,7 +52,10 @@
             color: #64748b;
             padding: 1rem;
         }
-
+        .table tbody tr { transition: all 0.2s; }
+        .table tbody tr:hover { background-color: #f8fafc; }
+        
+        /* Buttons */
         .btn-add {
             background-color: var(--primary-color);
             border: none;
@@ -64,34 +64,42 @@
             border-radius: 8px;
             transition: transform 0.2s;
         }
-
         .btn-add:hover {
             background-color: var(--secondary-color);
             transform: translateY(-1px);
+            color: white;
         }
 
-        /* Status Badges */
-        .badge-available {
-            background-color: var(--success-soft);
-            color: var(--success-text);
+        /* Add to Cart Button */
+        .btn-cart {
+            background-color: var(--primary-color);
+            color: white !important;
             font-weight: 600;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            border: none;
+            transition: all 0.3s;
+        }
+        .btn-cart:hover {
+            background-color: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.2);
         }
 
-        .badge-outofstock {
-            background-color: var(--danger-soft);
-            color: var(--danger-text);
-            font-weight: 600;
+        .badge-category {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            font-weight: 500;
         }
 
+        /* Delete Button Soft-Red Style */
         .btn-delete-custom {
             color: var(--danger-text);
             background-color: var(--danger-soft);
             border: 1px solid #fee2e2;
-            border-radius: 8px;
             font-weight: 500;
+            border-radius: 8px;
             transition: all 0.2s;
         }
-
         .btn-delete-custom:hover {
             background-color: var(--danger-text);
             color: white;
@@ -99,7 +107,7 @@
     </style>
 </head>
 <body>
- 
+
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
@@ -109,68 +117,91 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
-                      <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
-                    <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
-                    <a class="nav-link active" th:href="@{/category/list}">Categories</a>
-                    <a class="nav-link active" th:href="@{/inventories/list}">Inventory</a>
+                    <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
+                    <a class="nav-link active" th:href="@{/books}">Books</a>
+                    <a class="nav-link text-white-50" th:href="@{/inventories/list}">Inventory</a>
                 </div>
             </div>
         </div>
     </nav>
- 
+
     <div class="container pb-5">
         <div class="card main-card p-4">
             <div class="row align-items-center mb-4">
                 <div class="col-md-6">
-                    <h3 class="mb-0 fw-bold" style="color: #1e293b;">Inventory Dashboard</h3>
-                    <p class="text-muted small mb-0">Monitor stock levels and availability status.</p>
+                    <h3 class="mb-0 fw-bold" style="color: #1e293b;">Book Collection</h3>
+                    <p class="text-muted small mb-0">Manage and view the complete library inventory.</p>
                 </div>
                 <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                    <a th:href="@{/inventories/add-form}" class="btn btn-primary btn-add">
-                        <i class="bi bi-plus-circle-fill me-2"></i> Add New Item
+                    <a th:href="@{/books/add}" class="btn btn-primary btn-add text-white">
+                        <i class="bi bi-journal-plus me-2"></i> Add New Book
                     </a>
                 </div>
             </div>
- 
+
             <div class="table-responsive">
                 <table class="table table-borderless">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Quantity</th>
-                            <th>Status</th>
+                            <th>Book Title</th>
+                            <th>Author</th>
+                            <th>Publisher</th>
+                            <th>Category</th>
+                            <th>Price</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="inv : ${inventories}" class="border-bottom">
-                            <td class="text-muted font-monospace" th:text="${'#' + inv.inventoryId}">#1</td>
-                            <td class="fw-semibold" th:text="${inv.quantity}">0</td>
+                        <!-- Loop through booksDTO -->
+                        <tr th:each="book : ${booksDTO}" class="border-bottom">
+                            <td class="text-muted font-monospace" th:text="${'#BK-' + book.bookId}">#BK-1</td>
                             <td>
-                                <span th:classappend="${inv.status == 'Available' ? 'badge-available' : 'badge-outofstock'}" 
-                                      class="badge px-3 py-2 rounded-pill" 
-                                      th:text="${inv.status}">Status</span>
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" 
+                                         style="width: 40px; height: 40px; color: #4361ee; font-weight: bold; font-size: 0.9rem;" 
+                                         th:text="${#strings.substring(book.title,0,1)}">B</div>
+                                    <span th:text="${book.title}" class="fw-semibold">Book Title</span>
+                                </div>
+                            </td>
+                            <td th:text="${book.author.authorName}">Author Name</td>
+                            <td class="text-muted small" th:text="${book.publisher.publisherName}">Publisher Name</td>
+                            <td>
+                                <span class="badge badge-category px-3 py-2 rounded-pill" th:text="${book.category.categoryName}">Category</span>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-dark" th:text="${'₹' + #numbers.formatDecimal(book.price, 1, 2)}">₹0.00</span>
                             </td>
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a th:href="@{/inventories/edit-form/{id}(id=${inv.inventoryId})}" 
+                                    
+                                    <!-- Add to Cart Button -->
+                                    <button class="btn btn-sm btn-cart">
+                                        <i class="bi bi-cart-plus me-1"></i> Add
+                                    </button>
+
+                                    <!-- Edit Button -->
+                                    <a th:href="@{/book/edit/{id}(id=${book.bookId})}" 
                                        class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
                                        style="border-radius: 8px; font-weight: 500;">
-                                        <i class="bi bi-pencil-square me-2"></i> Edit
+                                        <i class="bi bi-pencil-square me-1"></i> Edit
                                     </a>
-                                    <a th:href="@{/inventories/delete/{id}(id=${inv.inventoryId})}" 
+
+                                    <!-- Delete Button -->
+                                    <a th:href="@{/book/delete/{id}(id=${book.bookId})}" 
                                        class="btn btn-sm btn-delete-custom d-inline-flex align-items-center px-3"
-                                       onclick="return confirm('Are you sure you want to delete this record?')">
-                                        <i class="bi bi-trash3 me-2"></i> Delete
+                                       onclick="return confirm('Are you sure you want to delete this book?')">
+                                        <i class="bi bi-trash3 me-1"></i> Delete
                                     </a>
+                                    
                                 </div>
                             </td>
                         </tr>
                         <!-- Empty State -->
-                        <tr th:if="${#lists.isEmpty(inventories)}">
-                            <td colspan="4" class="py-5 text-center">
-                                <i class="bi bi-box-seam text-muted opacity-25" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3">No inventory items found.</p>
+                        <tr th:if="${#lists.isEmpty(booksDTO)}">
+                            <td colspan="7" class="py-5 text-center">
+                                <i class="bi bi-journal-x text-muted opacity-25" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-3">No books found in your collection.</p>
                             </td>
                         </tr>
                     </tbody>
@@ -178,7 +209,8 @@
             </div>
         </div>
     </div>
- 
+
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net"></script>
 </body>
 </html>

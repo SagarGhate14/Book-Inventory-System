@@ -76,5 +76,11 @@ public void setBooks(List<Book> books) {
 	this.books = books;
 }
 
+@Override
+public String toString() {
+	return "Author [authorId=" + authorId + ", authorName=" + authorName + ", authorEmail=" + authorEmail
+			+ ", authorCountry=" + authorCountry + ", books=" + books + "]";
+}
+
 
 }
