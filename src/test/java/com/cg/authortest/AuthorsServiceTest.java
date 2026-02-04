@@ -1,26 +1,22 @@
 package com.cg.authortest;
 
-
 import com.cg.dto.AuthorDTO;
 import com.cg.entity.Author;
 import com.cg.repository.AuthorRepository;
 import com.cg.service.AuthorService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * 3 Tests for AuthorService
- */
 @ExtendWith(MockitoExtension.class)
 public class AuthorsServiceTest {
 
@@ -48,33 +44,46 @@ public class AuthorsServiceTest {
         a2.setAuthorCountry("UK");
     }
 
-    // 1️⃣ getAllAuthors → returns list from repo
     @Test
-    void getAllAuthors_shouldReturnRepoList() {
-        when(authorRepository.findAll()).thenReturn(List.of(a1, a2));
+    void testGetAllAuthors() {
+        // 1. Create a list of ENTITIES (what the Repo returns)
+        List<Author> entities = new ArrayList<>();
+        entities.add(a1);
+        entities.add(a2);
 
-        List<Author> list = authorService.getAllAuthors();
+        // 2. Mock the Repo to return the ENTITY list
+        when(authorRepository.findAll()).thenReturn(entities);
 
-        assertThat(list).hasSize(2);
-        assertThat(list.get(0).getAuthorName()).isEqualTo("John Doe");
+        // 3. Call the service (which converts them to DTOs)
+        List<Author> result = authorService.getAllAuthors();
+
+        // 4. Assertions
+        assertNotNull(result, "The result list should not be null");
+        assertEquals(2, result.size(), "The list size should be 2");
+        
+        // Check the first item in the list
+        assertEquals("John Doe", result.get(0).getAuthorName());
+        assertEquals(1, result.get(0).getAuthorId());
     }
 
-    // 2️⃣ toDTOList → converts Entities to DTOs
     @Test
-    void toDTOList_shouldConvertEntityListToDTOList() {
-        List<AuthorDTO> dtos = authorService.toDTOList(List.of(a1));
-
-        assertThat(dtos).hasSize(1);
-        assertThat(dtos.get(0).getAuthorName()).isEqualTo("John Doe");
+    void testMappingToDTO() {
+        // Test single mapping
+        AuthorDTO dto = authorService.toDTO(a1);
+        
+        assertNotNull(dto);
+        assertEquals("John Doe", dto.getAuthorName());
+        assertEquals(1, dto.getAuthorId());
     }
 
-    // 3️⃣ deleteAuthor → calls repository.deleteById()
     @Test
-    void deleteAuthor_shouldCallRepoDeleteById() {
-        doNothing().when(authorRepository).deleteById(1);
+    void testDeleteAuthor() {
+        // ⛳️ FIX: Mock the exists check so the service 'if' block passes
+        when(authorRepository.existsById(1)).thenReturn(true);
 
         authorService.deleteAuthor(1);
 
+        // Verify repository was called
         verify(authorRepository, times(1)).deleteById(1);
     }
 }

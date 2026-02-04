@@ -1,23 +1,15 @@
 package com.cg.controller;
 
-
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.cg.dto.AuthorDTO;
 import com.cg.entity.Author;
 import com.cg.service.AuthorService;
-
-
 
 @Controller
 @RequestMapping("/authors")
@@ -25,10 +17,10 @@ public class AuthorController {
 
     @Autowired
     AuthorService authorService;
-    
+
     @GetMapping("/new")
     public String addAuthor(Model model) {
-        model.addAttribute("author",new Author());
+        model.addAttribute("author", new Author());
         return "author/author-add";
     }
 
@@ -40,9 +32,9 @@ public class AuthorController {
 
     @GetMapping("/list")
     public String listAuthors(Model model) {
-    	List<Author> authors = authorService.getAllAuthors();
-    	List<AuthorDTO> authorsDTO = authorService.toDTOList(authors);
-        model.addAttribute("authors",authorsDTO);
+        List<Author> authors = authorService.getAllAuthors();
+        List<AuthorDTO> authorsDTO = authorService.toDTOList(authors);
+        model.addAttribute("authors", authorsDTO);
         return "author/author-list";
     }
 
@@ -52,22 +44,23 @@ public class AuthorController {
         model.addAttribute("author", author);
         return "author-view";
     }
-    
+
     @GetMapping("/edit/{id}")
-    public String updateAuthor(@PathVariable("id") int id,Model model) {
+    public String updateAuthor(@PathVariable("id") int id, Model model) {
         Author author = authorService.getAuthorById(id);
         AuthorDTO authorDTO = authorService.toDTO(author);
-        if(authorDTO == null) {
-        	return "redirect:/authors/list";
+        if (authorDTO == null) {
+            return "redirect:/authors/list";
         }
-        model.addAttribute("authorDTO",authorDTO);
+        model.addAttribute("authorDTO", authorDTO);
         return "author/author-edit";
     }
+
     @PostMapping("update")
-    public String updatedAuthor(@ModelAttribute("authorDTO")AuthorDTO authordto) {
-    	Author author = authorService.toEntity(authordto);
-    	authorService.updateAuthor(author);
-    	return "redirect:/authors/list";
+    public String updatedAuthor(@ModelAttribute("authorDTO") AuthorDTO authordto) {
+        Author author = authorService.toEntity(authordto);
+        authorService.updateAuthor(author);
+        return "redirect:/authors/list";
     }
 
     @GetMapping("/delete/{id}")

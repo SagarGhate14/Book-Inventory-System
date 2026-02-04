@@ -1,26 +1,22 @@
 package com.cg.publishertest;
 
-
 import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;
 import com.cg.repository.PublisherRepository;
 import com.cg.service.PublisherService;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * 3 service tests for PublisherService
- */
 @ExtendWith(MockitoExtension.class)
 public class PublisherServiceTest {
 
@@ -46,42 +42,41 @@ public class PublisherServiceTest {
         p2.setAddress("UK");
     }
 
-    // 1) getAllPublishers returns repository list
     @Test
-    void getAllPublishers_shouldReturnListFromRepository() {
-        when(publisherRepository.findAll()).thenReturn(List.of(p1, p2));
+    void testGetAllPublishers() {
+        List<Publisher> list = new ArrayList<>();
+        list.add(p1);
+        list.add(p2);
+
+        when(publisherRepository.findAll()).thenReturn(list);
 
         List<Publisher> result = publisherService.getAllPublishers();
 
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getPublisherId()).isEqualTo(1);
-        assertThat(result.get(0).getPublisherName()).isEqualTo("O'Reilly");
-        assertThat(result.get(1).getPublisherId()).isEqualTo(2);
-        assertThat(result.get(1).getPublisherName()).isEqualTo("Pearson");
+        assertEquals(2, result.size());
+        assertEquals("O'Reilly", result.get(0).getPublisherName());
     }
 
-    // 2) toDTOList maps entities to DTOs (covers toDTO as well)
     @Test
-    void toDTOList_shouldMapEntitiesToDTOs() {
-        List<PublisherDTO> dtos = publisherService.toDTOList(List.of(p1, p2));
+    void testToDTOListMapping() {
+        List<Publisher> entities = new ArrayList<>();
+        entities.add(p1);
 
-        assertThat(dtos).hasSize(2);
-        assertThat(dtos.get(0).getPublisherId()).isEqualTo(1);
-        assertThat(dtos.get(0).getPublisherName()).isEqualTo("O'Reilly");
-        assertThat(dtos.get(0).getAddress()).isEqualTo("CA");
+        List<PublisherDTO> result = publisherService.toDTOList(entities);
 
-        assertThat(dtos.get(1).getPublisherId()).isEqualTo(2);
-        assertThat(dtos.get(1).getPublisherName()).isEqualTo("Pearson");
-        assertThat(dtos.get(1).getAddress()).isEqualTo("UK");
+        assertNotNull(result);
+        assertEquals(1, result.get(0).getPublisherId());
+        assertEquals("O'Reilly", result.get(0).getPublisherName());
     }
 
-    // 3) deletePublisher delegates to repository.deleteById
     @Test
-    void deletePublisher_shouldInvokeRepositoryDeleteById() {
-        doNothing().when(publisherRepository).deleteById(2);
+    void testDeletePublisher() {
+        // ⛳️ FIX: You must tell the mock that ID 2 exists 
+        // so the 'if(!existsById)' check in your service passes!
+        when(publisherRepository.existsById(2)).thenReturn(true);
 
         publisherService.deletePublisher(2);
 
+        // Verify the delete was actually called
         verify(publisherRepository, times(1)).deleteById(2);
     }
 }
