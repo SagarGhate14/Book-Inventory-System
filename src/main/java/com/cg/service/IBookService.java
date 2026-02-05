@@ -11,6 +11,7 @@ public interface IBookService {
 	public List<Book> getAllBooks();
 	public Book findIdByBook(int bId);
 	public Book saveBook(Book book,Author author,Publisher publisher,Category category);
-	public void deleteBook(Book book);
+	public void deleteBook(int bId);
+	public Book updateBook(Book book,Author author,Publisher publisher,Category category);
 
 }

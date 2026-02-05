@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,6 +26,7 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/books")
 public class BookController {
+	
 	
 	@Autowired
 	private BookService bookService;
@@ -60,6 +62,32 @@ public class BookController {
 		Category category =  categoryService.getCategoryById(bookDTO.getCategoryId());
 		Book book = bookService.toEntity(bookDTO);
 		bookService.saveBook(book,author,publisher,category);
+		return "redirect:/books/list";
+	}
+	
+	@GetMapping("/edit/{id}")
+	public String editBook(@PathVariable("id") int id,Model model) {
+		Book book = bookService.findIdByBook(id);
+		model.addAttribute("bookDTO",bookService.toDTO(book));
+		model.addAttribute("categories",categoryService.getAllCategories());
+		model.addAttribute("authors",authorService.getAllAuthors());
+		model.addAttribute("publishers",publisherService.getAllPublishers());
+		return "book/book-edit";
+	}
+	
+	@PostMapping("/update")
+	public String updateBook(@ModelAttribute BookDTO bookDTO) {
+		Author author = authorService.getAuthorById(bookDTO.getAuthorId());
+		Publisher publisher = publisherService.findById(bookDTO.getPublisherId());
+		Category category =  categoryService.getCategoryById(bookDTO.getCategoryId());
+		Book book = bookService.toEntity(bookDTO);
+		bookService.updateBook(book,author,publisher,category);
+		return "redirect:/books/list";
+	}
+	
+	@GetMapping("/delete/{id}")
+	public String deleteBook(@PathVariable("id") int bId) {
+		bookService.deleteBook(bId);
 		return "redirect:/books/list";
 	}
 

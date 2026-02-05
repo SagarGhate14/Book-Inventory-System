@@ -36,9 +36,23 @@ public class BookService implements IBookService{
 	}
 
 	@Override
-	public void deleteBook(Book book) {
+	public void deleteBook(int bId) {
+           bookRepository.deleteById(bId);		
+	}
+	@Override
+	public Book findIdByBook(int bId) {
 		// TODO Auto-generated method stub
-		
+		return bookRepository.findById(bId).get();
+	}
+
+
+
+	@Override
+	public Book updateBook(Book book,Author author,Publisher publisher,Category category) {
+		book.setAuthor(author);
+		book.setPublisher(publisher);
+		book.setCategory(category);
+		return bookRepository.save(book);
 	}
 	
 	
@@ -77,7 +91,7 @@ public class BookService implements IBookService{
 	
 	
 	// Inside your BookService.java
-	private BookDTO toDTO(Book book) {
+	public BookDTO toDTO(Book book) {
 	    BookDTO dto = new BookDTO();
 	    dto.setBookId(book.getBookId());
 	    dto.setTitle(book.getTitle());
@@ -97,13 +111,5 @@ public class BookService implements IBookService{
 	    return dto;
 	}
 
-
-
-
-	@Override
-	public Book findIdByBook(int bId) {
-		// TODO Auto-generated method stub
-		return bookRepository.findById(bId).get();
-	}
 
 }

@@ -4,6 +4,9 @@ import com.cg.entity.Inventory;
 import com.cg.entity.Status;
 import com.cg.dto.InventoryDTO;
 import com.cg.repository.InventoryRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +22,7 @@ public class InventoryService implements IInventoryService {
     @Autowired
     private InventoryRepository inventoryRepository;
 
-    // 1. Using STREAMS API
+   
     @Override
     public List<Inventory> getAllInventories() {
         return inventoryRepository.findAll();
@@ -47,6 +50,7 @@ public class InventoryService implements IInventoryService {
     }
 
     @Override
+    @Transactional 
     public void updateInventory(int id, InventoryDTO dto) {
         Inventory inv = inventoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
@@ -57,10 +61,14 @@ public class InventoryService implements IInventoryService {
 
     // 5. Using DIRECT METHOD CALL
     @Override
+    @Transactional
     public void deleteInventory(int id) {
-        inventoryRepository.deleteById(id);
+        inventoryRepository.deleteByInventoryId(id);
     }
     
+    public Inventory findBookById(Integer bookId) {
+    	return inventoryRepository.findByBookId(bookId).get();
+    }
     
     public InventoryDTO toDTO(Inventory entity) {
         if (entity == null) return null;
@@ -69,7 +77,11 @@ public class InventoryService implements IInventoryService {
         dto.setInventoryId(entity.getInventoryId());
         dto.setQuantity(entity.getQuantity());
         // Handling Enum to String conversion
-        dto.setStatus(entity.getStatus() != null ? entity.getStatus().name() : null);
+        dto.setStatus(entity.getStatus());
+        
+        if (entity.getBook() != null) {
+            dto.setBookId(entity.getBook().getBookId());
+        }
         
         // Note: You might want to add bookTitle or userId to DTO 
         // to make the UI more useful.
@@ -80,12 +92,12 @@ public class InventoryService implements IInventoryService {
         if (dto == null) return null;
         
         Inventory entity = new Inventory();
-        entity.setInventoryId(dto.getInventoryId());
+       // entity.setInventoryId(dto.getInventoryId());
         entity.setQuantity(dto.getQuantity());
         
         // Handling String to Enum conversion
         if (dto.getStatus() != null) {
-            entity.setStatus(Status.valueOf(dto.getStatus().toUpperCase()));
+            entity.setStatus(dto.getStatus().toUpperCase());
         }
         
         // Relationship fields (Book/User) are usually handled during 
@@ -104,4 +116,9 @@ public class InventoryService implements IInventoryService {
                    .map(this::toEntity)
                    .collect(Collectors.toList());
     }
+
+	@Override
+	public Inventory findById(Integer id) {
+		return inventoryRepository.findById(id).get();
+	}
 }

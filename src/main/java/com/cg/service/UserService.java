@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cg.dto.UserDTO;
@@ -16,6 +17,9 @@ public class UserService implements IUserService {
 
       @Autowired
       private UserRepository userRepository;
+      
+      @Autowired
+      private BCryptPasswordEncoder passwordEncoder;
 
     // Entity -> DTO (inside service, NOT a mapper class)
     private UserDTO convertToDTO(User user) {
@@ -50,6 +54,8 @@ public class UserService implements IUserService {
 
     @Override
     public User saveUser(User user) {
+    	
+    	user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
     

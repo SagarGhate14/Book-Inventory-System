@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>System Message - Bookshelf Pro</title>
+    <!-- Premium Google Font -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+    
+    <style>
+        :root {
+            --primary-navy: #0f172a;
+            --accent-blue: #4361ee;
+            --glass-white: rgba(255, 255, 255, 0.95);
+        }
+
+        body { 
+            background-color: #f1f5f9; 
+            font-family: 'Inter', sans-serif;
+            background-image: radial-gradient(at 0% 0%, rgba(67, 97, 238, 0.05) 0, transparent 50%), 
+                              radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.05) 0, transparent 50%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .error-card {
+            background: var(--glass-white);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            text-align: center;
+            padding: 3rem 2rem;
+            max-width: 450px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* Pure CSS Floating Animation */
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background: #eff6ff;
+            color: var(--accent-blue);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .error-title {
+            font-weight: 800;
+            color: var(--primary-navy);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-text {
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Action Buttons */
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-primary-pro {
+            background: var(--primary-navy);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-primary-pro:hover {
+            background: #000;
+            color: white;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-outline-pro {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-outline-pro:hover { color: var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+    <div class="error-card">
+        <!-- Visual Icon -->
+        <div class="icon-box">
+            <i th:class="${statusCode == 404} ? 'bi bi-book fs-1' : 'bi bi-exclamation-circle fs-1'"></i>
+        </div>
+
+        <span class="status-badge" th:text="${'Error Code ' + statusCode}">Error Code 404</span>
+        <h1 class="error-title" th:text="${errorTitle}">Something Went Wrong</h1>
+        
+        <!-- Error Message from GlobalException -->
+        <p class="error-text" th:text="${errorMessage}">
+            The library archives could not find the data you requested.
+        </p>
+
+        <div class="btn-stack">
+            <!-- Direct links to avoid JavaScript dependency -->
+            <a th:href="@{/inventories/list}" class="btn-primary-pro">
+                <i class="bi bi-grid-fill me-2"></i>Dashboard
+            </a>
+            
+            <a th:href="@{/authors/list}" class="btn-outline-pro">
+                Return to Authors Directory
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

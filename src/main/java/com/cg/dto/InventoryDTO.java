@@ -1,12 +1,11 @@
 package com.cg.dto;
 
 public class InventoryDTO {
-	private int inventoryId;
+	private Integer inventoryId;
 	private String status;
 	private int quantity;
 	private Integer bookId;
 
-	
 
 	public InventoryDTO() {
 	}

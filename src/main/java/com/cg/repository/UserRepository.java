@@ -9,6 +9,8 @@ import com.cg.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
+	
+	   public Optional<User> findByEmail(String username);
    
 }
 

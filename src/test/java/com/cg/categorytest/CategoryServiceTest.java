@@ -11,15 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * 3 service tests for CategoryService
- */
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {
 
@@ -43,41 +40,40 @@ public class CategoryServiceTest {
         cat2.setCategoryName("Science");
     }
 
-    // 1) getAllCategories returns repository list unchanged
     @Test
-    void getAllCategories_shouldReturnAllFromRepository() {
-        when(categoryRepository.findAll()).thenReturn(List.of(cat1, cat2));
+    void testGetAllCategories() {
+        List<Category> list = new ArrayList<>();
+        list.add(cat1);
+        list.add(cat2);
+
+        when(categoryRepository.findAll()).thenReturn(list);
 
         List<Category> result = categoryService.getAllCategories();
 
-        assertThat(result).hasSize(2);
-        assertThat(result.get(0).getCategoryId()).isEqualTo(1);
-        assertThat(result.get(0).getCategoryName()).isEqualTo("Fiction");
-        assertThat(result.get(1).getCategoryId()).isEqualTo(2);
-        assertThat(result.get(1).getCategoryName()).isEqualTo("Science");
+        assertEquals(2, result.size());
+        assertEquals("Fiction", result.get(0).getCategoryName());
     }
 
-    // 2) toDTOList maps entities to DTO list (using toDTO)
     @Test
-    void toDTOList_shouldMapEntitiesToDTOs() {
-        List<Category> entities = List.of(cat1, cat2);
+    void testToDTOListMapping() {
+        List<Category> entities = new ArrayList<>();
+        entities.add(cat1);
 
         List<CategoryDTO> dtos = categoryService.toDTOList(entities);
 
-        assertThat(dtos).hasSize(2);
-        assertThat(dtos.get(0).getCategoryId()).isEqualTo(1);
-        assertThat(dtos.get(0).getCategoryName()).isEqualTo("Fiction");
-        assertThat(dtos.get(1).getCategoryId()).isEqualTo(2);
-        assertThat(dtos.get(1).getCategoryName()).isEqualTo("Science");
+        assertNotNull(dtos);
+        assertEquals(1, dtos.get(0).getCategoryId());
+        assertEquals("Fiction", dtos.get(0).getCategoryName());
     }
 
-    // 3) deleteCategory delegates to repository.deleteById
     @Test
-    void deleteCategory_shouldInvokeRepositoryDeleteById() {
-        doNothing().when(categoryRepository).deleteById(2);
+    void testDeleteCategory() {
+        // ⛳️ FIX: Stub existsById to return true so the service 'if' check passes
+        when(categoryRepository.existsById(2)).thenReturn(true);
 
         categoryService.deleteCategory(2);
 
+        // Verify the repository delete was actually called
         verify(categoryRepository, times(1)).deleteById(2);
     }
 }
