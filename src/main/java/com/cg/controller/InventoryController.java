@@ -29,6 +29,7 @@ public class InventoryController {
     @GetMapping("/list")
     @Transactional(readOnly = true)
     public String showIndex(Model model) {
+    	
         model.addAttribute("inventories", inventoryService.getAllInventories());
         return "inventory/inventory-list";
     }

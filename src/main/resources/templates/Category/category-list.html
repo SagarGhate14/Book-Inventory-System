@@ -103,7 +103,9 @@
                     <a class="nav-link text-white-50" th:href="@{/inventories/list}">Inventory</a>
                     <a class="nav-link active" th:href="@{/category/list}">Categories</a>
                     <a class="nav-link text-white-50" th:href="@{/publishers/list}">Publishers</a>
-                    <a class="nav-link text-white-50" th:href="@{/users/list}">Users</a>
+                    <a class="nav-link text-white-50" th:href="@{/users/list}" 
+                     th:if="${session.loggedInUser != null && session.loggedInUser.role == 'ADMIN'}">Users</a>
+                
                 </div>
             </div>
         </div>
@@ -116,7 +118,8 @@
                     <h3 class="mb-0 fw-bold" style="color: #1e293b;">Category Directory</h3>
                     <p class="text-muted small mb-0">Manage and view all book genres in the system.</p>
                 </div>
-                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <div class="col-md-6 text-md-end mt-3 mt-md-0" 
+                sec:authorize="hasRole('ADMIN')">
                     <a th:href="@{/category/new}" class="btn btn-primary btn-add">
                         <i class="bi bi-tag-fill me-2"></i> Add New Category
                     </a>
@@ -144,24 +147,24 @@
                                     <span th:text="${category.categoryName}" class="fw-semibold">Category Name</span>
                                 </div>
                             </td>
-                            <td class="text-end">
-                                <div class="d-flex justify-content-end gap-2">
-                                    
-                                    <!-- Update Button -->
-                                    <a th:href="@{/category/update/{id}(id=${category.categoryId})}" 
-                                       class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
-                                       style="border-radius: 8px; font-weight: 500;">
-                                        <i class="bi bi-pencil-square me-2"></i> Edit
-                                    </a>
+                           
+    <td class="text-end" sec:authorize="hasRole('ADMIN')">
+    <div class="d-flex justify-content-end gap-2">
+        <!-- FIXED: Use category.categoryId instead of author.authorId -->
+        <a th:href="@{/category/update/{id}(id=${category.categoryId})}"
+           class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
+           style="border-radius: 8px; font-weight: 500;">
+            <i class="bi bi-pencil-square me-2"></i> Edit
+        </a>
 
-                                    <!-- Delete Button -->
-                                    <a th:href="@{/category/delete/{id}(id=${category.categoryId})}" 
-                                       class="btn btn-sm btn-delete-custom d-inline-flex align-items-center px-3">
-                                        <i class="bi bi-trash3 me-2"></i> Delete
-                                    </a>
-                                    
-                                </div>
-                            </td>
+        <!-- FIXED: Use category.categoryId instead of author.authorId -->
+        <a th:href="@{/category/delete/{id}(id=${category.categoryId})}"
+           class="btn btn-sm btn-outline-danger d-inline-flex align-items-center px-3"
+           style="border-radius: 8px; font-weight: 500;">
+            <i class="bi bi-trash3 me-2"></i> Delete
+        </a>
+    </div>
+</td>
                         </tr>
                         <!-- Empty State -->
                         <tr th:if="${#lists.isEmpty(categories)}">

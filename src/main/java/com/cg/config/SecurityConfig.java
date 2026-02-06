@@ -20,11 +20,12 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
 	        .authorizeHttpRequests(auth -> auth
-	            // 1. PUBLIC ACCESS (Everyone can see these)
-	            .requestMatchers("/login", "/users/new", "/users/add", "/css/**", "/js/**").permitAll()
-	            .requestMatchers("/books/list", "/cart/**").permitAll() // Allow cart and books list
+	            // 1. PUBLIC ACCESS (Added /favicon.ico and static resources)
+	            .requestMatchers("/login", "/users/new", "/users/add","/users/verify-corp","/users/newAdmin", "/favicon.ico").permitAll()
+	            .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
+	            .requestMatchers("/cart/**").permitAll() 
 	            
-	            // 2. ADMIN ONLY (Restricted paths)
+	            // 2. ADMIN ONLY
 	            .requestMatchers("/users/list").hasRole("ADMIN")
 	            .requestMatchers("/books/edit/**", "/books/delete/**").hasRole("ADMIN")
 	            
@@ -33,19 +34,17 @@ public class SecurityConfig {
 	        )
 	        .formLogin(form -> form
 	            .loginPage("/login")
-	            .defaultSuccessUrl("/books/list", true) // Redirect to book list after login
+	            .defaultSuccessUrl("/books/list", true) 
 	            .permitAll()
 	        )
 	        .logout(logout -> logout
 	            .logoutSuccessUrl("/login?logout")
-	            .invalidateHttpSession(true) // Clear cart and user data on logout
+	            .invalidateHttpSession(true) 
 	            .permitAll()
 	        )
-	        // 4. CSRF PROTECTION (Crucial for the "Add to Cart" POST form)
-	        // Ensure your HTML form includes: <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+	        // 4. CSRF PROTECTION
 	        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")); 
 
 	    return http.build();
 	}
-
 }

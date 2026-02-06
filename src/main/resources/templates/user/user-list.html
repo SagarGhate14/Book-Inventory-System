@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Management - Bookshelf Pro</title>
+
     <!-- Modern Google Font -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net">
-    
+
     <style>
         :root {
             --primary-color: #4361ee;
@@ -19,19 +20,19 @@
             --danger-soft: #fff1f2;
             --danger-text: #e11d48;
         }
-        body { 
-            background-color: var(--bg-light); 
+        body {
+            background-color: var(--bg-light);
             font-family: 'Inter', sans-serif;
             color: #333;
         }
-        /* Navbar Styling */
+        /* Navbar Styling (exactly like Category/Authors pages) */
         .navbar {
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
-        
-        /* Card & Table Styling */
+
+        /* Card & Table Styling (exactly like Category/Authors pages) */
         .main-card {
             border: none;
             border-radius: 12px;
@@ -54,33 +55,30 @@
         }
         .table tbody tr { transition: all 0.2s; }
         .table tbody tr:hover { background-color: #f8fafc; }
-        
-        /* Avatar Circle */
-        .avatar-circle {
-            width: 40px; 
-            height: 40px; 
-            background-color: #eff6ff;
-            color: var(--primary-color); 
-            font-weight: 700; 
-            font-size: 0.9rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+        /* Avatar initial (same visual language) */
+        .avatar-initial {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            color: #4361ee;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            font-weight: 700; font-size: 0.9rem;
             text-transform: uppercase;
         }
 
-        /* Role Badge */
+        /* Role badge (soft pill) */
         .badge-role {
-            background-color: #f1f5f9;
-            color: #4361ee;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
             font-weight: 600;
-            font-size: 0.7rem;
-            padding: 0.4rem 0.8rem;
-            border: 1px solid #e0e7ff;
         }
 
-        /* Buttons */
+        /* Buttons (same colors & styles) */
         .btn-add {
             background-color: var(--primary-color);
             border: none;
@@ -98,15 +96,15 @@
         }
 
         .btn-delete-custom {
-            background-color: #fff1f2;
-            color: #e11d48;
+            background-color: var(--danger-soft);
+            color: var(--danger-text);
             border: 1px solid #fee2e2;
             border-radius: 8px;
             font-weight: 500;
             transition: all 0.2s;
         }
         .btn-delete-custom:hover {
-            background-color: #e11d48;
+            background-color: var(--danger-text);
             color: white;
         }
     </style>
@@ -116,14 +114,19 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
-                <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
-                <a class="nav-link text-white-50" th:href="@{/inventories/list}">Inventory</a>
-                <a class="nav-link text-white-50" th:href="@{/category/list}">Category</a>
-                <a class="nav-link text-white-50" th:href="@{/publishers/list}">Publishers</a>
-                <a class="nav-link active" th:href="@{/users/list}">Users</a>
+            <a class="navbar-brand" th:href="@{/}">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
+                    <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
+                    <a class="nav-link text-white-50" th:href="@{/inventories/list}">Inventory</a>
+                    <a class="nav-link text-white-50" th:href="@{/category/list}">Categories</a>
+                    <a class="nav-link text-white-50" th:href="@{/publishers/list}">Publishers</a>
+                    <a class="nav-link active" th:href="@{/users/list}">Users</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -133,16 +136,14 @@
             <div class="row align-items-center mb-4">
                 <div class="col-md-6">
                     <h3 class="mb-0 fw-bold" style="color: #1e293b;">User Management</h3>
-                    <p class="text-muted small mb-0">Monitor system access and credentials.</p>
+                    <p class="text-muted small mb-0">Manage and view all users in the system.</p>
                 </div>
-                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
                     <a th:href="@{/users/new}" class="btn btn-primary btn-add">
-                        <i class="bi bi-person-plus-fill me-2"></i> Add New User
+                        <i class="bi bi-person-plus me-2"></i> Add User
                     </a>
-                </div>
-                <div class="col-md-6 text-md-end mt-3 mt-md-0">
                     <a th:href="@{/users/newAdmin}" class="btn btn-primary btn-add">
-                        <i class="bi bi-person-plus-fill me-2"></i> Add New Admin
+                        <i class="bi bi-shield-plus me-2"></i> Add Admin
                     </a>
                 </div>
             </div>
@@ -153,64 +154,67 @@
                         <tr>
                             <th>ID</th>
                             <th>User Profile</th>
-                            <th>Email Address</th>
+                            <th>Email</th>
                             <th>Role</th>
-                            <th>Password</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Loop through UserDTOs -->
+                        <!-- Loop users -->
                         <tr th:each="user : ${usersDTO}" class="border-bottom">
                             <td class="text-muted font-monospace" th:text="${'#USR-' + user.userId}">#USR-1</td>
+
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar-circle me-3" 
-                                         th:text="${#strings.substring(user.userName,0,1)}">U</div>
-                                    <div>
-                                        <span th:text="${user.userName}" class="fw-semibold d-block">User Name</span>
-                                    </div>
+                                    <div class="avatar-initial me-3" th:text="${#strings.substring(user.userName,0,1)}">U</div>
+                                    <span class="fw-semibold" th:text="${user.userName}">User Name</span>
                                 </div>
                             </td>
+
                             <td>
-                                <div class="small text-muted">
-                                    <i class="bi bi-envelope me-1"></i>
+                                <span class="text-muted small d-inline-flex align-items-center">
+                                    <i class="bi bi-envelope-at me-2"></i>
                                     <span th:text="${user.email}">user@example.com</span>
-                                </div>
+                                </span>
                             </td>
+
                             <td>
-                                <span class="badge badge-role rounded-pill text-uppercase" th:text="${user.role}">Role</span>
+                                <span class="badge-role" th:text="${user.role}">ROLE</span>
                             </td>
-                            <td>
-                                <span class="text-muted font-monospace small">••••••••</span>
-                            </td>
+
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a th:href="@{/users/update/{id}(id=${user.userId})}" 
-                                       class="btn btn-sm btn-outline-primary px-3" style="border-radius: 8px;">
-                                        <i class="bi bi-pencil-square me-1"></i> Edit
+                                    <!-- Edit -->
+                                    <a th:href="@{/users/update/{id}(id=${user.userId})}"
+                                       class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
+                                       style="border-radius: 8px; font-weight: 500;">
+                                        <i class="bi bi-pencil-square me-2"></i> Edit
                                     </a>
-                                    <a th:href="@{/users/delete/{id}(id=${user.userId})}" 
-                                       class="btn btn-sm btn-delete-custom px-3">
-                                        <i class="bi bi-trash3 me-1"></i> Delete
+                                    <!-- Delete -->
+                                    <a th:href="@{/users/delete/{id}(id=${user.userId})}"
+                                       class="btn btn-sm btn-delete-custom d-inline-flex align-items-center px-3">
+                                        <i class="bi bi-trash3 me-2"></i> Delete
                                     </a>
                                 </div>
                             </td>
                         </tr>
+
                         <!-- Empty State -->
-                        <tr th:if="${#lists.isEmpty(userDTO)}">
-                            <td colspan="6" class="py-5 text-center">
+                        <tr th:if="${#lists.isEmpty(usersDTO)}">
+                            <td colspan="5" class="py-5 text-center">
                                 <i class="bi bi-people text-muted opacity-25" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3">No users found in the system.</p>
+                                <p class="text-muted mt-3">No users found in your database.</p>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net"></script>
 </body>
 </html>
+``

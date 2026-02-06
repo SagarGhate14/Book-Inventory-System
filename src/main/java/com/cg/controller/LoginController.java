@@ -25,14 +25,18 @@ public class LoginController {
 	    
 	    @PostMapping("/login")
 	    public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-	        User user = userService.login(email, password);
-	        if (user != null) {
-	            // Store the role in the session so it survives a refresh
-	        	 session.setAttribute("loggedInUser", user);
-	            session.setAttribute("userRole", user.getRole().toString()); 
-	            return "redirect:/dashboard";
-	        }
-	        return "login";
+	    	 User user = userService.login(email, password);
+	    	    if (user != null) {
+	    	        // Force the role to uppercase string for consistency
+	    	        String roleStr = user.getRole().toString().toUpperCase();
+	    	        
+	    	        session.setAttribute("loggedInUser", user);
+	    	        session.setAttribute("userRole", roleStr); 
+	    	        
+	    	        System.out.println("DEBUG: User logged in with role: " + roleStr); // Check your console!
+	    	        return "redirect:/books/list"; // Redirect to your actual directory
+	    	    }
+	    	    return "user/login";
 	    }
 
 
