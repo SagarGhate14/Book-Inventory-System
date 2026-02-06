@@ -74,15 +74,16 @@ public class UserController {
     @GetMapping("/update/{id}")
     public String showEditForm(@PathVariable int id, Model model) {
     	User user = userService.getUserById(id);
-        model.addAttribute("user", userService.getUserById(id));
+    	UserDTO userDTO = userService.toDTO(user);
+        model.addAttribute("userDTO", userDTO);
         return "user/user-edit";
     }
 
     // UPDATE USER
-    @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable int id, @ModelAttribute("user") UserDTO userDTO) {
-        userService.updateUser(id, userDTO);
-        return "redirect:/users";
+    @PostMapping("/update")
+    public String updateUser(@ModelAttribute("userDTO") UserDTO userDTO) {
+        userService.updateUser(userDTO.getUserId(), userDTO);
+        return "redirect:/users/list";
     }
 
     // DELETE USER

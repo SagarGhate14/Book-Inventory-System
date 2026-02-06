@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Author Management - Bookshelf Pro</title>
+    <title>Book Management - Bookshelf Pro</title>
     <!-- Modern Google Font -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <!-- Bootstrap 5.3 CSS -->
@@ -18,6 +18,8 @@
             --bg-light: #f8f9fc;
             --danger-soft: #fff1f2;
             --danger-text: #e11d48;
+            --success-soft: #ecfdf5;
+            --success-text: #059669;
         }
         body { 
             background-color: var(--bg-light); 
@@ -30,79 +32,39 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
-        
-        /* Card & Table Styling */
-        .main-card {
-            border: none;
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            margin-top: 2rem;
-        }
-        .table { vertical-align: middle; }
-        .table thead {
-            background-color: #f1f5f9;
-            border-bottom: 2px solid #e2e8f0;
-        }
-        .table thead th {
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            color: #64748b;
-            padding: 1rem;
-        }
-        .table tbody tr { transition: all 0.2s; }
-        .table tbody tr:hover { background-color: #f8fafc; }
-        
-        /* Buttons */
-        .btn-add {
-            background-color: var(--primary-color);
-            border: none;
-            font-weight: 600;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            transition: transform 0.2s;
-        }
-        .btn-add:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-1px);
-        }
-        .badge-country {
-            background-color: #e0e7ff;
-            color: #4338ca;
-            font-weight: 500;
-        }
 
-        /* Action Buttons Styling */
-        .btn-action {
-            width: 35px;
-            height: 35px;
-            padding: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            transition: all 0.2s;
+        /* FLOATING CART PILL */
+        .cart-floating-container {
+            position: fixed;
+            top: 95px;
+            right: 30px;
+            z-index: 1050;
         }
-        .btn-edit {
-            color: var(--primary-color);
-            background-color: #eff6ff;
-            border: 1px solid #dbeafe;
+        .checkout-pill-modern {
+            display: flex; align-items: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white !important; text-decoration: none !important;
+            padding: 12px 28px; border-radius: 50px;
+            border: 2px solid rgba(255,255,255,0.15);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: cartPulse 2s infinite;
         }
-        .btn-edit:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .btn-delete {
-            color: var(--danger-text);
-            background-color: var(--danger-soft);
-            border: 1px solid #fee2e2;
-        }
-        .btn-delete:hover {
-            background-color: var(--danger-text);
-            color: white;
-        }
+        .checkout-pill-modern:hover { transform: scale(1.08) translateY(-4px); box-shadow: 0 15px 35px rgba(67, 97, 238, 0.45); }
+        .cart-data-group { display: flex; align-items: center; gap: 12px; border-right: 1px solid rgba(255,255,255,0.3); padding-right: 18px; margin-right: 18px; }
+        .cart-count-display { font-size: 1.6rem; font-weight: 900; color: #ffca28; line-height: 1; }
+        .checkout-label { font-weight: 800; font-size: 0.95rem; letter-spacing: 1.5px; }
+        @keyframes cartPulse { 0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); } 100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); } }
+
+        /* Table Styling */
+        .main-card { border: none; border-radius: 12px; background: #ffffff; box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); margin-top: 2rem; }
+        .table thead th { font-weight: 600; text-transform: uppercase; font-size: 0.75rem; color: #64748b; padding: 1rem; }
+        .badge-category { background-color: #e0e7ff; color: #4338ca; font-weight: 500; }
+
+        /* Action Buttons */
+        .btn-cart-add { color: var(--success-text); background-color: var(--success-soft); border: 1px solid #d1fae5; border-radius: 8px; font-weight: 600; transition: all 0.2s; }
+        .btn-cart-add:hover { background-color: var(--success-text); color: white; }
+        .btn-delete-custom { color: var(--danger-text); background-color: var(--danger-soft); border: 1px solid #fee2e2; border-radius: 8px; font-weight: 500; }
+        .btn-delete-custom:hover { background-color: var(--danger-text); color: white; }
     </style>
 </head>
 <body>
@@ -111,89 +73,99 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto">
-                    <a class="nav-link active" th:href="@{/authors/list}">Authors</a>
-                    <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
-                    <a class="nav-link text-white-50" th:href="@{/inventories/list}">Inventory</a>
-                    <a class="nav-link text-white-50" th:href="@{/category/list}">Category</a>
-                    <a class="nav-link text-white-50" th:href="@{/publishers/list}">Publishers</a>
-                    <a class="nav-link text-white-50" th:href="@{/users/list}">Users</a>
-                </div>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link active" th:href="@{/books/list}">Books</a>
+                <a class="nav-link text-white-50" th:href="@{/users/list}" th:if="${session.userRole == 'ADMIN'}">Users</a>
             </div>
         </div>
     </nav>
 
+    <!-- Floating Checkout (Corner) -->
+    <div class="cart-floating-container" th:if="${session.cart != null && session.cart.size() > 0}">
+        <a th:href="@{/cart/checkout}" class="checkout-pill-modern shadow-lg">
+            <div class="cart-data-group">
+                <i class="bi bi-cart3"></i>
+                <span class="cart-count-display" th:text="${session.cart.size()}">0</span>
+            </div>
+            <span class="checkout-label">CHECKOUT</span>
+        </a>
+    </div>
+
     <div class="container pb-5">
+        <!-- Success Alert -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show mt-4 border-0 shadow-sm" role="alert" style="border-radius: 12px;">
+            <i class="bi bi-check-circle-fill me-2"></i> <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
         <div class="card main-card p-4">
             <div class="row align-items-center mb-4">
                 <div class="col-md-6">
-                    <h3 class="mb-0 fw-bold" style="color: #1e293b;">Authors Directory</h3>
-                    <p class="text-muted small mb-0">Manage and view all registered authors in the system.</p>
+                    <h3 class="mb-0 fw-bold" style="color: #1e293b;">Books Directory</h3>
+                    <p class="text-muted small mb-0">Browse and manage the library catalog.</p>
                 </div>
-                <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                    <a th:href="@{/authors/new}" class="btn btn-primary btn-add">
-                        <i class="bi bi-person-plus-fill me-2"></i> Add New Author
+                <div class="col-md-6 text-md-end mt-3 mt-md-0" th:if="${session.userRole == 'ADMIN'}">
+                    <a th:href="@{/books/new}" class="btn btn-primary" style="border-radius: 8px; background-color: var(--primary-color); border:none;">
+                        <i class="bi bi-journal-plus me-2"></i> Add New Book
                     </a>
                 </div>
             </div>
 
             <div class="table-responsive">
-                <table class="table table-borderless">
+                <table class="table table-borderless align-middle">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Author Name</th>
-                            <th>Contact Email</th>
-                            <th>Origin Country</th>
+                            <th>Book Details</th>
+                            <th>Category</th>
+                            <th>Price</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Loop through authors -->
-                        <tr th:each="author : ${authors}" class="border-bottom">
-                            <td class="text-muted font-monospace" th:text="${'#' + author.authorId}">#1</td>
+                        <tr th:each="book : ${booksDTO}" class="border-bottom">
+                            <td class="text-muted font-monospace" th:text="${'#BK-' + book.bookId}">#BK-1</td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3" 
-                                         style="width: 40px; height: 40px; color: #4361ee; font-weight: bold; font-size: 0.9rem;" 
-                                         th:text="${#strings.substring(author.authorName,0,1)}">A</div>
-                                    <span th:text="${author.authorName}" class="fw-semibold">Author Name</span>
+                                         style="width: 40px; height: 40px; color: var(--primary-color); font-weight: bold;" 
+                                         th:text="${#strings.substring(book.title,0,1)}">B</div>
+                                    <div>
+                                        <div th:text="${book.title}" class="fw-semibold">Title</div>
+                                        <small class="text-muted" th:text="${book.author?.authorName}">Author</small>
+                                    </div>
                                 </div>
                             </td>
-                            <td th:text="${author.authorEmail}">email@example.com</td>
-                            <td>
-                                <span class="badge badge-country px-3 py-2 rounded-pill" th:text="${author.authorCountry}">Country</span>
+                            <td><span class="badge badge-category px-3 py-2 rounded-pill" th:text="${book.category?.categoryName}">Category</span></td>
+                            <td class="fw-bold" th:text="${'₹' + book.price}">₹0</td>
+                            
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <!-- Add to Cart Form -->
+                                    <form th:action="@{/cart/add}" method="post" class="m-0">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                        <input type="hidden" name="id" th:value="${book.bookId}" />
+                                        <button type="submit" class="btn btn-sm btn-cart-add px-3 d-inline-flex align-items-center">
+                                            <i class="bi bi-cart-plus me-2"></i> Add
+                                        </button>
+                                    </form>
+
+                                    <!-- Admin Only: Edit and Delete -->
+                                    <th:block th:if="${session.userRole == 'ADMIN'}">
+                                        <a th:href="@{/books/edit/{id}(id=${book.bookId})}" class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center" style="border-radius: 8px;">
+                                            <i class="bi bi-pencil-square me-2"></i> Edit
+                                        </a>
+                                        <a th:href="@{/books/delete/{id}(id=${book.bookId})}" class="btn btn-sm btn-delete-custom px-3 d-inline-flex align-items-center">
+                                            <i class="bi bi-trash3 me-2"></i> Delete
+                                        </a>
+                                    </th:block>
+                                </div>
                             </td>
-                           <!-- Inside your <tbody> <tr> -->
-<td class="text-end">
-    <div class="d-flex justify-content-end gap-2">
-        
-        <!-- Update Button: Outline Style with Text -->
-        <a th:href="@{/authors/edit/{id}(id=${author.authorId})}" 
-           class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
-           style="border-radius: 8px; font-weight: 500;">
-            <i class="bi bi-pencil-square me-2"></i> Edit
-        </a>
-
-        <!-- Delete Button: Soft-Red Style with Text -->
-        <a th:href="@{/authors/delete/{id}(id=${author.authorId})}" 
-           class="btn btn-sm btn-delete-custom d-inline-flex align-items-center px-3">
-            <i class="bi bi-trash3 me-2"></i> Delete
-        </a>
-        
-    </div>
-</td>
-
                         </tr>
-                        <!-- Empty State -->
-                        <tr th:if="${#lists.isEmpty(authors)}">
+                        <tr th:if="${#lists.isEmpty(booksDTO)}">
                             <td colspan="5" class="py-5 text-center">
-                                <i class="bi bi-people text-muted opacity-25" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3">No authors found in your database.</p>
+                                <i class="bi bi-journal-x text-muted opacity-25" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-3">No books found in the collection.</p>
                             </td>
                         </tr>
                     </tbody>
@@ -201,8 +173,6 @@
             </div>
         </div>
     </div>
-
-    <!-- FIXED: Complete Bootstrap 5.3.3 JS Bundle -->
     <script src="https://cdn.jsdelivr.net"></script>
 </body>
 </html>

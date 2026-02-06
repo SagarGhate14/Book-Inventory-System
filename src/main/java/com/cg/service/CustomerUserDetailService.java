@@ -2,6 +2,7 @@ package com.cg.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,6 +33,25 @@ public class CustomerUserDetailService implements UserDetailsService{
 	                .authorities("ROLE_" + user.getRole()) // Explicitly set authority
 	                .build();
 
+	    }
+	 
+	
+	    public User login(String email, String password) {
+	        // 1. Try to find the user by email
+	        Optional<User> userOptional = userRepository.findByEmail(email);
+
+	        if (userOptional.isPresent()) {
+	            User user = userOptional.get();
+	            
+	            // 2. Compare the provided password with the stored password
+	            // Note: If using BCrypt, use passwordEncoder.matches(password, user.getPassword())
+	            if (user.getPassword().equals(password)) {
+	                return user; // Login successful
+	            }
+	        }
+	        
+	        // 3. If user not found or password doesn't match
+	        return null; 
 	    }
 
 }

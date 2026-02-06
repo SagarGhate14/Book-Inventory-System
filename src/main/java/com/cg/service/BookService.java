@@ -1,24 +1,34 @@
 package com.cg.service;
 
 import java.util.ArrayList;
+
+
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cg.dto.BookDTO;
+import com.cg.dto.CartItem;
 import com.cg.entity.Author;
 import com.cg.entity.Book;
 import com.cg.entity.Category;
 import com.cg.entity.Inventory;
 import com.cg.entity.Publisher;
 import com.cg.repository.BookRepository;
+import com.cg.repository.InventoryRepository;
+
 
 @Service
 public class BookService implements IBookService{
 
 	@Autowired
 	private BookRepository bookRepository;
+	@Autowired
+	private InventoryRepository inventoryRepository;
 	
 	@Override
 	public List<Book> getAllBooks() {
@@ -110,6 +120,35 @@ public class BookService implements IBookService{
 	    
 	    return dto;
 	}
+	
+	
+	
+	@Transactional // Ensures the database stays consistent
+    public void processBooking(List<CartItem> cart) {
+		 // If your CartItem already has a 'quantity' field, use item.getQuantity()
+	    // Otherwise, we count occurrences in the list
+	    Map<Integer, Long> bookCounts = cart.stream()
+	            .collect(Collectors.groupingBy(CartItem::getBookId, Collectors.counting()));
 
+	    for (Map.Entry<Integer, Long> entry : bookCounts.entrySet()) {
+	        Integer bookId = entry.getKey();
+	        int totalOrdered = entry.getValue().intValue();
+
+	        // 2. Fetch inventory for this specific book
+	        Inventory inventory = inventoryRepository.findByBook_BookId(bookId)
+	            .orElseThrow(() -> new RuntimeException("Inventory record missing for Book ID: " + bookId));
+
+	        int currentStock = inventory.getQuantity();
+
+	        // 3. Validation: check if stock can handle the total order
+	        if (currentStock < totalOrdered) {
+	            throw new RuntimeException("Insufficient stock! Available: " + currentStock + ", Requested: " + totalOrdered);
+	        }
+
+	        // 4. Subtract and Save
+	        inventory.setQuantity(currentStock - totalOrdered);
+	        inventoryRepository.saveAndFlush(inventory);
+	    }
+	}
 
 }

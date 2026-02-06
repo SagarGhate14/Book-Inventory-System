@@ -59,6 +59,8 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
     
+    
+    
     @Override
     public User updateUser(int id, UserDTO userDTO) {
         User existing = userRepository.findById(id).orElseThrow(() ->

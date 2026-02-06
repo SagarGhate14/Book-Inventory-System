@@ -103,30 +103,58 @@
             box-shadow: 0 0 0 6px var(--ring);
         }
 
-        /* LOGIN BUTTON */
-        .btn-mimo{
-            background: linear-gradient(135deg, var(--mimo-mint), var(--mimo-teal)) !important;
-            color:#052e26 !important;
-            border:none !important;
-            border-radius:14px;
-            padding:.95rem 1rem;
-            font-weight:800;
-            box-shadow: 0 12px 24px rgba(53,230,167,.28);
-        }
-        
-        .btn-mimo:hover{
-            transform: translateY(-2px);
-            box-shadow: 0 16px 28px rgba(53,230,167,.35);
-        }
+   /* ======================================
+   SKY‑BLUE THEME (fresh new color palette)
+   ====================================== */
 
-        .signup-link a{
-            font-weight:700;
-            color:var(--mimo-teal);
-            text-decoration:none;
-        }
-        .signup-link a:hover{
-            text-decoration:underline;
-        }
+/* Define a modern sky‑blue palette */
+:root{
+  --sky: #4da9ff;              /* main sky blue */
+  --sky-dark: #1e7bd8;         /* deeper blue for hover */
+  --sky-ring: rgba(77,169,255,.35);
+}
+
+/* 1) LOGIN BUTTON → SKY BLUE */
+.btn-mimo{
+  background: linear-gradient(135deg, var(--sky), var(--sky-dark)) !important;
+  color:#ffffff !important;
+  border:none !important;
+  border-radius:14px;
+  padding:.95rem 1rem;
+  font-weight:800;
+  box-shadow: 0 12px 24px rgba(77,169,255,.30) !important;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.btn-mimo:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(30,123,216,.40) !important;
+}
+
+/* 2) TOP STRIP OF LOGIN CARD → SKY BLUE GRADIENT */
+.login-card::before{
+  background: linear-gradient(90deg, var(--sky), var(--sky-dark)) !important;
+}
+
+/* 3) INPUT FOCUS RING → SKY BLUE GLOW */
+.form-control:focus{
+  border-color: var(--sky) !important;
+  box-shadow: 0 0 0 6px var(--sky-ring) !important;
+  outline: none !important;
+}
+
+/* 4) SIGNUP LINK → SKY BLUE */
+.signup-link a{
+  color: var(--sky) !important;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.signup-link a:hover{
+  color: var(--sky-dark) !important;
+  text-decoration:underline !important;
+}
+ 
     </style>
 </head>
 
@@ -136,7 +164,7 @@
 
         <div class="text-center mb-4">
             <h2 class="fw-bold">
-                📚 CG <span style="color:var(--mimo-teal)">Library</span>
+                📚 CG <span style="color:var(--sky-dark)">Library</span>
             </h2>
             <p>Welcome back! Please login.</p>
         </div>
