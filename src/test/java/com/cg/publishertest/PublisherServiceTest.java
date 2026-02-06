@@ -2,6 +2,7 @@ package com.cg.publishertest;
 
 import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;
+import com.cg.exception.GlobalException.PublisherNotFoundException;
 import com.cg.repository.PublisherRepository;
 import com.cg.service.PublisherService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -43,40 +45,50 @@ public class PublisherServiceTest {
     }
 
     @Test
-    void testGetAllPublishers() {
-        List<Publisher> list = new ArrayList<>();
-        list.add(p1);
-        list.add(p2);
+    void testFindById_Success() {
+        // Arrange
+        Publisher expectedPublisher = new Publisher();
+        expectedPublisher.setPublisherId(101);
+        expectedPublisher.setPublisherName("Oxford Press");
 
-        when(publisherRepository.findAll()).thenReturn(list);
+        when(publisherRepository.findById(101)).thenReturn(Optional.of(expectedPublisher));
 
-        List<Publisher> result = publisherService.getAllPublishers();
+        // Act
+        Publisher actualPublisher = publisherService.findById(101);
 
-        assertEquals(2, result.size());
-        assertEquals("O'Reilly", result.get(0).getPublisherName());
+        // Assert
+        assertNotNull(actualPublisher);
+        assertEquals("Oxford Press", actualPublisher.getPublisherName());
+        verify(publisherRepository, times(1)).findById(101);
     }
+    @Test
+    void testDeletePublisher_Success() {
+        // Arrange
+        int pId = 202;
+        when(publisherRepository.existsById(pId)).thenReturn(true);
+
+        // Act
+        publisherService.deletePublisher(pId);
+
+        // Assert
+        verify(publisherRepository, times(1)).existsById(pId);
+        verify(publisherRepository, times(1)).deleteById(pId);
+    }
+
 
     @Test
-    void testToDTOListMapping() {
-        List<Publisher> entities = new ArrayList<>();
-        entities.add(p1);
+    void testDeletePublisher_ThrowsException_WhenIdNotFound() {
+        // Arrange
+        int pId = 999;
+        when(publisherRepository.existsById(pId)).thenReturn(false);
 
-        List<PublisherDTO> result = publisherService.toDTOList(entities);
+        // Act & Assert
+        assertThrows(PublisherNotFoundException.class, () -> {
+            publisherService.deletePublisher(pId);
+        });
 
-        assertNotNull(result);
-        assertEquals(1, result.get(0).getPublisherId());
-        assertEquals("O'Reilly", result.get(0).getPublisherName());
+        // Verify deleteById was NEVER called because validation failed
+        verify(publisherRepository, never()).deleteById(pId);
     }
 
-    @Test
-    void testDeletePublisher() {
-        // ⛳️ FIX: You must tell the mock that ID 2 exists 
-        // so the 'if(!existsById)' check in your service passes!
-        when(publisherRepository.existsById(2)).thenReturn(true);
-
-        publisherService.deletePublisher(2);
-
-        // Verify the delete was actually called
-        verify(publisherRepository, times(1)).deleteById(2);
-    }
 }

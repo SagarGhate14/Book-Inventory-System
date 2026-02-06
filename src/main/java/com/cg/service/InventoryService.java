@@ -67,7 +67,7 @@ public class InventoryService implements IInventoryService {
     }
     
     public Inventory findBookById(Integer bookId) {
-    	return inventoryRepository.findByBookId(bookId).get();
+    	return inventoryRepository.findByBook_BookId(bookId).get();
     }
     
     public InventoryDTO toDTO(Inventory entity) {

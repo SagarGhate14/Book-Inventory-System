@@ -1,12 +1,12 @@
 package com.cg.categorytest;
 
-
 import com.cg.controller.CategoryController;
 import com.cg.dto.CategoryDTO;
 import com.cg.entity.Category;
 import com.cg.service.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,18 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * 3 controller tests for CategoryController
- */
 @WebMvcTest(controllers = CategoryController.class)
+@AutoConfigureMockMvc(addFilters = false)   // prevents 403 errors if security is enabled
 public class CategoryControllerTest {
 
     @Autowired
@@ -34,7 +29,7 @@ public class CategoryControllerTest {
     @MockBean
     private CategoryService categoryService;
 
-    // 1) GET /category/list -> returns "Category/category-list" with categories model populated
+    // 1) GET /category/list -> Should load category list view with DTOs
     @Test
     void list_shouldRenderCategoryListWithDTOs() throws Exception {
         Category cat1 = new Category();
@@ -64,7 +59,7 @@ public class CategoryControllerTest {
                 .andExpect(model().attributeExists("categories"));
     }
 
-    // 2) GET /category/new -> returns "Category/category-add" with categoryDTO model
+    // 2) GET /category/new -> Should display add-category form
     @Test
     void newForm_shouldRenderAddView() throws Exception {
         mockMvc.perform(get("/category/new"))
@@ -73,16 +68,14 @@ public class CategoryControllerTest {
                 .andExpect(model().attributeExists("categoryDTO"));
     }
 
-    // 3) POST /category/new -> redirects to /category/list and calls service mapping + save
+    // 3) POST /category/new -> Should save category and redirect to list
     @Test
     void addCategory_shouldMapDTOToEntityAndSave_thenRedirect() throws Exception {
-        // map DTO -> entity
         Category entity = new Category();
         entity.setCategoryId(0);
         entity.setCategoryName("Mystery");
 
         when(categoryService.toEntity(any(CategoryDTO.class))).thenReturn(entity);
-        // addCategory returns saved entity; not used by controller, but fine to mock
         when(categoryService.addCategory(entity)).thenReturn(entity);
 
         mockMvc.perform(post("/category/new")
