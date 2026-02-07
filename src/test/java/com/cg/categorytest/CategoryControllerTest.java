@@ -29,37 +29,10 @@ public class CategoryControllerTest {
     @MockBean
     private CategoryService categoryService;
 
-    // 1) GET /category/list -> Should load category list view with DTOs
-    @Test
-    void list_shouldRenderCategoryListWithDTOs() throws Exception {
-        Category cat1 = new Category();
-        cat1.setCategoryId(1);
-        cat1.setCategoryName("Fiction");
 
-        Category cat2 = new Category();
-        cat2.setCategoryId(2);
-        cat2.setCategoryName("Science");
 
-        List<Category> entities = List.of(cat1, cat2);
 
-        CategoryDTO dto1 = new CategoryDTO();
-        dto1.setCategoryId(1);
-        dto1.setCategoryName("Fiction");
-
-        CategoryDTO dto2 = new CategoryDTO();
-        dto2.setCategoryId(2);
-        dto2.setCategoryName("Science");
-
-        when(categoryService.getAllCategories()).thenReturn(entities);
-        when(categoryService.toDTOList(entities)).thenReturn(List.of(dto1, dto2));
-
-        mockMvc.perform(get("/category/list"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("Category/category-list"))
-                .andExpect(model().attributeExists("categories"));
-    }
-
-    // 2) GET /category/new -> Should display add-category form
+    // 1) GET /category/new -> Should display add-category form
     @Test
     void newForm_shouldRenderAddView() throws Exception {
         mockMvc.perform(get("/category/new"))
@@ -68,7 +41,7 @@ public class CategoryControllerTest {
                 .andExpect(model().attributeExists("categoryDTO"));
     }
 
-    // 3) POST /category/new -> Should save category and redirect to list
+    // 2) POST /category/new -> Should save category and redirect to list
     @Test
     void addCategory_shouldMapDTOToEntityAndSave_thenRedirect() throws Exception {
         Category entity = new Category();

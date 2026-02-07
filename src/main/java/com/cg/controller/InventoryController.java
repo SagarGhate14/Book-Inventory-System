@@ -29,13 +29,14 @@ public class InventoryController {
     private BookService bookService;
 
     @GetMapping("/list")
-    @Transactional(readOnly = true)
-    public String showIndex(Model model) {
-    	
-        model.addAttribute("inventories", inventoryService.getAllInventories());
+    public String getAllInventories(Model model) {
+        // Fetch and convert to DTOs
+        List<Inventory> inventoryList = inventoryService.getAllInventories();
+        List<InventoryDTO> inventoryDTOList = inventoryService.toDTOList(inventoryList);     
+        // Key Name: "inventories" must match the th:each in HTML
+        model.addAttribute("inventories", inventoryDTOList);
         return "inventory/inventory-list";
     }
-
     @GetMapping("/add")
     public String showAddForm(Model model) {
     	List<Book> books = bookService.getAllBooks();
@@ -82,49 +83,26 @@ public class InventoryController {
     }
     
     @PostMapping("/edit")
-    public String updateInventory(@ModelAttribute InventoryDTO inventoryDTO,RedirectAttributes redirectAttributes, BindingResult result) {
-    	Inventory currentInventory = inventoryService.getInventoryById(inventoryDTO.getInventoryId());
-    	
-        if (result.hasErrors()) {
-            // This will print the EXACT reason for the 500 error in your console
-            result.getAllErrors().forEach(System.out::println); 
-            return "redirect:/inventories/list";
-        }
+    public String updateInventory(@ModelAttribute InventoryDTO inventoryDTO, RedirectAttributes redirectAttributes, BindingResult result) {
+        if (result.hasErrors()) return "redirect:/inventories/list";
 
-    	
-
-    	if (currentInventory == null) {
-            redirectAttributes.addFlashAttribute("error", "Inventory record not found.");
-            return "redirect:/inventories/list";
-        }
-
-        // 2. CHECK: Is this book already assigned to a DIFFERENT inventory record?
+        Inventory currentInventory = inventoryService.getInventoryById(inventoryDTO.getInventoryId());
         Inventory existingWithBook = inventoryService.findBookById(inventoryDTO.getBookId());
+
+        // Duplicate check
         if (existingWithBook != null && !existingWithBook.getInventoryId().equals(inventoryDTO.getInventoryId())) {
             redirectAttributes.addFlashAttribute("error", "This book is already assigned to another inventory slot.");
             return "redirect:/inventories/list";
         }
 
-        // 3. Fetch the Book entity
-        Book book = bookService.findIdByBook(inventoryDTO.getBookId());
-        if (book == null) {
-            redirectAttributes.addFlashAttribute("error", "Selected Book ID does not exist.");
-            return "redirect:/inventories/list";
-        }
-
-        // 4. Update fields
+        // Update and Save
         currentInventory.setQuantity(inventoryDTO.getQuantity());
-        currentInventory.setBook(book);
-        
-        // Logic: Set status based on quantity
-        String status = (inventoryDTO.getQuantity() > 0) ? "AVAILABLE" : "OUT_OF_STOCK";
-        currentInventory.setStatus(status);
+        currentInventory.setBook(bookService.findIdByBook(inventoryDTO.getBookId()));
+        currentInventory.setStatus(inventoryDTO.getQuantity() > 0 ? "AVAILABLE" : "OUT_OF_STOCK");
 
-        // 5. Save
         inventoryService.saveInventory(currentInventory);
-        
         redirectAttributes.addFlashAttribute("success", "Inventory updated successfully!");
         return "redirect:/inventories/list";
     }
-    
+
 }
