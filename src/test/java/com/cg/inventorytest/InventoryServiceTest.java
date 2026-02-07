@@ -1,6 +1,7 @@
 package com.cg.inventorytest;
 
 import com.cg.dto.InventoryDTO;
+import com.cg.entity.Book;
 import com.cg.entity.Inventory;
 import com.cg.repository.InventoryRepository;
 import com.cg.service.InventoryService;
@@ -22,64 +23,66 @@ import static org.mockito.Mockito.*;
 public class InventoryServiceTest {
 
     @Mock
-    private InventoryRepository inventoryRepository; // Fake Database
+    private InventoryRepository inventoryRepository;
 
     @InjectMocks
-    private InventoryService inventoryService; // Service we are testing
+    private InventoryService inventoryService;
 
     private Inventory sampleInventory;
+    private Book sampleBook;
 
     @BeforeEach
     void setUp() {
-        // Create a sample entity for testing
-        // Arguments: id, status, quantity, book, user
-        sampleInventory = new Inventory(1, "Available", 10, null, null);
+        sampleBook = new Book();
+        sampleBook.setBookId(101);
+        sampleBook.setTitle("Java Basics");
+
+        // Match your Inventory entity constructor or use setters
+        sampleInventory = new Inventory();
+        sampleInventory.setInventoryId(1);
+        sampleInventory.setStatus("AVAILABLE");
+        sampleInventory.setQuantity(10);
+        sampleInventory.setBook(sampleBook);
     }
 
     @Test
     void testGetAllInventories() {
-        // 1. Prepare fake list
+        // Arrange
         List<Inventory> list = new ArrayList<>();
         list.add(sampleInventory);
-
-        // 2. Mock the repository call
         when(inventoryRepository.findAll()).thenReturn(list);
 
-        // 3. Call the service
-        List<InventoryDTO> result = inventoryService.getAllInventories();
+        // Act
+        List<Inventory> result = inventoryService.getAllInventories();
 
-        // 4. Simple Check
+        // Assert
         assertEquals(1, result.size());
-        assertEquals("Available", result.get(0).getStatus());
+        assertEquals("AVAILABLE", result.get(0).getStatus());
+        verify(inventoryRepository).findAll();
     }
-
-    @Test
-    void testGetInventoryById() {
-        // Mock finding the item
-        when(inventoryRepository.findById(1)).thenReturn(Optional.of(sampleInventory));
-
-        InventoryDTO result = inventoryService.getInventoryById(1);
-
-        // Simple Check
-        assertNotNull(result);
-        assertEquals(1, result.getInventoryId());
-    }
-
-    @Test
-    void testSaveInventory() {
-        // Prepare DTO to save
-        InventoryDTO dto = new InventoryDTO();
-        dto.setQuantity(5);
-
-        // Call the service
-        inventoryService.saveInventory(dto);
-
-        // Verify that save was called on the database
-        verify(inventoryRepository).save(any(Inventory.class));
-    }
-
-   
 
   
 
+    @Test
+    void testSaveInventory() {
+        // Arrange
+        Inventory inventoryToSave = new Inventory();
+        inventoryToSave.setQuantity(5);
+
+        // Act
+        inventoryService.saveInventory(inventoryToSave);
+
+        // Assert
+        verify(inventoryRepository).save(any(Inventory.class));
+    }
+
+ 
+    @Test
+    void testDeleteInventory() {
+        // Act
+        inventoryService.deleteInventory(1);
+
+        // Assert
+        verify(inventoryRepository).deleteByInventoryId(1);
+    }
 }

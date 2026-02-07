@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>System Message - Bookshelf Pro</title>
-    <!-- Premium Google Font -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- Bootstrap 5.3 CSS -->
-    <link href="https://cdn.jsdelivr.net" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
-    
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet" />
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons (REQUIRED FOR THE X SYMBOL) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
     <style>
         :root {
             --primary-navy: #0f172a;
             --accent-blue: #4361ee;
+            --error-red: #e11d48; /* Strong red */
             --glass-white: rgba(255, 255, 255, 0.95);
         }
 
-        body { 
-            background-color: #f1f5f9; 
+        body {
+            background-color: #f1f5f9;
             font-family: 'Inter', sans-serif;
-            background-image: radial-gradient(at 0% 0%, rgba(67, 97, 238, 0.05) 0, transparent 50%), 
-                              radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.05) 0, transparent 50%);
             height: 100vh;
             display: flex;
             align-items: center;
@@ -42,18 +44,31 @@
             border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
-        /* Pure CSS Floating Animation */
+        /* SQUARE BOX WITH GLOW */
         .icon-box {
             width: 80px;
             height: 80px;
-            background: #eff6ff;
-            color: var(--accent-blue);
+            background: #fef2f2; /* soft red */
             display: inline-flex;
             align-items: center;
             justify-content: center;
             border-radius: 20px;
             margin-bottom: 1.5rem;
             animation: floatIcon 3s ease-in-out infinite;
+
+            /* glowing lighting around the box */
+            box-shadow:
+                0 0 12px rgba(225, 29, 72, 0.6),
+                0 0 25px rgba(225, 29, 72, 0.4),
+                0 0 45px rgba(225, 29, 72, 0.3);
+        }
+
+        /* GLOWING RED X ICON */
+        .icon-box i {
+            color: var(--error-red) !important;
+            font-size: 3.4rem !important;
+
+        
         }
 
         @keyframes floatIcon {
@@ -85,7 +100,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Action Buttons */
         .btn-stack {
             display: flex;
             flex-direction: column;
@@ -104,7 +118,6 @@
 
         .btn-primary-pro:hover {
             background: #000;
-            color: white;
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
@@ -113,39 +126,34 @@
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 600;
-            transition: 0.2s;
         }
-
-        .btn-outline-pro:hover { color: var(--accent-blue); }
     </style>
 </head>
+
 <body>
 
-    <div class="error-card">
-        <!-- Visual Icon -->
-        <div class="icon-box">
-            <i th:class="${statusCode == 404} ? 'bi bi-book fs-1' : 'bi bi-exclamation-circle fs-1'"></i>
-        </div>
+<div class="error-card">
 
-        <span class="status-badge" th:text="${'Error Code ' + statusCode}">Error Code 404</span>
-        <h1 class="error-title" th:text="${errorTitle}">Something Went Wrong</h1>
-        
-        <!-- Error Message from GlobalException -->
-        <p class="error-text" th:text="${errorMessage}">
-            The library archives could not find the data you requested.
-        </p>
-
-        <div class="btn-stack">
-            <!-- Direct links to avoid JavaScript dependency -->
-            <a th:href="@{/inventories/list}" class="btn-primary-pro">
-                <i class="bi bi-grid-fill me-2"></i>Dashboard
-            </a>
-            
-            <a th:href="@{/authors/list}" class="btn-outline-pro">
-                Return to Authors Directory
-            </a>
-        </div>
+    <!-- ICON WITH RED GLOW -->
+    <div class="icon-box">
+        <i class="bi bi-x-circle-fill"></i>
     </div>
+
+    <span class="status-badge" th:text="${'Error Code ' + statusCode}">Error Code 404</span>
+
+    <h1 class="error-title" th:text="${errorTitle}">System Error</h1>
+
+    <p class="error-text" th:text="${errorMessage}">
+        The request could not be completed at this time.
+    </p>
+
+    <div class="btn-stack">
+        <a th:href="@{/books/list}" class="btn-primary-pro">
+            <i class="bi bi-house-door-fill me-2"></i>Return to Home
+        </a>
+        <a th:href="@{/inventories/list}" class="btn-outline-pro">View Current Inventory</a>
+    </div>
+</div>
 
 </body>
 </html>

@@ -32,20 +32,11 @@ public class InventoryService implements IInventoryService {
     @Override
     public Inventory getInventoryById(int id) {
         Optional<Inventory> optionalInv = inventoryRepository.findById(id);
-        
-//        if (optionalInv.isPresent()) {
-//            Inventory inv = optionalInv.get();
-//            return new InventoryDTO(inv.getInventoryId(), inv.getStatus(), inv.getQuantity());
-//        } else {
-//            throw new RuntimeException("Inventory not found with id: " + id);
-//        }
         return optionalInv.get();
     }
 
     @Override
     public void saveInventory(Inventory inventory) {
-       
-       // inv.setStatus(dto.getQuantity() > 0 ? "Available" : "Out of Stock");
         inventoryRepository.save(inventory);
     }
 
@@ -76,17 +67,15 @@ public class InventoryService implements IInventoryService {
         InventoryDTO dto = new InventoryDTO();
         dto.setInventoryId(entity.getInventoryId());
         dto.setQuantity(entity.getQuantity());
-        // Handling Enum to String conversion
         dto.setStatus(entity.getStatus());
         
         if (entity.getBook() != null) {
             dto.setBookId(entity.getBook().getBookId());
+            dto.setBookTitle(entity.getBook().getTitle()); // MAP THE TITLE HERE
         }
-        
-        // Note: You might want to add bookTitle or userId to DTO 
-        // to make the UI more useful.
         return dto;
     }
+
     
     public Inventory toEntity(InventoryDTO dto) {
         if (dto == null) return null;
@@ -106,16 +95,27 @@ public class InventoryService implements IInventoryService {
     }
     
     public List<InventoryDTO> toDTOList(List<Inventory> entities) {
-        return entities.stream()
-                       .map(this::toDTO)
-                       .collect(Collectors.toList());
+        List<InventoryDTO> dtoList = new ArrayList<>();
+        
+        for (Inventory i : entities) {
+            InventoryDTO dto = toDTO(i);
+            dtoList.add(dto);
+        }
+        
+        return dtoList;
     }
-    
+
     public List<Inventory> toEntityList(List<InventoryDTO> dtos) {
-        return dtos.stream()
-                   .map(this::toEntity)
-                   .collect(Collectors.toList());
+        List<Inventory> entityList = new ArrayList<>();
+        
+        for (InventoryDTO d : dtos) {
+            Inventory e = toEntity(d);
+            entityList.add(e);
+        }
+        
+        return entityList;
     }
+
 
 	@Override
 	public Inventory findById(Integer id) {

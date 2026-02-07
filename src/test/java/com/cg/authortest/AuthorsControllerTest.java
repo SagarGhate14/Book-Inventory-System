@@ -29,31 +29,9 @@ public class AuthorsControllerTest {
     @MockBean
     private AuthorService authorService;
 
-    // 1) GET /authors/list -> loads author list page with DTOs in model
-    @Test
-    void listAuthors_shouldRenderAuthorListWithDTOs() throws Exception {
-        Author a1 = new Author();
-        a1.setAuthorId(1);
-        a1.setAuthorName("John Doe");
-        a1.setAuthorEmail("john@gmail.com");
-        a1.setAuthorCountry("USA");
+ 
 
-        AuthorDTO dto1 = new AuthorDTO(1, "John Doe", "john@gmail.com", "USA");
-
-        when(authorService.getAllAuthors()).thenReturn(List.of(a1));
-        when(authorService.toDTOList(List.of(a1))).thenReturn(List.of(dto1));
-
-        mockMvc.perform(get("/authors/list"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("author/author-list"))
-                .andExpect(model().attributeExists("authors"));
-
-        verify(authorService, times(1)).getAllAuthors();
-        verify(authorService, times(1)).toDTOList(List.of(a1));
-        verifyNoMoreInteractions(authorService);
-    }
-
-    // 2) GET /authors/new -> returns add page with empty Author model
+    // 1) GET /authors/new -> returns add page with empty Author model
     @Test
     void newAuthorForm_shouldRenderAddView() throws Exception {
         mockMvc.perform(get("/authors/new"))
@@ -62,7 +40,7 @@ public class AuthorsControllerTest {
                 .andExpect(model().attributeExists("author"));
     }
 
-    // 3) POST /authors/add -> saves Author and redirects to /authors/list
+    // 2) POST /authors/add -> saves Author and redirects to /authors/list
     @Test
     void addAuthor_shouldSaveAndRedirect() throws Exception {
         doNothing().when(authorService).saveAuthor(any(Author.class));

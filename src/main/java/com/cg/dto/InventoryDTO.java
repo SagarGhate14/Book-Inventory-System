@@ -5,7 +5,7 @@ public class InventoryDTO {
 	private String status;
 	private int quantity;
 	private Integer bookId;
-
+	 private String bookTitle;
 
 	public InventoryDTO() {
 	}
@@ -26,6 +26,19 @@ public class InventoryDTO {
 
 	public String getStatus() {
 		return status;
+	}
+	
+
+	public String getBookTitle() {
+		return bookTitle;
+	}
+
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
+	}
+
+	public void setInventoryId(Integer inventoryId) {
+		this.inventoryId = inventoryId;
 	}
 
 	public void setStatus(String status) {
