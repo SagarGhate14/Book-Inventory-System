@@ -36,7 +36,6 @@ public class GlobalException {
         model.addAttribute("errorTitle", "Server Error");
         model.addAttribute("errorMessage", "An unexpected error occurred.");
         model.addAttribute("statusCode", 500);
-        System.err.println("CRASH DETECTED: " + e.getMessage());
         ex.printStackTrace(); //
         return "error/custom-error";
     }
