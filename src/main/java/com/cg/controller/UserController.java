@@ -70,26 +70,11 @@ public class UserController {
         return "redirect:/users/list";
     }
 
-    // OPEN EDIT FORM
-    @GetMapping("/update/{id}")
-    public String showEditForm(@PathVariable int id, Model model) {
-    	User user = userService.getUserById(id);
-    	UserDTO userDTO = userService.toDTO(user);
-        model.addAttribute("userDTO", userDTO);
-        return "user/user-edit";
-    }
-
-    // UPDATE USER
-    @PostMapping("/update")
-    public String updateUser(@ModelAttribute("userDTO") UserDTO userDTO) {
-        userService.updateUser(userDTO.getUserId(), userDTO);
-        return "redirect:/users/list";
-    }
 
     // DELETE USER
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable int id) {
         userService.deleteUser(id);
-        return "redirect:/users";
+        return "redirect:/users/list";
     }
 }

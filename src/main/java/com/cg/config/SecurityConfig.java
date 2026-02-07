@@ -43,7 +43,11 @@ public class SecurityConfig {
 	            .permitAll()
 	        )
 	        // 4. CSRF PROTECTION
-	        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")); 
+	     // Change this line in filterChain
+	        .csrf(csrf -> csrf
+	            .ignoringRequestMatchers("/h2-console/**", "/cart/verify-payment") // Add payment path
+	        );
+
 
 	    return http.build();
 	}

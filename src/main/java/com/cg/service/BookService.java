@@ -3,6 +3,7 @@ package com.cg.service;
 import java.util.ArrayList;
 
 
+
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +19,11 @@ import com.cg.entity.Book;
 import com.cg.entity.Category;
 import com.cg.entity.Inventory;
 import com.cg.entity.Publisher;
+import com.cg.entity.User;
 import com.cg.repository.BookRepository;
 import com.cg.repository.InventoryRepository;
+
+import com.cg.repository.UserRepository;
 
 
 @Service
@@ -29,6 +33,9 @@ public class BookService implements IBookService{
 	private BookRepository bookRepository;
 	@Autowired
 	private InventoryRepository inventoryRepository;
+	@Autowired
+	private UserRepository userRepository;
+	
 	
 	@Override
 	public List<Book> getAllBooks() {
@@ -125,30 +132,36 @@ public class BookService implements IBookService{
 	
 	@Transactional // Ensures the database stays consistent
     public void processBooking(List<CartItem> cart) {
-		 // If your CartItem already has a 'quantity' field, use item.getQuantity()
-	    // Otherwise, we count occurrences in the list
-	    Map<Integer, Long> bookCounts = cart.stream()
-	            .collect(Collectors.groupingBy(CartItem::getBookId, Collectors.counting()));
+		 // 1. Find the User who is logged in
+      
+        
+        // 3. Update Inventory for each book in the cart
+        for (CartItem item : cart) {
+            // Find inventory record for this specific book
+            Inventory inventory = inventoryRepository.findByBook_BookId(item.getBookId())
+                .orElseThrow(() -> new RuntimeException("Book not found in inventory"));
 
-	    for (Map.Entry<Integer, Long> entry : bookCounts.entrySet()) {
-	        Integer bookId = entry.getKey();
-	        int totalOrdered = entry.getValue().intValue();
+            // Check if we have enough stock
+            if (inventory.getQuantity() < 1) {
+                throw new RuntimeException("Book " + item.getTitle() + " just went out of stock!");
+            }
 
-	        // 2. Fetch inventory for this specific book
-	        Inventory inventory = inventoryRepository.findByBook_BookId(bookId)
-	            .orElseThrow(() -> new RuntimeException("Inventory record missing for Book ID: " + bookId));
+            // Reduce quantity by 1
+            inventory.setQuantity(inventory.getQuantity() - 1);
+            
+            // Auto-update status if it hits zero
+            if (inventory.getQuantity() == 0) {
+                inventory.setStatus("OUT_OF_STOCK");
+            }
 
-	        int currentStock = inventory.getQuantity();
+            // Save the updated inventory stock
+            inventoryRepository.save(inventory);
+        }
 
-	        // 3. Validation: check if stock can handle the total order
-	        if (currentStock < totalOrdered) {
-	            throw new RuntimeException("Insufficient stock! Available: " + currentStock + ", Requested: " + totalOrdered);
-	        }
-
-	        // 4. Subtract and Save
-	        inventory.setQuantity(currentStock - totalOrdered);
-	        inventoryRepository.saveAndFlush(inventory);
-	    }
+        
+       
 	}
+	
+	
 
 }

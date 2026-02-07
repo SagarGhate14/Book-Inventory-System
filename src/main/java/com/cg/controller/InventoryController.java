@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/inventories")
@@ -42,12 +44,6 @@ public class InventoryController {
         model.addAttribute("inventory", new InventoryDTO());
         model.addAttribute("books", books != null ? books : new ArrayList<>()); // Prevent null
         return "inventory/inventory-add";
-    }
-
-    @GetMapping("/edit-form/{id}")
-    public String showUpdateForm(@PathVariable int id, Model model) {
-        model.addAttribute("inventory", inventoryService.getInventoryById(id));
-        return "inventory/update";
     }
 
     @PostMapping("/save")
@@ -86,32 +82,48 @@ public class InventoryController {
     }
     
     @PostMapping("/edit")
-    public String updateInventory(@ModelAttribute InventoryDTO inventoryDTO) {
+    public String updateInventory(@ModelAttribute InventoryDTO inventoryDTO,RedirectAttributes redirectAttributes, BindingResult result) {
     	Inventory currentInventory = inventoryService.getInventoryById(inventoryDTO.getInventoryId());
-
-        if (currentInventory != null) {
-            // 2. CHECK: Is the selected bookId already taken by another row?
-            // Note: You need a method like findByBookId in your service/repository
-            Inventory existingWithBook = inventoryService.findBookById(inventoryDTO.getBookId());
-
-            if (existingWithBook != null && !existingWithBook.getInventoryId().equals(inventoryDTO.getInventoryId())) {
-                // This Book ID is already in the database for a different Inventory record!
-                // Redirect back with an error message
-                return "redirect:/inventories/list";
-            }
-
-            // 3. SAFE TO UPDATE: Set the fields from the DTO
-            currentInventory.setQuantity(inventoryDTO.getQuantity());
-            currentInventory.setStatus(inventoryDTO.getQuantity() > 0 ? "AVAILABLE" : "OUT_OF_STOCK");
-
-            // 4. Link the Book
-            Book book = bookService.findIdByBook(inventoryDTO.getBookId());
-            currentInventory.setBook(book);
-
-            // 5. Save (Hibernate will perform an UPDATE because currentInventory is managed)
-            inventoryService.saveInventory(currentInventory);
+    	
+        if (result.hasErrors()) {
+            // This will print the EXACT reason for the 500 error in your console
+            result.getAllErrors().forEach(System.out::println); 
+            return "redirect:/inventories/list";
         }
+
+    	
+
+    	if (currentInventory == null) {
+            redirectAttributes.addFlashAttribute("error", "Inventory record not found.");
+            return "redirect:/inventories/list";
+        }
+
+        // 2. CHECK: Is this book already assigned to a DIFFERENT inventory record?
+        Inventory existingWithBook = inventoryService.findBookById(inventoryDTO.getBookId());
+        if (existingWithBook != null && !existingWithBook.getInventoryId().equals(inventoryDTO.getInventoryId())) {
+            redirectAttributes.addFlashAttribute("error", "This book is already assigned to another inventory slot.");
+            return "redirect:/inventories/list";
+        }
+
+        // 3. Fetch the Book entity
+        Book book = bookService.findIdByBook(inventoryDTO.getBookId());
+        if (book == null) {
+            redirectAttributes.addFlashAttribute("error", "Selected Book ID does not exist.");
+            return "redirect:/inventories/list";
+        }
+
+        // 4. Update fields
+        currentInventory.setQuantity(inventoryDTO.getQuantity());
+        currentInventory.setBook(book);
         
+        // Logic: Set status based on quantity
+        String status = (inventoryDTO.getQuantity() > 0) ? "AVAILABLE" : "OUT_OF_STOCK";
+        currentInventory.setStatus(status);
+
+        // 5. Save
+        inventoryService.saveInventory(currentInventory);
+        
+        redirectAttributes.addFlashAttribute("success", "Inventory updated successfully!");
         return "redirect:/inventories/list";
     }
     

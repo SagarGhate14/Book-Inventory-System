@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Inventory - Bookshelf Pro</title>
+    <title>Edit Inventory - CG Library</title>
     <!-- Modern Google Font -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <!-- Bootstrap 5.3 CSS -->
@@ -106,7 +106,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
+            <a class="navbar-brand" href="#">📚 <span class="ms-2">CG Library</span></a>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
                 <a class="nav-link text-white-50" th:href="@{/books}">Books</a>
@@ -127,6 +127,8 @@
 
             <!-- Form bound to existing Inventory object -->
             <form th:action="@{/inventories/edit}" th:object="${inventory}" method="post">
+            
+             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 
                 <!-- Hidden ID field to ensure we update, not create new -->
                 <input type="hidden" th:field="*{inventoryId}" />

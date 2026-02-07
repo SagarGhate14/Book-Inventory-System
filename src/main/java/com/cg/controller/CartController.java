@@ -1,8 +1,11 @@
 package com.cg.controller;
 
+import java.security.Principal;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +19,9 @@ import com.cg.dto.BookDTO;
 import com.cg.dto.CartItem;
 import com.cg.entity.Book;
 import com.cg.service.BookService;
+
+import com.razorpay.RazorpayClient;
+import com.razorpay.Utils;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -34,26 +40,7 @@ public class CartController {
         return "cart/checkout"; // Points to checkout.html
     }
 
-    // 2. The Confirmation Logic (The method you asked about)
-    @PostMapping("/confirm")
-    public String confirmBooking(HttpSession session, Model model) {
-        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-        
-        if (cart != null && !cart.isEmpty()) {
-            // Logic: Pass the cart to the service to save in DB
-           // bookingService.processBooking(cart);
-            
-        	bookingService.processBooking(cart);
-        	
-            // Clear the session so the cart is empty for the next purchase
-            session.removeAttribute("cart");
-            
-            model.addAttribute("message", "Your books have been successfully booked!");
-            return "cart/booking-confirmed"; // Points to booking-success.html
-        }
-        
-        return "redirect:/books/list"; // Redirect if cart was empty
-    }
+   
     
     @PostMapping("/add")
     public String addToCart(@RequestParam int id, HttpSession session,RedirectAttributes ra) {
@@ -76,6 +63,85 @@ public class CartController {
     public String showConfirmedPage() {
         return "cart/booking-confirmed";
     }
+
+    
+    
+    @GetMapping("/payment")
+    public String showPayment(HttpSession session, Model model) throws Exception {
+        List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+        if (cart == null || cart.isEmpty()) return "redirect:/books/list";
+
+        double total = cart.stream().mapToDouble(CartItem::getPrice).sum();
+
+        // 1. Initialize Razorpay Client (Use your TEST Keys)
+        RazorpayClient client = new RazorpayClient("rzp_test_SD9JCpIiU4BRWR", "r6QvnJP18tjLeSgM7UbbNCSs");
+        
+        int amountInPaise = (int) (total * 100);
+
+        JSONObject orderRequest = new JSONObject();
+        orderRequest.put("amount", amountInPaise);
+        orderRequest.put("currency", "INR");
+        orderRequest.put("receipt", "txn_123456");
+
+        com.razorpay.Order order = client.orders.create(orderRequest);
+
+        model.addAttribute("cartItems", cart);
+        model.addAttribute("totalPrice", total);
+        model.addAttribute("amount", amountInPaise);
+        model.addAttribute("razorpayOrderId", order.get("id")); // Passed to JS
+        return "cart/payment";
+    }
+    
+    
+    
+    
+    @GetMapping("/verify-payment")
+    public String verifyPayment(
+        @RequestParam("payment_id") String paymentId,
+        @RequestParam("order_id") String orderId,
+        @RequestParam("signature") String signature,
+        HttpSession session, Principal principal, RedirectAttributes ra) {
+
+        try {
+            // 1. Prepare verification options
+            JSONObject options = new JSONObject();
+            options.put("razorpay_order_id", orderId);
+            options.put("razorpay_payment_id", paymentId);
+            options.put("razorpay_signature", signature);
+
+            // 2. CRITICAL: Use your EXACT Test Secret Key here
+            String secret = "r6QvnJP18tjLeSgM7UbbNCSs"; 
+            
+            // This is the robust method recommended for 2026
+            boolean isValid = Utils.verifyPaymentSignature(options, secret);
+
+            if (isValid && principal != null) {
+                List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+                
+                // Check if session expired during payment
+                if (cart == null) {
+                    ra.addFlashAttribute("error", "Session expired. Please retry.");
+                    return "redirect:/books/list";
+                }
+
+                bookingService.processBooking(cart);
+                session.removeAttribute("cart");
+                return "redirect:/cart/booking-confirmed";
+            }
+        } catch (Exception e) {
+            // If this prints, your Secret Key is likely wrong or the Razorpay library crashed
+            System.err.println("Verification Failed: " + e.getMessage());
+            e.printStackTrace(); 
+        }
+        
+        ra.addFlashAttribute("error", "Payment verification failed.");
+        return "redirect:/cart/payment";
+    }
+
+  
+
+
+
 
 
 }

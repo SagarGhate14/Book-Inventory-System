@@ -60,20 +60,7 @@ public class UserService implements IUserService {
     }
     
     
-    
-    @Override
-    public User updateUser(int id, UserDTO userDTO) {
-        User existing = userRepository.findById(id).orElseThrow(() ->
-            new RuntimeException("User not found with id: " + id)
-        );
-
-        existing.setUserName(userDTO.getUserName());
-        existing.setEmail(userDTO.getEmail());
-        existing.setRole(userDTO.getRole());
-
-        User updated = userRepository.save(existing);
-        return updated;
-    }
+   
 
     @Override
     public void deleteUser(int id) {

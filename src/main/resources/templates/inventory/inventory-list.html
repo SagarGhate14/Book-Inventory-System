@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inventory Management - Bookshelf Pro</title>
+    <title>Inventory Management -CG Library</title>
     <!-- Modern Google Font -->
     <link href="https://fonts.googleapis.com" rel="stylesheet">
     <!-- Bootstrap 5.3 CSS -->
@@ -37,15 +37,21 @@
  
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
+            <a class="navbar-brand" href="#">📚 <span class="ms-2">CG Library</span></a>
             <div class="navbar-nav ms-auto">
             <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
                 <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
                 <a class="nav-link active" th:href="@{/inventories/list}">Inventory</a>
-                <a class="nav-link text-white-50" th:href="@{/category/list}">Category</a>
+                <a class="nav-link text-white-50" th:href="@{/category/list}">Categories</a>
                 <a class="nav-link text-white-50" th:href="@{/publishers/list}">Publishers</a>
                <a class="nav-link text-white-50" th:href="@{/users/list}" 
-                     th:if="${session.loggedInUser != null && session.loggedInUser.role == 'ADMIN'}">Users</a>
+                    sec:authorize="hasRole('ADMIN')">Users</a>
+                    
+                     <form th:action="@{/logout}" method="post" class="ms-lg-3">
+                        <input type="hidden" th:name="${_csrf.parameterName}"
+                            th:value="${_csrf.token}" />
+                        <button type="submit"
+                            class="btn btn-link nav-link text-danger border-0">Logout</button>
                 
             </div>
         </div>

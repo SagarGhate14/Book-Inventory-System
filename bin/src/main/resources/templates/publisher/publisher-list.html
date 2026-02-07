@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Publisher Management - Bookshelf Pro</title>
+    <!-- Modern Google Font -->
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+    
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --bg-light: #f8f9fc;
+            --danger-soft: #fff1f2;
+            --danger-text: #e11d48;
+        }
+        body { 
+            background-color: var(--bg-light); 
+            font-family: 'Inter', sans-serif;
+            color: #333;
+        }
+        /* Navbar Styling */
+        .navbar {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+        
+        /* Card & Table Styling */
+        .main-card {
+            border: none;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin-top: 2rem;
+        }
+        .table { vertical-align: middle; }
+        .table thead {
+            background-color: #f1f5f9;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .table thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            padding: 1rem;
+        }
+        .table tbody tr { transition: all 0.2s; }
+        .table tbody tr:hover { background-color: #f8fafc; }
+        
+        /* Avatar Circle */
+        .avatar-circle {
+            width: 40px; 
+            height: 40px; 
+            background-color: #eff6ff;
+            color: var(--primary-color); 
+            font-weight: 700; 
+            font-size: 0.9rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Buttons */
+        .btn-add {
+            background-color: var(--primary-color);
+            border: none;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            transition: transform 0.2s;
+            color: white;
+            text-decoration: none;
+        }
+        .btn-add:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        .btn-delete-custom {
+            background-color: #fff1f2;
+            color: #e11d48;
+            border: 1px solid #fee2e2;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-delete-custom:hover {
+            background-color: #e11d48;
+            color: white;
+        }
+        .btn-delete-custom {
+    background-color: #fff1f2; /* Soft red bg */
+    color: #e11d48;            /* Dark red text */
+    border: 1px solid #fecdd3;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-delete-custom:hover {
+    background-color: #e11d48;
+    color: white;
+}
+td.text-end {
+    white-space: nowrap !important; /* Forces buttons to stay in one line */
+    min-width: 250px; /* Ensures there is enough room */
+}
+        
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
+                <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
+                <a class="nav-link text-white-50" th:href="@{/inventories/list}">Inventory</a>
+                <a class="nav-link text-white-50" th:href="@{/category/list}">Categories</a>
+                <a class="nav-link active" th:href="@{/publishers/list}">Publishers</a>
+               <a class="nav-link text-white-50" th:href="@{/users/list}" 
+                     th:if="${session.loggedInUser != null && session.loggedInUser.role == 'ADMIN'}">Users</a>
+                
+                
+                
+            </div>
+        </div>
+    </nav>
+
+    <div class="container pb-5">
+        <div class="card main-card p-4">
+            <div class="row align-items-center mb-4">
+                <div class="col-md-6">
+                    <h3 class="mb-0 fw-bold" style="color: #1e293b;">Publisher Directory</h3>
+                    <p class="text-muted small mb-0">Manage distribution partners and locations.</p>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0" 
+                 sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/publishers/new}" class="btn btn-primary btn-add">
+                        <i class="bi bi-building-add me-2"></i> Add Publisher
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Publisher Details</th>
+                            <th>Address</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through publishers -->
+                        <tr th:each="publisher : ${publisherDTO}" class="border-bottom">
+                            <td class="text-muted font-monospace" th:text="${'#PUB-' + publisher.publisherId}">#PUB-1</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-3" 
+                                         th:text="${#strings.substring(publisher.publisherName,0,1)}">P</div>
+                                    <div>
+                                        <span th:text="${publisher.publisherName}" class="fw-semibold d-block">Publisher Name</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="small text-muted">
+                                    <i class="bi bi-geo-alt me-1"></i>
+                                    <span th:text="${publisher.address}">123 Main St, City</span>
+                                </div>
+                            <td class="text-end">
+   
+
+        <!-- 2. Admin Only Group -->
+        <div class="d-flex gap-2" sec:authorize="hasRole('ADMIN')">
+            <!-- Edit -->
+            <a th:href="@{/publishers/update/{id}(id=${publisher.publisherId})}"
+               class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
+               style="border-radius: 8px;">
+                <i class="bi bi-pencil-square me-2"></i> Edit
+            </a>
+
+            <!-- Delete -->
+            <a th:href="@{/publishers/delete/{id}(id=${publisher.publisherId})}"
+               class="btn btn-sm btn-outline-danger d-inline-flex align-items-center px-3"
+               style="border-radius: 8px;">
+                <i class="bi bi-trash3 me-2"></i> Delete
+            </a>
+        </div>
+    </div>
+</td>
+
+
+
+                        </tr>
+                        <!-- Empty State -->
+                        <tr th:if="${#lists.isEmpty(publisherDTO)}">
+                            <td colspan="4" class="py-5 text-center">
+                                <i class="bi bi-building-exclamation text-muted opacity-25" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-3">No publishers found in the system.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Checkout - Bookshelf Pro</title>
+    <title>Checkout - CG Library</title>
 
     <!-- Google Font & CDNs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -150,7 +150,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" th:href="@{/books/list}">📚 <span class="ms-2">BOOKSHELF PRO</span></a>
+            <a class="navbar-brand" th:href="@{/books/list}">📚 <span class="ms-2">CG Library</span></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -240,21 +240,21 @@
                         </div>
 
                         <!-- Info + Confirm -->
-                        <form th:action="@{/cart/confirm}" method="post">
-                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <div class="mt-4">
+    <div class="info-alert p-3 mb-4 d-flex align-items-center">
+        <i class="bi bi-credit-card-fill fs-4 me-3 text-primary"></i>
+        <div>
+            <strong>Secure Payment Required</strong><br>
+            <small>Complete the payment to confirm your order and update inventory.</small>
+        </div>
+    </div>
 
-                            <div class="info-alert p-3 mb-4 d-flex align-items-center">
-                                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-                                <div>
-                                    <strong>No Payment Required!</strong><br>
-                                    <small>This will reserve the books under your account. Collect them from the desk.</small>
-                                </div>
-                            </div>
+    <!-- SIMPLE LINK (GET REQUEST) -->
+    <a th:href="@{/cart/payment}" class="btn btn-confirm w-100 fs-5 d-flex align-items-center justify-content-center">
+        <i class="bi bi-shield-check me-2"></i> Proceed to Secure Payment
+    </a>
+</div>
 
-                            <button type="submit" class="btn btn-confirm w-100 fs-5">
-                                <i class="bi bi-shield-check me-2"></i> Confirm My Booking
-                            </button>
-                        </form>
                     </div>
 
                 </div> <!-- /card -->
