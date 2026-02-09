@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"  
-                xmlns:sec="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Authors - CG Library</title>
 
-    <!-- Modern Google Font -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- Bootstrap 5.3 CSS -->
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
         :root {
@@ -61,8 +65,8 @@
         .avatar-initial {
             width: 40px; height: 40px;
             border-radius: 10px;
-            background: #f1f5f9;          /* soft neutral bg like category pill */
-            color: #4361ee;               /* same blue family */
+            background: #f1f5f9;
+            color: #4361ee;
             display: inline-flex;
             align-items: center; justify-content: center;
             font-weight: 700; font-size: 0.9rem;
@@ -100,63 +104,63 @@
 </head>
 <body>
 
-    <!-- Navigation Bar (same design as Category page) -->
+    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" th:href="@{/books/list}">📚 <span class="ms-2">CG Library</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/books/list}">
+                📚 <span class="ms-2">CG Library</span>
+            </a>
+
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto">
+                <div class="navbar-nav ms-auto align-items-lg-center">
                     <a class="nav-link active" th:href="@{/authors/list}">Authors</a>
                     <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
                     <a class="nav-link text-white-50" th:href="@{/inventories/list}">Inventory</a>
                     <a class="nav-link text-white-50" th:href="@{/category/list}">Categories</a>
                     <a class="nav-link text-white-50" th:href="@{/publishers/list}">Publishers</a>
-                    <a class="nav-link text-white-50" th:href="@{/users/list}" 
-                    sec:authorize="hasRole('ADMIN')">Users</a>
-                     
-                     <form th:action="@{/logout}" method="post" class="ms-lg-3">
-                        <input type="hidden" th:name="${_csrf.parameterName}"
-                            th:value="${_csrf.token}" />
-                        <button type="submit"
-                            class="btn btn-link nav-link text-danger border-0">Logout</button>
+                    <a class="nav-link text-white-50" th:href="@{/users/list}" sec:authorize="hasRole('ADMIN')">Users</a>
+
+                    <!-- Logout -->
+                    <form th:action="@{/logout}" method="post" class="ms-lg-3">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn btn-link nav-link text-danger border-0 p-0 ms-lg-2">
+                            Logout
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </nav>
-    
-
-    
 
     <div class="container pb-5">
-    
-    
-    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-        <div class="d-flex align-items-center">
-            <i class="bi bi-exclamation-octagon-fill fs-4 me-3"></i>
-            <strong th:text="${error}">Error Message</strong>
+        <!-- Dismissible Error Alert -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm mt-3" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-octagon-fill fs-4 me-3"></i>
+                <strong th:text="${error}">Error Message</strong>
+            </div>
+            <!-- Bootstrap 5 uses data-bs-dismiss -->
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    
-    
-    
+
         <div class="card main-card p-4">
             <div class="row align-items-center mb-4">
                 <div class="col-md-6">
                     <h3 class="mb-0 fw-bold" style="color: #1e293b;">Authors Directory</h3>
                     <p class="text-muted small mb-0">Manage and view all authors in the system.</p>
                 </div>
-              <div class="col-md-6 text-md-end mt-3 mt-md-0" 
-                sec:authorize="hasRole('ADMIN')">
-    <a th:href="@{/authors/new}" class="btn btn-primary btn-add" 
-       style="border-radius: 8px; background-color: var(--primary-color); border:none;">
-        <i class="bi bi-person-plus me-2"></i> Add New Author
-    </a>
-</div>
 
+                <div class="col-md-6 text-md-end mt-3 mt-md-0" sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/authors/new}" class="btn btn-primary btn-add" style="border-radius: 8px; border:none;">
+                        <i class="bi bi-person-plus me-2"></i> Add New Author
+                    </a>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -183,35 +187,34 @@
                                 </div>
                             </td>
                             <td>
-        <div class="d-flex align-items-center">
-            <i class="bi bi-geo-alt text-muted me-2"></i>
-            <span th:text="${author.authorCountry ?: 'N/A'}">Country</span>
-        </div>
-    </td>
-                           <td class="text-end" sec:authorize="hasRole('ADMIN')">
-    <div class="d-flex justify-content-end gap-2">
-        <!-- Edit Button -->
-        <a th:href="@{/authors/edit/{id}(id=${author.authorId})}"
-           class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
-           style="border-radius: 8px; font-weight: 500;">
-            <i class="bi bi-pencil-square me-2"></i> Edit
-        </a>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-geo-alt text-muted me-2"></i>
+                                    <span th:text="${author.authorCountry ?: 'N/A'}">Country</span>
+                                </div>
+                            </td>
+                            <td class="text-end" sec:authorize="hasRole('ADMIN')">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <!-- Edit Button -->
+                                    <a th:href="@{/authors/edit/{id}(id=${author.authorId})}"
+                                       class="btn btn-sm btn-outline-primary d-inline-flex align-items-center px-3"
+                                       style="border-radius: 8px; font-weight: 500;">
+                                        <i class="bi bi-pencil-square me-2"></i> Edit
+                                    </a>
 
-        <!-- Delete Button -->
-        <a th:href="@{/authors/delete/{id}(id=${author.authorId})}"
-           class="btn btn-sm btn-delete-custom d-inline-flex align-items-center px-3">
-            <i class="bi bi-trash3 me-2"></i> Delete
-        </a>
-    </div>
-</td>
-
+                                    <!-- Delete Button -->
+                                    <a th:href="@{/authors/delete/{id}(id=${author.authorId})}"
+                                       class="btn btn-sm btn-delete-custom d-inline-flex align-items-center px-3">
+                                        <i class="bi bi-trash3 me-2"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
 
                         <!-- Empty State -->
                         <tr th:if="${#lists.isEmpty(authors)}">
-                            <td colspan="3" class="py-5 text-center">
+                            <td colspan="4" class="py-5 text-center">
                                 <i class="bi bi-person-x text-muted opacity-25" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3">No authors found in your database.</p>
+                                <p class="text-muted mt-3 mb-0">No authors found in your database.</p>
                             </td>
                         </tr>
                     </tbody>
@@ -221,7 +224,7 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net"></script>
+    <!-- Bootstrap 5.3.3 JS (Bundle includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
