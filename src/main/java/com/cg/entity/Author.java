@@ -20,7 +20,7 @@ private String authorName;
 private String authorEmail;
 private String authorCountry;
 
-@OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+@OneToMany(mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 private List<Book> books;
 
 public Author() {

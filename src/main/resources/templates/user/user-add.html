@@ -171,11 +171,8 @@
                         <label class="form-label" for="role">System Role</label>
                         <select id="role" th:field="*{role}" class="form-select" required>
                             <option value="" disabled selected>Select</option>
-                            <option value="VIEWER">VIEWER</option>
-                            <!-- If backend supports more, add here:
-                            <option value="USER">USER</option>
-                            <option value="ADMIN">ADMIN</option>
-                            -->
+                            <option value="STAFF">Staff</option>
+                            
                         </select>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">
                             Please select a role.

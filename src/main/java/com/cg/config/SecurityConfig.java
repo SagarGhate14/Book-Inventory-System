@@ -21,19 +21,24 @@ public class SecurityConfig {
 	    http
 	        .authorizeHttpRequests(auth -> auth
 	            // 1. PUBLIC ACCESS (Added /favicon.ico and static resources)
-	            .requestMatchers("/login", "/users/new", "/users/add","/users/verify-corp","/users/newAdmin", "/favicon.ico").permitAll()
-	            .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-	            .requestMatchers("/cart/**").permitAll() 
+	            .requestMatchers("/login", "/users/new", "/users/add","/users/verify-corp","/users/newAdmin").permitAll()
+	            
 	            
 	            // 2. ADMIN ONLY
-	            .requestMatchers("/users/list").hasRole("ADMIN")
+	            .requestMatchers("/users/list","users/delete/**").hasRole("ADMIN")
 	            .requestMatchers("/books/edit/**", "/books/delete/**").hasRole("ADMIN")
+	            .requestMatchers("/authors/edit/**","/authors/delete/**").hasRole("ADMIN")
+	            .requestMatchers("/category/edit/**","/category/delete/**").hasRole("ADMIN")
+	            .requestMatchers("/publishers/edit/**","/publishers/delete/**").hasRole("ADMIN")
+	            .requestMatchers("/inventories/edit/**","/inventories/delete/**").hasRole("ADMIN")
+	            
+	        
 	            
 	            // 3. SECURE EVERYTHING ELSE
 	            .anyRequest().authenticated()
 	        )
 	        .formLogin(form -> form
-	            .loginPage("/login")
+	            .loginPage("/login")  
 	            .defaultSuccessUrl("/books/list", true) 
 	            .permitAll()
 	        )
@@ -42,10 +47,12 @@ public class SecurityConfig {
 	            .invalidateHttpSession(true) 
 	            .permitAll()
 	        )
+	        
+	        
 	        // 4. CSRF PROTECTION
 	     // Change this line in filterChain
 	        .csrf(csrf -> csrf
-	            .ignoringRequestMatchers("/h2-console/**", "/cart/verify-payment") // Add payment path
+	            .ignoringRequestMatchers("/h2-console/**") // Add payment path
 	        );
 
 

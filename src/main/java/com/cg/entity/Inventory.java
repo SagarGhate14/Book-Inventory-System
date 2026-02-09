@@ -20,24 +20,19 @@ public class Inventory {
 	@JoinColumn(name = "book_id")
 	private Book book;
 
-	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "user_id")
-	private User user;
 
 	public Inventory() {
 	}
 
-	
-	public Inventory(Integer inventoryId, String status, int quantity, Book book, User user) {
+
+	public Inventory(Integer inventoryId, String status, int quantity, Book book) {
 		super();
 		this.inventoryId = inventoryId;
 		this.status = status;
 		this.quantity = quantity;
 		this.book = book;
-		this.user = user;
 	}
 
-	
 
 	public Integer getInventoryId() {
 		return inventoryId;
@@ -78,17 +73,8 @@ public class Inventory {
 		this.book = book;
 	}
 
-
-	public User getUser() {
-		return user;
-	}
-
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-
+	
+	
 
 
 	

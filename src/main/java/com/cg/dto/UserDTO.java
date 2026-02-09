@@ -1,18 +1,18 @@
 package com.cg.dto;
 
-import com.cg.entity.Role;
+
 
 public class UserDTO {
 
     private int userId;
     private String userName;
     private String email;
-    private Role role;
+    private String role;
     private String password;
 
     public UserDTO() { }
 
-	public UserDTO(int userId, String userName, String email, Role role, String password) {
+	public UserDTO(int userId, String userName, String email, String role, String password) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -45,11 +45,11 @@ public class UserDTO {
 		this.email = email;
 	}
 
-	public Role getRole() {
+	public String getRole() {
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 

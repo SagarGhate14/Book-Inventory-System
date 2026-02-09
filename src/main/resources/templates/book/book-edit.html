@@ -120,6 +120,7 @@
 
             <!-- Ensure th:object matches the DTO passed from Controller -->
             <form th:action="@{/books/update}" th:object="${bookDTO}" method="post">
+             <input type="hidden" name="_method" value="PUT" />
 
                 <!-- REQUIRED: Hidden ID field for Update -->
                 <input type="hidden" th:field="*{bookId}">

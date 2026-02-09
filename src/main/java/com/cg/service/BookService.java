@@ -4,26 +4,20 @@ import java.util.ArrayList;
 
 
 
-import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cg.dto.BookDTO;
-import com.cg.dto.CartItem;
 import com.cg.entity.Author;
 import com.cg.entity.Book;
 import com.cg.entity.Category;
-import com.cg.entity.Inventory;
 import com.cg.entity.Publisher;
-import com.cg.entity.User;
 import com.cg.repository.BookRepository;
-import com.cg.repository.InventoryRepository;
 
-import com.cg.repository.UserRepository;
 
 
 @Service
@@ -32,9 +26,6 @@ public class BookService implements IBookService{
 	@Autowired
 	private BookRepository bookRepository;
 	@Autowired
-	private InventoryRepository inventoryRepository;
-	@Autowired
-	private UserRepository userRepository;
 	
 	
 	@Override
@@ -113,6 +104,9 @@ public class BookService implements IBookService{
 	    dto.setBookId(book.getBookId());
 	    dto.setTitle(book.getTitle());
 	    dto.setPrice(book.getPrice());
+	 // Inside your Service mapping logic
+	    dto.setInventory(book.getInventory());
+
 	    
 	    // Ensure these match the NEW capitalized names from Step 1
 	    if (book.getAuthor() != null) {
@@ -130,37 +124,9 @@ public class BookService implements IBookService{
 	
 	
 	
-	@Transactional // Ensures the database stays consistent
-    public void processBooking(List<CartItem> cart) {
-		 // 1. Find the User who is logged in
-      
-        
-        // 3. Update Inventory for each book in the cart
-        for (CartItem item : cart) {
-            // Find inventory record for this specific book
-            Inventory inventory = inventoryRepository.findByBook_BookId(item.getBookId())
-                .orElseThrow(() -> new RuntimeException("Book not found in inventory"));
-
-            // Check if we have enough stock
-            if (inventory.getQuantity() < 1) {
-                throw new RuntimeException("Book " + item.getTitle() + " just went out of stock!");
-            }
-
-            // Reduce quantity by 1
-            inventory.setQuantity(inventory.getQuantity() - 1);
-            
-            // Auto-update status if it hits zero
-            if (inventory.getQuantity() == 0) {
-                inventory.setStatus("OUT_OF_STOCK");
-            }
-
-            // Save the updated inventory stock
-            inventoryRepository.save(inventory);
-        }
 
         
-       
-	}
+     
 	
 	
 

@@ -2,6 +2,7 @@ package com.cg.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -10,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cg.dto.UserDTO;
-import com.cg.entity.Role;
+
 import com.cg.entity.User;
-import com.cg.service.IUserService;
+
 import com.cg.service.UserService;
 
 @Controller

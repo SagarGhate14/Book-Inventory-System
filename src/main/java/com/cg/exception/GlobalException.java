@@ -1,8 +1,10 @@
 package com.cg.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class GlobalException {
@@ -24,13 +26,34 @@ public class GlobalException {
 		return "error/custom-error";
 	}
 
-	@ExceptionHandler(Exception.class)
-	public String handleGeneral(Exception ex, Model model) {
-		model.addAttribute("errorTitle", "Server Error");
-		model.addAttribute("errorMessage", "An internal error occurred: " + ex.getMessage());
-		model.addAttribute("statusCode", 500);
-		return "error/custom-error";
-	}
+
+
+
+    // 3. Global Fallback
+    @ExceptionHandler(Exception.class)
+    public String handleGeneral(Exception ex, Model model) {
+        model.addAttribute("errorTitle", "Server Error");
+        model.addAttribute("errorMessage", "An unexpected error occurred.");
+        model.addAttribute("statusCode", 500);
+        System.err.println("CRASH DETECTED: " + ex.getMessage());
+        ex.printStackTrace(); //
+        return "error/custom-error";
+    }
+    
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public String handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex, RedirectAttributes ra) {
+        // 1. Create the friendly message
+        String message = "Cannot delete: This record is linked to existing books. Delete the books first!";
+        
+        // 2. Add it as a Flash Attribute (this creates the popup)
+        ra.addFlashAttribute("error", message);
+        
+        // 3. Redirect back to the authors list (or wherever they were)
+        return "redirect:/authors/list"; 
+    }
+
+
+
 
 	// Static Inner Exceptions
 	public static class AuthorNotFoundException extends RuntimeException {

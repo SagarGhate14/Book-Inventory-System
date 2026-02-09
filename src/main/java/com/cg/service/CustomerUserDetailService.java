@@ -20,6 +20,7 @@ public class CustomerUserDetailService implements UserDetailsService{
 	@Autowired
     private UserRepository userRepository;
 
+	
 	 @Override
 	    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	        // 1. Fetch user from DB by email
@@ -34,24 +35,6 @@ public class CustomerUserDetailService implements UserDetailsService{
 	                .build();
 
 	    }
-	 
-	
-	    public User login(String email, String password) {
-	        // 1. Try to find the user by email
-	        Optional<User> userOptional = userRepository.findByEmail(email);
 
-	        if (userOptional.isPresent()) {
-	            User user = userOptional.get();
-	            
-	            // 2. Compare the provided password with the stored password
-	            // Note: If using BCrypt, use passwordEncoder.matches(password, user.getPassword())
-	            if (user.getPassword().equals(password)) {
-	                return user; // Login successful
-	            }
-	        }
-	        
-	        // 3. If user not found or password doesn't match
-	        return null; 
-	    }
 
 }

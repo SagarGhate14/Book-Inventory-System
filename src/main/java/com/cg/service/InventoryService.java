@@ -1,7 +1,7 @@
 package com.cg.service;
 
 import com.cg.entity.Inventory;
-import com.cg.entity.Status;
+
 import com.cg.dto.InventoryDTO;
 import com.cg.repository.InventoryRepository;
 
@@ -11,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class InventoryService implements IInventoryService {
@@ -37,9 +36,11 @@ public class InventoryService implements IInventoryService {
 
     @Override
     public void saveInventory(Inventory inventory) {
+
         inventoryRepository.save(inventory);
     }
 
+    
     @Override
     @Transactional 
     public void updateInventory(int id, InventoryDTO dto) {
@@ -117,8 +118,7 @@ public class InventoryService implements IInventoryService {
     }
 
 
-	@Override
-	public Inventory findById(Integer id) {
-		return inventoryRepository.findById(id).get();
-	}
+
+
+
 }

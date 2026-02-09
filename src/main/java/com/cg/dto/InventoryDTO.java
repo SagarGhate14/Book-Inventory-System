@@ -61,11 +61,5 @@ public class InventoryDTO {
 		this.bookId = bookId;
 	}
 
-	@Override
-	public String toString() {
-		return "InventoryDTO [inventoryId=" + inventoryId + ", status=" + status + ", quantity=" + quantity
-				+ ", bookId=" + bookId + "]";
-	}
-
 		
 }

@@ -25,7 +25,7 @@ public class AuthorController {
     }
 
     @PostMapping("/add")
-    public String addAuthor(Author author) {
+    public String addAuthor(@ModelAttribute Author author) {
         authorService.saveAuthor(author);
         return "redirect:/authors/list";
     }
@@ -38,12 +38,6 @@ public class AuthorController {
         return "author/author-list";
     }
 
-    @GetMapping("/view/{id}")
-    public String viewAuthor(@PathVariable int id, Model model) {
-        Author author = authorService.getAuthorById(id);
-        model.addAttribute("author", author);
-        return "author-view";
-    }
 
     @GetMapping("/edit/{id}")
     public String updateAuthor(@PathVariable("id") int id, Model model) {
