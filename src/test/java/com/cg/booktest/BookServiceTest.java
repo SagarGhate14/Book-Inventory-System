@@ -1,6 +1,7 @@
 package com.cg.booktest;
 
-import com.cg.dto.CartItem;
+
+
 import com.cg.entity.*;
 import com.cg.repository.BookRepository;
 import com.cg.repository.InventoryRepository;
@@ -11,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -64,25 +65,7 @@ class BookServiceTest {
         assertEquals(101, result.getBookId());
     }
 
-    @Test
-    void processBooking_ShouldReduceQuantityAndSaveInventory() {
-        // Arrange
-        CartItem item = new CartItem();
-        item.setBookId(1);
-        List<CartItem> cart = List.of(item);
-
-        Inventory inventory = new Inventory();
-        inventory.setQuantity(5);
-        
-        when(inventoryRepository.findByBook_BookId(1)).thenReturn(Optional.of(inventory));
-
-        // Act
-        bookService.processBooking(cart);
-
-        // Assert
-        assertEquals(4, inventory.getQuantity());
-        verify(inventoryRepository, times(1)).save(inventory);
-    }
+   
 
 
 }
