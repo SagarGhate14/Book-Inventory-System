@@ -81,7 +81,7 @@ public class BookService implements IBookService{
 	    return entity;
 	}
 	 
-	 
+	
 	public List<BookDTO> toDTOList(List<Book> books) {
 	    List<BookDTO> dtoList = new ArrayList<>();
 	    
@@ -111,12 +111,15 @@ public class BookService implements IBookService{
 	    // Ensure these match the NEW capitalized names from Step 1
 	    if (book.getAuthor() != null) {
 	        dto.setAuthorId(book.getAuthor().getAuthorId());
+	        dto.setAuthorName(book.getAuthor().getAuthorName());
 	    }
 	    if (book.getPublisher() != null) {
 	        dto.setPublisherId(book.getPublisher().getPublisherId());
+	        dto.setPublisherName(book.getPublisher().getPublisherName());
 	    }
 	    if (book.getCategory() != null) {
 	        dto.setCategoryId(book.getCategory().getCategoryId());
+	        dto.setCategoryName(book.getCategory().getCategoryName());
 	    }
 	    
 	    return dto;

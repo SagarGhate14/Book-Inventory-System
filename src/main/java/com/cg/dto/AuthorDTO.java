@@ -1,11 +1,28 @@
 package com.cg.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 public class AuthorDTO {
 	private int authorId;
-	private String authorName;
-	private String authorEmail;
-	private String authorCountry;
+	
+	
+	@NotBlank(message = "Author name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
+    @Pattern(regexp = "^[a-zA-Z\\s.]+$", message = "Name can only contain letters, spaces, and dots")
+    private String authorName;
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Please provide a valid email address")
+    private String authorEmail;
+
+    @NotBlank(message = "Country is required")
+    @Size(min = 2, max = 50, message = "Country name is too short or too long")
+    private String authorCountry;
+
+ 
 	public AuthorDTO() {
 		
 	}

@@ -8,6 +8,8 @@ import com.cg.service.BookService;
 import com.cg.service.IInventoryService;
 import com.cg.service.InventoryService;
 
+import jakarta.validation.Valid;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,6 @@ public class InventoryController {
     @GetMapping("/add")
     public String showAddForm(Model model) {
     	List<Book> books = bookService.getAllBooks();
-        System.out.println("Books found: " + (books != null ? books.size() : "NULL"));
         
         model.addAttribute("inventory", new InventoryDTO());
         model.addAttribute("books", books != null ? books : new ArrayList<>()); // Prevent null
@@ -48,8 +49,10 @@ public class InventoryController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute("inventory") InventoryDTO inventoryDTO) {
-   
+    public String save(@Valid @ModelAttribute("inventory") InventoryDTO inventoryDTO,BindingResult result,Model model) {
+    	
+    	
+    	 
     	int safeQuantity = Math.max(0, inventoryDTO.getQuantity());
         
         Inventory inventory = inventoryService.toEntity(inventoryDTO);
@@ -83,8 +86,8 @@ public class InventoryController {
     }
     
     @PostMapping("/edit")
-    public String updateInventory(@ModelAttribute InventoryDTO inventoryDTO, RedirectAttributes redirectAttributes, BindingResult result) {
-        if (result.hasErrors()) return "redirect:/inventories/list";
+    public String updateInventory(@Valid @ModelAttribute InventoryDTO inventoryDTO, RedirectAttributes redirectAttributes, BindingResult result) {
+    	 
 
         Inventory currentInventory = inventoryService.getInventoryById(inventoryDTO.getInventoryId());
         Inventory existingWithBook = inventoryService.findBookById(inventoryDTO.getBookId());

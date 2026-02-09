@@ -6,11 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.cg.dto.CategoryDTO;
 import com.cg.entity.Category;
 import com.cg.service.CategoryService;
+
+import jakarta.validation.Valid;
  
 @Controller
 @RequestMapping("/category")
@@ -36,7 +39,12 @@ public class CategoryController {
  
     // Add Category
     @PostMapping("/new")
-    public String addCategory(@ModelAttribute CategoryDTO categoryDTO) {
+    public String addCategory(@Valid @ModelAttribute CategoryDTO categoryDTO,BindingResult result) {
+    	if (result.hasErrors()) {
+	        // 2. If errors exist, stop and return the EDIT form
+	        return "Category/category-add"; 
+	    }
+    	
        Category category = categoryService.toEntity(categoryDTO);
        categoryService.addCategory(category);
        return "redirect:/category/list";
@@ -56,11 +64,16 @@ public class CategoryController {
    }
     // Update category
     @PostMapping("/update")
-    public String updateCategory(@ModelAttribute Category category) {
-        CategoryDTO existing = categoryService.toDTO(category);
+    public String updateCategory(@Valid @ModelAttribute CategoryDTO categoryDTO,BindingResult result) {
+    	if (result.hasErrors()) {
+	        // 2. If errors exist, stop and return the EDIT form
+	        return "Category/category-add"; 
+	    }
+    	
+        Category existing = categoryService.toEntity(categoryDTO);
         if (existing != null) {
-            existing.setCategoryName(category.getCategoryName());
-            categoryService.updateCategory(category);
+            existing.setCategoryName(categoryDTO.getCategoryName());
+            categoryService.updateCategory(existing);
         }
         return "redirect:/category/list";
     }

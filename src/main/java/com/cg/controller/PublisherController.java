@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,8 @@ import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;
 import com.cg.service.IPublisherService;
 import com.cg.service.PublisherService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/publishers")
@@ -41,7 +44,13 @@ public class PublisherController {
 	}
       
 	@PostMapping("/add")
-	public String savePublisher(@ModelAttribute PublisherDTO publisherDTO) {
+	public String savePublisher(@Valid @ModelAttribute PublisherDTO publisherDTO,BindingResult result) {
+		if (result.hasErrors()) {
+	        // 2. If errors exist, stop and return the EDIT form
+	        return "publisher/publisher-add"; 
+	    }
+		
+		
 		Publisher publisher = publisherService.toEntity(publisherDTO);
 		publisherService.savePublisher(publisher);
 		return "redirect:/publishers/list";
@@ -55,7 +64,12 @@ public class PublisherController {
 	}
 	
 	@PostMapping("/update")
-	public String updatedPublisher(@ModelAttribute PublisherDTO publisherDTO) {
+	public String updatedPublisher(@Valid @ModelAttribute PublisherDTO publisherDTO,BindingResult result) {
+		if (result.hasErrors()) {
+	        // 2. If errors exist, stop and return the EDIT form
+	        return "publisher/publisher-edit"; 
+	    }
+		
 		Publisher publisher = publisherService.toEntity(publisherDTO);
 		publisherService.updatePublisher(publisher);
 		return "redirect:/publishers/list";

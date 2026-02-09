@@ -115,6 +115,7 @@
                             <i class="bi bi-tag-fill"></i>
                         </span>
                         <input type="text" th:field="*{categoryName}" class="form-control border-start-0" id="categoryName" placeholder="e.g. Mystery & Thriller" required>
+                         <div class="text-danger small mt-1" th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}"></div>
                     </div>
                 </div>
 

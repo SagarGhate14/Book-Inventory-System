@@ -13,7 +13,5 @@ public class LoginController {
 	    public String login() {
 	        return "user/login"; // Refers to login.html
 	    }
-	   
-
 
 }

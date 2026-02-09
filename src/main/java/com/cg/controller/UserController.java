@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -15,6 +16,8 @@ import com.cg.dto.UserDTO;
 import com.cg.entity.User;
 
 import com.cg.service.UserService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/users")
@@ -65,7 +68,12 @@ public class UserController {
 
     // SAVE USER
     @PostMapping("/add")
-    public String saveUser(@ModelAttribute("userDTO") UserDTO userDTO) {
+    public String saveUser(@Valid @ModelAttribute("userDTO") UserDTO userDTO,BindingResult result) {
+    	if (result.hasErrors()) {
+	        // 2. If errors exist, stop and return the EDIT form
+	        return "user/user-add"; 
+	    }
+    	
       User user = userService.toEntity(userDTO);
       userService.saveUser(user);
         return "redirect:/users/list";

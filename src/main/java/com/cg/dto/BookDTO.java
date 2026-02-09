@@ -2,37 +2,42 @@ package com.cg.dto;
 
 import com.cg.entity.Inventory;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class BookDTO {
 	
 	private int bookId;
 
-    @NotBlank(message = "Title is required")
+	@NotBlank(message = "Book title is required")
+    @Size(min = 2, max = 200, message = "Title must be between 2 and 200 characters")
     private String title;
 
-    @Min(value = 0, message = "Price cannot be negative")
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Price cannot be negative")
     private double price;
 
-    // We store IDs for selection in the UI (Dropdowns)
-    @NotNull(message = "Author is required")
+    @NotNull(message = "Please select an author")
     private Integer authorId;
-    private String authorName;
-    // Useful for displaying in the List table
-
-    @NotNull(message = "Publisher is required")
-    private Integer publisherId;
-    private String publisherName;
     
+    private String authorName;
 
-    @NotNull(message = "Category is required")
+    @NotNull(message = "Please select a publisher")
+    private Integer publisherId;
+    
+    private String publisherName;
+
+    @NotNull(message = "Please select a category")
     private Integer categoryId;
+    
     private String categoryName;
-   
 
-    // Inventory quantity is usually managed here during book creation
+    // Use @Valid to trigger validation inside the Inventory object if needed
+    @Valid 
     private Inventory inventory;
     
      // Thymeleaf will bind the ID from the dropdown here

@@ -154,6 +154,8 @@
                            class="form-control"
                            placeholder="e.g. john@example.com"
                            required>
+                           
+                           
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
                         Please enter a valid email.
                     </div>
@@ -169,19 +171,18 @@
                                class="form-control"
                                placeholder="••••••••"
                                required>
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
-                            Please enter a valid password.
-                        </div>
+                       <div class="text-danger small mt-1" 
+         th:if="${#fields.hasErrors('password')}" 
+         th:errors="*{password}">
+        Password error will appear here.
+    </div>
                     </div>
                     <div class="col-md-6">
                         <label for="role" class="form-label">User Role</label>
                         <select id="role" th:field="*{role}" class="form-select" required>
                             <option value="" selected disabled>Select Role</option>
                             <option value="ADMIN">ADMIN</option>
-                            <!-- If your backend supports more roles, include them:
-                            <option value="USER">USER</option>
-                            <option value="VIEWER">VIEWER</option>
-                            -->
+                            
                         </select>
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">
                             Please select a role.

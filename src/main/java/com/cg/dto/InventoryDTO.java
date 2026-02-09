@@ -1,10 +1,25 @@
 package com.cg.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+
 public class InventoryDTO {
 	private Integer inventoryId;
-	private String status;
-	private int quantity;
-	private Integer bookId;
+	
+	@NotBlank(message = "Stock status is required")
+    @Pattern(regexp = "^(Available|Out of Stock|Damaged|Reserved)$", 
+             message = "Status must be: Available, Out of Stock, Damaged, or Reserved")
+    private String status;
+
+   
+    private int quantity;
+
+    @NotNull(message = "A book must be associated with this inventory")
+    private Integer bookId;
+    
+    
 	 private String bookTitle;
 
 	public InventoryDTO() {

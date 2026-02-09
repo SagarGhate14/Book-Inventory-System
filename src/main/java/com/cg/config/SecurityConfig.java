@@ -46,16 +46,8 @@ public class SecurityConfig {
 	            .logoutSuccessUrl("/login?logout")
 	            .invalidateHttpSession(true) 
 	            .permitAll()
-	        )
-	        
-	        
-	        // 4. CSRF PROTECTION
-	     // Change this line in filterChain
-	        .csrf(csrf -> csrf
-	            .ignoringRequestMatchers("/h2-console/**") // Add payment path
 	        );
-
-
+	        
 	    return http.build();
 	}
 }

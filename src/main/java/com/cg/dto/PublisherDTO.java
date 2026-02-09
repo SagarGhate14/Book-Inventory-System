@@ -12,6 +12,7 @@ public class PublisherDTO {
     private String publisherName;
 
     @NotBlank(message = "Address is required")
+    @Size(min=4, max=100)
     private String address;
 
     // Default Constructor

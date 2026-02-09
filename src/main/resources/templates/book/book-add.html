@@ -56,6 +56,7 @@
                     <div class="input-group">
                         <span class="input-group-text border-end-0"><i class="bi bi-book"></i></span> 
                         <input type="text" th:field="*{title}" class="form-control border-start-0" id="title" placeholder="e.g. The Great Gatsby" required />
+                        <p class="text-danger small" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
                     </div>
                 </div>
 

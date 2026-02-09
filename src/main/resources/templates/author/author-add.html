@@ -100,20 +100,24 @@
 
             <!-- Form starts here -->
             <form th:action="@{/authors/add}" th:object="${author}" method="post">
+            
                 
                 <div class="mb-3">
                     <label for="authorName" class="form-label">Full Name</label>
                     <input type="text" th:field="*{authorName}" class="form-control" id="authorName" placeholder="e.g. William Shakespeare" required>
+                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('authorName')}" th:errors="*{authorName}"></div>
                 </div>
 
                 <div class="mb-3">
                     <label for="authorEmail" class="form-label">Email Address</label>
                     <input type="email" th:field="*{authorEmail}" class="form-control" id="authorEmail" placeholder="name@example.com" required>
+                     <div class="text-danger small mt-1" th:if="${#fields.hasErrors('authorEmail')}" th:errors="*{authorEmail}"></div>
                 </div>
 
                 <div class="mb-4">
                     <label for="authorCountry" class="form-label">Country of Origin</label>
                     <input type="text" th:field="*{authorCountry}" class="form-control" id="authorCountry" placeholder="e.g. United Kingdom" required>
+                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('authorCountry')}" th:errors="*{authorCountry}"></div>
                 </div>
 
                 <div class="row g-3">

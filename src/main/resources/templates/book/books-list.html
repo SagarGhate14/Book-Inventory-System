@@ -261,6 +261,7 @@ body {
                         <th>Book Title</th>
                         <th>Author</th>
                         <th>Category</th>
+                        <th>Publisher </th>
                         <th>Price</th>
                         <th class="text-end">Actions</th>
                     </tr>
@@ -272,9 +273,10 @@ body {
                             <small class="text-muted" th:text="${'ID: #BK-' + book.bookId}">ID:
                                 #BK-0</small>
                         </td>
-                        <td th:text="${book.author?.authorName}">Author</td>
+                        <td th:text="${book.authorName}">Author</td>
                         <td><span class="badge bg-primary px-3 py-2 rounded-pill"
-                            th:text="${book.category?.categoryName}">Category</span></td>
+                            th:text="${book.categoryName}">Category</span></td>
+                            <td th:text="${book.publisherName}">Publisher</td>
                         <td class="fw-bold text-primary" th:text="${'₹' + book.price}">₹0</td>
                         <td class="text-end">
                             <div class="d-flex justify-content-end gap-2">
