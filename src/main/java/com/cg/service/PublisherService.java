@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;
+import com.cg.exception.GlobalException;
 import com.cg.repository.PublisherRepository;
 
 // ✅ Using static inner exceptions from GlobalException
@@ -57,8 +58,9 @@ public class PublisherService implements IPublisherService {
     @Override
     public Publisher findById(int pId) {
         return publisherRepository.findById(pId)
-                .orElseThrow(() -> new PublisherNotFoundException(pId));
+                .orElseThrow(() -> new GlobalException.PublisherNotFoundException(pId));
     }
+
 
     /* --- MAPPING HELPERS (Logic Unchanged) --- */
 

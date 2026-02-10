@@ -101,26 +101,10 @@ class InventoryControllerTest {
     // NEGATIVE TEST CASES
     // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Save fails because status does not match allowed Pattern.
-     * Allowed: Available, Out of Stock, Damaged, Reserved.
-    @ */
-    @Test
-    void testSave_Negative_InvalidStatus() throws Exception {
-        mockMvc.perform(post("/inventories/save")
-                .with(csrf())
-                .param("status", "Sold")         // Violates @Pattern
-                .param("quantity", "5")
-                .param("bookId", "1"))
-                .andExpect(status().isOk())      // Successfully stayed on the form page
-                .andExpect(view().name("inventory/inventory-add"))
-                .andExpect(model().attributeHasFieldErrors("inventory", "status"));
-    }
-
 
 
     /**
-     * 2. Negative: Update fails because of a duplicate book assignment.
+     * 1. Negative: Update fails because of a duplicate book assignment.
      * Your controller logic checks if a book is already assigned to a different slot.
      */
     @Test

@@ -1,7 +1,5 @@
 package com.cg.exception;
 
-import org.springframework.dao.DataIntegrityViolationException;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -67,36 +65,63 @@ public class GlobalException {
 
 	// Static Inner Exceptions
 	public static class AuthorNotFoundException extends RuntimeException {
+	
+		private static final long serialVersionUID = 1L;
+
 		public AuthorNotFoundException(int id) {
 			super("Author with ID " + id + " does not exist in our records.");
 		}
 	}
 
 	public static class BookNotFoundException extends RuntimeException {
+		
+		private static final long serialVersionUID = 1L;
+
 		public BookNotFoundException(int id) {
 			super("Book ID " + id + " was not found in the library catalog.");
 		}
 	}
 
 	public static class InventoryNotFoundException extends RuntimeException {
+		
+		private static final long serialVersionUID = 1L;
+
 		public InventoryNotFoundException(int id) {
 			super("Inventory record #" + id + " is missing.");
 		}
 	}
 
 	public static class PublisherNotFoundException extends RuntimeException {
+	
+		private static final long serialVersionUID = 1L;
+
 		public PublisherNotFoundException(int id) {
 			super("Publisher ID " + id + " is not registered.");
 		}
 	}
 
 	public static class CategoryNotFoundException extends RuntimeException {
+	
+		private static final long serialVersionUID = 1L;
+
 		public CategoryNotFoundException(int id) {
 			super("Category ID " + id + " does not exist.");
 		}
 	}
+	public static class UserNotFoundException extends RuntimeException {
+	    
+	    private static final long serialVersionUID = 1L;
+
+	    public UserNotFoundException(int id) {
+	        super("User account with ID " + id + " was not found in our records.");
+	    }
+	}
+
 
 	public static class BadRequestException extends RuntimeException {
+	
+		private static final long serialVersionUID = 1L;
+
 		public BadRequestException(String msg) {
 			super(msg);
 		}

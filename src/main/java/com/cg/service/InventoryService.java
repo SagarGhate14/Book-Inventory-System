@@ -1,7 +1,7 @@
 package com.cg.service;
 
 import com.cg.entity.Inventory;
-
+import com.cg.exception.GlobalException;
 import com.cg.dto.InventoryDTO;
 import com.cg.repository.InventoryRepository;
 
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -32,9 +31,10 @@ public class InventoryService implements IInventoryService {
     // 2. Using MANUAL OPTIONAL CHECK with IF-ELSE
     @Override
     public Inventory getInventoryById(int id) {
-        Optional<Inventory> optionalInv = inventoryRepository.findById(id);
-        return optionalInv.get();
+        return inventoryRepository.findById(id)
+                .orElseThrow(() -> new GlobalException.InventoryNotFoundException(id));
     }
+
 
     @Override
     public void saveInventory(Inventory inventory) {

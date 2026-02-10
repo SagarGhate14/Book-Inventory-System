@@ -31,13 +31,11 @@ public class CategoryControllerTest {
     @MockBean
     private CategoryService categoryService;
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully view the list of categories.
-     */
+    
+     // 1. Positive: Successfully view the list of categories.
+     
     @Test
     void testAllCategory_Positive() throws Exception {
         // Arrange

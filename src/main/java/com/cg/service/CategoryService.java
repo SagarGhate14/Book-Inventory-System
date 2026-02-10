@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cg.dto.CategoryDTO;
 import com.cg.entity.Category;
+import com.cg.exception.GlobalException;
 import com.cg.repository.CategoryRepository;
 
 // ✅ Static imports from your GlobalException file
@@ -34,8 +35,9 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category getCategoryById(int id) {
         return categoryRepo.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
+                .orElseThrow(() -> new GlobalException.CategoryNotFoundException(id));
     }
+
 
     @Override
     public Category updateCategory(Category category) {

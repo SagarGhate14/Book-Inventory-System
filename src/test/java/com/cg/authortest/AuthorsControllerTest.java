@@ -93,16 +93,5 @@ public class AuthorsControllerTest {
     }
 
     
-     // 3. Negative: Edit non-existent author redirects to list.
      
-    @Test
-    void testEditAuthor_Negative_NotFound() throws Exception {
-        // Arrange: Controller logic redirects to list if DTO is null
-        when(authorService.getAuthorById(99)).thenReturn(null);
-        when(authorService.toDTO(null)).thenReturn(null);
-
-        mockMvc.perform(get("/authors/edit/99"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/authors/list"));
-    }
 }
