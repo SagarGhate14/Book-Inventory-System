@@ -11,10 +11,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,36 +25,84 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false) // disable security filters if Spring Security is present
 public class AuthorsControllerTest {
 
-    @Autowired
+	@Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private AuthorService authorService;
 
- 
-
-    // 1) GET /authors/new -> returns add page with empty Author model
+    // POSITIVE TEST CASES  
+    
+     // 1. Positive: Successfully add a new author with valid data.
+     
     @Test
-    void newAuthorForm_shouldRenderAddView() throws Exception {
-        mockMvc.perform(get("/authors/new"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("author/author-add"))
-                .andExpect(model().attributeExists("author"));
-    }
-
-    // 2) POST /authors/add -> saves Author and redirects to /authors/list
-    @Test
-    void addAuthor_shouldSaveAndRedirect() throws Exception {
-        doNothing().when(authorService).saveAuthor(any(Author.class));
-
+    void testAddAuthor_Positive() throws Exception {
         mockMvc.perform(post("/authors/add")
-                        .param("authorName", "Alice")
-                        .param("authorEmail", "alice@gmail.com")
-                        .param("authorCountry", "India"))
+                .with(csrf()) // Prevents 403 Forbidden
+                .param("authorName", "J.K. Rowling")
+                .param("authorEmail", "jk@example.com")
+                .param("authorCountry", "UK"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/authors/list"));
 
-        verify(authorService, times(1)).saveAuthor(any(Author.class));
-        verifyNoMoreInteractions(authorService);
+        verify(authorService, times(1)).saveAuthor(any());
+    }
+
+    
+     // 2. Positive: Successfully delete an author.
+     
+    @Test
+    void testDeleteAuthor_Positive() throws Exception {
+        mockMvc.perform(get("/authors/delete/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/authors/list"));
+
+        verify(authorService).deleteAuthor(1);
+    }
+
+    // NEGATIVE TEST CASES
+
+    
+     // 1. Negative: Validation fails due to invalid name pattern (contains numbers).
+     // Constraint: @Pattern(regexp = "^[a-zA-Z\\s.]+$")
+     
+    @Test
+    void testAddAuthor_Negative_InvalidNamePattern() throws Exception {
+        mockMvc.perform(post("/authors/add")
+                .with(csrf())
+                .param("authorName", "John123") // Numbers are forbidden by regex
+                .param("authorEmail", "john@example.com")
+                .param("authorCountry", "USA"))
+                .andExpect(status().isOk()) // Returns to the form view
+                .andExpect(view().name("author/author-add"))
+                .andExpect(model().attributeHasFieldErrors("author", "authorName"));
+    }
+
+    
+    // 2. Negative: Validation fails due to invalid email format.
+     
+    @Test
+    void testAddAuthor_Negative_InvalidEmail() throws Exception {
+        mockMvc.perform(post("/authors/add")
+                .with(csrf())
+                .param("authorName", "John Doe")
+                .param("authorEmail", "not-an-email") // Fails @Email validation
+                .param("authorCountry", "USA"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("author", "authorEmail"));
+    }
+
+    
+     // 3. Negative: Edit non-existent author redirects to list.
+     
+    @Test
+    void testEditAuthor_Negative_NotFound() throws Exception {
+        // Arrange: Controller logic redirects to list if DTO is null
+        when(authorService.getAuthorById(99)).thenReturn(null);
+        when(authorService.toDTO(null)).thenReturn(null);
+
+        mockMvc.perform(get("/authors/edit/99"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/authors/list"));
     }
 }

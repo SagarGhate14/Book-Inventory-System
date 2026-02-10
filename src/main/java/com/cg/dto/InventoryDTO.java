@@ -8,9 +8,7 @@ import jakarta.validation.constraints.Pattern;
 public class InventoryDTO {
 	private Integer inventoryId;
 	
-	@NotBlank(message = "Stock status is required")
-    @Pattern(regexp = "^(Available|Out of Stock|Damaged|Reserved)$", 
-             message = "Status must be: Available, Out of Stock, Damaged, or Reserved")
+	
     private String status;
 
    

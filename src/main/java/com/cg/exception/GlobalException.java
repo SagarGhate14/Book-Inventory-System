@@ -53,7 +53,7 @@ public class GlobalException {
         ra.addFlashAttribute("error", message);
         
         // 3. Redirect back to the authors list (or wherever they were)
-        return "redirect:/authors/list"; 
+        return "redirect:/books/list"; 
     }
     
     @ExceptionHandler(NoResourceFoundException.class)

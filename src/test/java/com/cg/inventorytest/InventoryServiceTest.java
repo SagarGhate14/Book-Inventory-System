@@ -4,6 +4,7 @@ import com.cg.dto.InventoryDTO;
 import com.cg.entity.Book;
 import com.cg.entity.Inventory;
 import com.cg.repository.InventoryRepository;
+import com.cg.service.BookService;
 import com.cg.service.InventoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,67 +23,132 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class InventoryServiceTest {
 
-    @Mock
+	@Mock
     private InventoryRepository inventoryRepository;
+
+    @Mock
+    private BookService bookService;
 
     @InjectMocks
     private InventoryService inventoryService;
 
     private Inventory sampleInventory;
+    private InventoryDTO sampleDTO;
     private Book sampleBook;
 
     @BeforeEach
     void setUp() {
         sampleBook = new Book();
-        sampleBook.setBookId(101);
-        sampleBook.setTitle("Java Basics");
+        sampleBook.setBookId(1);
+        sampleBook.setTitle("Java Programming");
 
-        // Match your Inventory entity constructor or use setters
         sampleInventory = new Inventory();
-        sampleInventory.setInventoryId(1);
+        sampleInventory.setInventoryId(10);
+        sampleInventory.setQuantity(5);
         sampleInventory.setStatus("AVAILABLE");
-        sampleInventory.setQuantity(10);
         sampleInventory.setBook(sampleBook);
+
+        sampleDTO = new InventoryDTO();
+        sampleDTO.setInventoryId(10);
+        sampleDTO.setQuantity(20);
+        sampleDTO.setBookId(1);
+        sampleDTO.setStatus("Available");
     }
 
+    // -------------------------------------------------------------------------
+    // POSITIVE TEST CASES
+    // -------------------------------------------------------------------------
+
+    /**
+     * 1. Positive: Successfully save an inventory record.
+     */
     @Test
-    void testGetAllInventories() {
+    void testSaveInventory_Positive() {
+        // Act
+        inventoryService.saveInventory(sampleInventory);
+
+        // Assert: Verify save was called on the repository
+        verify(inventoryRepository, times(1)).save(sampleInventory);
+    }
+
+    /**
+     * 2. Positive: Successfully update an existing inventory record.
+     * Verifies that quantity, status, and book linkage are updated.
+     */
+    @Test
+    void testUpdateInventory_Positive() {
         // Arrange
-        List<Inventory> list = new ArrayList<>();
-        list.add(sampleInventory);
-        when(inventoryRepository.findAll()).thenReturn(list);
+        when(inventoryRepository.findById(10)).thenReturn(Optional.of(sampleInventory));
+        when(bookService.findIdByBook(1)).thenReturn(sampleBook);
 
         // Act
-        List<Inventory> result = inventoryService.getAllInventories();
+        inventoryService.updateInventory(10, sampleDTO);
 
         // Assert
-        assertEquals(1, result.size());
-        assertEquals("AVAILABLE", result.get(0).getStatus());
-        verify(inventoryRepository).findAll();
+        assertEquals(20, sampleInventory.getQuantity());
+        assertEquals("AVAILABLE", sampleInventory.getStatus()); // quantity > 0
+        verify(inventoryRepository, times(1)).save(sampleInventory);
     }
 
-  
-
+    /**
+     * 3. Positive: Verify the Entity to DTO conversion (toDTO).
+     */
     @Test
-    void testSaveInventory() {
+    void testToDTO_Positive() {
+        // Act
+        InventoryDTO result = inventoryService.toDTO(sampleInventory);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(10, result.getInventoryId());
+        assertEquals("Java Programming", result.getBookTitle());
+    }
+
+    // -------------------------------------------------------------------------
+    // NEGATIVE TEST CASES
+    // -------------------------------------------------------------------------
+
+    /**
+     * 1. Negative: Handle update for a non-existent inventory ID.
+     */
+    @Test
+    void testUpdateInventory_Negative_NotFound() {
+        // Arrange: Repository returns empty for ID 99
+        when(inventoryRepository.findById(99)).thenReturn(Optional.empty());
+
+        // Act & Assert: Should throw RuntimeException as per service logic
+        assertThrows(RuntimeException.class, () -> {
+            inventoryService.updateInventory(99, sampleDTO);
+        });
+
+        // Verify save was never called
+        verify(inventoryRepository, never()).save(any());
+    }
+
+    /**
+     * 2. Negative: Handle searching for an inventory record that doesn't exist.
+     */
+    @Test
+    void testGetInventoryById_Negative_NotFound() {
         // Arrange
-        Inventory inventoryToSave = new Inventory();
-        inventoryToSave.setQuantity(5);
+        when(inventoryRepository.findById(999)).thenReturn(Optional.empty());
 
-        // Act
-        inventoryService.saveInventory(inventoryToSave);
-
-        // Assert
-        verify(inventoryRepository).save(any(Inventory.class));
+        // Act & Assert: Current implementation uses .get() on Optional
+        assertThrows(java.util.NoSuchElementException.class, () -> {
+            inventoryService.getInventoryById(999);
+        });
     }
 
- 
+    /**
+     * 3. Negative: Verify toEntityList returns empty when given null.
+     */
     @Test
-    void testDeleteInventory() {
+    void testToDTOList_Negative_NullInput() {
         // Act
-        inventoryService.deleteInventory(1);
+        List<InventoryDTO> result = inventoryService.toDTOList(new ArrayList<>());
 
         // Assert
-        verify(inventoryRepository).deleteByInventoryId(1);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 }

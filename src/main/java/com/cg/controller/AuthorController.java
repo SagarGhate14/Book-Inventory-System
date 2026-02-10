@@ -48,7 +48,12 @@ public class AuthorController {
     }
     
     @GetMapping("/edit/{id}")
-    public String updateAuthor(@PathVariable("id") int id, Model model) {
+    public String updateAuthor(@PathVariable("id") int id,BindingResult result, Model model) {
+    	if (result.hasErrors()) {
+            // DO NOT redirect. Return the view directly to keep the errors.
+            return "inventory/inventory-edit"; 
+        }
+    	
         Author author = authorService.getAuthorById(id);
         AuthorDTO authorDTO = authorService.toDTO(author);
         if (authorDTO == null) {

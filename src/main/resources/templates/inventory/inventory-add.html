@@ -92,6 +92,7 @@
                                     th:value="${book.bookId}" 
                                     th:text="${book.title}"></option>
                         </select>
+                         <div class="invalid-feedback" th:if="${#fields.hasErrors('bookId')}" th:errors="*{bookId}"></div>
                     </div>
                 </div>
 

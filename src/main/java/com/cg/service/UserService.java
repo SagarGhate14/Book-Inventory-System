@@ -21,26 +21,7 @@ public class UserService implements IUserService {
       @Autowired
       private BCryptPasswordEncoder passwordEncoder;
 
-    // Entity -> DTO (inside service, NOT a mapper class)
-    private UserDTO convertToDTO(User user) {
-        return new UserDTO(
-                user.getUserId(),
-                user.getUserName(),
-                user.getEmail(),
-                user.getRole(),
-                user.getPassword()
-        );
-    }
 
-    // DTO -> Entity (inside service, NOT a mapper class)
-    private User convertToEntity(UserDTO dto) {
-        User user = new User();
-        user.setUserId(dto.getUserId());
-        user.setUserName(dto.getUserName());
-        user.setEmail(dto.getEmail());
-        user.setRole(dto.getRole());
-        return user;
-    }
 
     @Override
     public List<User> getAllUsers() {

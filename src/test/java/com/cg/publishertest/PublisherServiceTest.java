@@ -2,6 +2,7 @@ package com.cg.publishertest;
 
 import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;
+import com.cg.exception.GlobalException.BadRequestException;
 import com.cg.exception.GlobalException.PublisherNotFoundException;
 import com.cg.repository.PublisherRepository;
 import com.cg.service.PublisherService;
@@ -22,73 +23,121 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class PublisherServiceTest {
 
-    @Mock
+	@Mock
     private PublisherRepository publisherRepository;
 
     @InjectMocks
     private PublisherService publisherService;
 
-    private Publisher p1;
-    private Publisher p2;
+    private Publisher samplePublisher;
 
     @BeforeEach
     void setUp() {
-        p1 = new Publisher();
-        p1.setPublisherId(1);
-        p1.setPublisherName("O'Reilly");
-        p1.setAddress("CA");
-
-        p2 = new Publisher();
-        p2.setPublisherId(2);
-        p2.setPublisherName("Pearson");
-        p2.setAddress("UK");
+        // Initialize a sample publisher for testing
+        samplePublisher = new Publisher();
+        samplePublisher.setPublisherId(10);
+        samplePublisher.setPublisherName("Pearson Education");
+        samplePublisher.setAddress("London, UK");
     }
 
-    @Test
-    void testFindById_Success() {
-        // Arrange
-        Publisher expectedPublisher = new Publisher();
-        expectedPublisher.setPublisherId(101);
-        expectedPublisher.setPublisherName("Oxford Press");
+    // -------------------------------------------------------------------------
+    // POSITIVE TEST CASES
+    // -------------------------------------------------------------------------
 
-        when(publisherRepository.findById(101)).thenReturn(Optional.of(expectedPublisher));
+    /**
+     * 1. Positive: Successfully save a publisher.
+     */
+    @Test
+    void testSavePublisher_Positive() {
+        // Arrange
+        when(publisherRepository.save(any(Publisher.class))).thenReturn(samplePublisher);
 
         // Act
-        Publisher actualPublisher = publisherService.findById(101);
+        Publisher saved = publisherService.savePublisher(samplePublisher);
 
         // Assert
-        assertNotNull(actualPublisher);
-        assertEquals("Oxford Press", actualPublisher.getPublisherName());
-        verify(publisherRepository, times(1)).findById(101);
+        assertNotNull(saved);
+        assertEquals("Pearson Education", saved.getPublisherName());
+        verify(publisherRepository, times(1)).save(samplePublisher);
     }
+
+    /**
+     * 2. Positive: Successfully find a publisher by valid ID.
+     */
     @Test
-    void testDeletePublisher_Success() {
+    void testFindById_Positive() {
         // Arrange
-        int pId = 202;
-        when(publisherRepository.existsById(pId)).thenReturn(true);
+        when(publisherRepository.findById(10)).thenReturn(Optional.of(samplePublisher));
 
         // Act
-        publisherService.deletePublisher(pId);
+        Publisher found = publisherService.findById(10);
 
         // Assert
-        verify(publisherRepository, times(1)).existsById(pId);
-        verify(publisherRepository, times(1)).deleteById(pId);
+        assertNotNull(found);
+        assertEquals(10, found.getPublisherId());
+        verify(publisherRepository, times(1)).findById(10);
     }
 
-
+    /**
+     * 3. Positive: Successfully update an existing publisher.
+     */
     @Test
-    void testDeletePublisher_ThrowsException_WhenIdNotFound() {
+    void testUpdatePublisher_Positive() {
+        // Arrange: Mock existence check and save operation
+        when(publisherRepository.existsById(10)).thenReturn(true);
+        when(publisherRepository.save(any(Publisher.class))).thenReturn(samplePublisher);
+
+        // Act
+        Publisher result = publisherService.updatePublisher(samplePublisher);
+
+        // Assert
+        assertNotNull(result);
+        verify(publisherRepository, times(1)).save(samplePublisher);
+    }
+
+    // -------------------------------------------------------------------------
+    // NEGATIVE TEST CASES
+    // -------------------------------------------------------------------------
+
+    /**
+     * 1. Negative: Throw BadRequestException when saving a null publisher.
+     */
+    @Test
+    void testSavePublisher_Negative_NullInput() {
+        // Act & Assert
+        assertThrows(BadRequestException.class, () -> {
+            publisherService.savePublisher(null);
+        });
+        verify(publisherRepository, never()).save(any());
+    }
+
+    /**
+     * 2. Negative: Throw PublisherNotFoundException when deleting a non-existent ID.
+     */
+    @Test
+    void testDeletePublisher_Negative_NotFound() {
         // Arrange
-        int pId = 999;
-        when(publisherRepository.existsById(pId)).thenReturn(false);
+        when(publisherRepository.existsById(99)).thenReturn(false);
 
         // Act & Assert
         assertThrows(PublisherNotFoundException.class, () -> {
-            publisherService.deletePublisher(pId);
+            publisherService.deletePublisher(99);
         });
+        verify(publisherRepository, never()).deleteById(99);
+    }
 
-        // Verify deleteById was NEVER called because validation failed
-        verify(publisherRepository, never()).deleteById(pId);
+    /**
+     * 3. Negative: Throw PublisherNotFoundException when finding a non-existent ID.
+     */
+    @Test
+    void testFindById_Negative_NotFound() {
+        // Arrange
+        when(publisherRepository.findById(99)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(PublisherNotFoundException.class, () -> {
+            publisherService.findById(99);
+        });
     }
 
 }

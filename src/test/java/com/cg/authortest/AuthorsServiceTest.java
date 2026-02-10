@@ -2,6 +2,7 @@ package com.cg.authortest;
 
 import com.cg.dto.AuthorDTO;
 import com.cg.entity.Author;
+import com.cg.exception.GlobalException.AuthorNotFoundException;
 import com.cg.repository.AuthorRepository;
 import com.cg.service.AuthorService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,70 +23,125 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class AuthorsServiceTest {
 
-    @Mock
-    private AuthorRepository authorRepository;
+	 @Mock
+	    private AuthorRepository authorRepository;
 
-    @InjectMocks
-    private AuthorService authorService;
+	    @InjectMocks
+	    private AuthorService authorService;
 
-    private Author a1;
-    private Author a2;
+	    private Author sampleAuthor;
 
-    @BeforeEach
-    void setup() {
-        a1 = new Author();
-        a1.setAuthorId(1);
-        a1.setAuthorName("John Doe");
-        a1.setAuthorEmail("john@gmail.com");
-        a1.setAuthorCountry("USA");
+	    @BeforeEach
+	    void setUp() {
+	        // Initialize a sample Author object before each test
+	        sampleAuthor = new Author();
+	        sampleAuthor.setAuthorId(101);
+	        sampleAuthor.setAuthorName("J.K. Rowling");
+	        sampleAuthor.setAuthorEmail("jk@example.com");
+	        sampleAuthor.setAuthorCountry("UK");
+	    }
 
-        a2 = new Author();
-        a2.setAuthorId(2);
-        a2.setAuthorName("Mary Jane");
-        a2.setAuthorEmail("mary@gmail.com");
-        a2.setAuthorCountry("UK");
-    }
+	    // --- POSITIVE TEST CASES ---
 
-    @Test
-    void testGetAllAuthors() {
-        // 1. Create a list of ENTITIES (what the Repo returns)
-        List<Author> entities = new ArrayList<>();
-        entities.add(a1);
-        entities.add(a2);
+	    /**
+	     * 1. Positive: Successfully retrieve an author when a valid ID exists.
+	     */
+	    @Test
+	    void testGetAuthorById_Positive() {
+	        // Arrange: Tell the mock repository to return the sample author for ID 101
+	        when(authorRepository.findById(101)).thenReturn(Optional.of(sampleAuthor));
 
-        // 2. Mock the Repo to return the ENTITY list
-        when(authorRepository.findAll()).thenReturn(entities);
+	        // Act: Call the service method
+	        Author result = authorService.getAuthorById(101);
 
-        // 3. Call the service (which converts them to DTOs)
-        List<Author> result = authorService.getAllAuthors();
+	        // Assert: Verify the result is not null and the data matches
+	        assertNotNull(result);
+	        assertEquals("J.K. Rowling", result.getAuthorName());
+	        verify(authorRepository, times(1)).findById(101);
+	    }
 
-        // 4. Assertions
-        assertNotNull(result, "The result list should not be null");
-        assertEquals(2, result.size(), "The list size should be 2");
-        
-        // Check the first item in the list
-        assertEquals("John Doe", result.get(0).getAuthorName());
-        assertEquals(1, result.get(0).getAuthorId());
-    }
+	    /**
+	     * 2. Positive: Successfully retrieve all authors from the database.
+	     */
+	    @Test
+	    void testGetAllAuthors_Positive() {
+	        // Arrange: Mock the list returned by the repository
+	        List<Author> authors = Arrays.asList(sampleAuthor, new Author());
+	        when(authorRepository.findAll()).thenReturn(authors);
 
-    @Test
-    void testMappingToDTO() {
-        // Test single mapping
-        AuthorDTO dto = authorService.toDTO(a1);
-        
-        assertNotNull(dto);
-        assertEquals("John Doe", dto.getAuthorName());
-        assertEquals(1, dto.getAuthorId());
-    }
+	        // Act: Call the service
+	        List<Author> resultList = authorService.getAllAuthors();
 
-    @Test
-    void testDeleteAuthor() {
-        // ⛳️ FIX: Mock the exists check so the service 'if' block passes
-        when(authorRepository.existsById(1)).thenReturn(true);
+	        // Assert: Verify list size and repository interaction
+	        assertEquals(2, resultList.size());
+	        verify(authorRepository, times(1)).findAll();
+	    }
 
-        authorService.deleteAuthor(1);
+	    /**
+	     * 3. Positive: Successfully update an existing author.
+	     */
+	    @Test
+	    void testUpdateAuthor_Positive() {
+	        // Arrange: Mock existence check and save operation
+	        when(authorRepository.existsById(101)).thenReturn(true);
+	        when(authorRepository.save(any(Author.class))).thenReturn(sampleAuthor);
 
-        // Verify repository was called
-        verify(authorRepository, times(1)).deleteById(1);
-    }
+	        // Act: Perform update
+	        Author updatedAuthor = authorService.updateAuthor(sampleAuthor);
+
+	        // Assert: Verify update was successful
+	        assertNotNull(updatedAuthor);
+	        assertEquals(101, updatedAuthor.getAuthorId());
+	        verify(authorRepository, times(1)).save(sampleAuthor);
+	    }
+
+	    // --- NEGATIVE TEST CASES ---
+
+	    /**
+	     * 1. Negative: Throw AuthorNotFoundException when searching for a non-existent ID.
+	     */
+	    @Test
+	    void testGetAuthorById_Negative_NotFound() {
+	        // Arrange: Mock repository to return empty for ID 999
+	        when(authorRepository.findById(999)).thenReturn(Optional.empty());
+
+	        // Act & Assert: Verify that the specific exception is thrown
+	        assertThrows(AuthorNotFoundException.class, () -> {
+	            authorService.getAuthorById(999);
+	        });
+	    }
+
+	    /**
+	     * 2. Negative: Throw AuthorNotFoundException when attempting to delete a non-existent author.
+	     */
+	    @Test
+	    void testDeleteAuthor_Negative_NotFound() {
+	        // Arrange: Mock existsById to return false
+	        when(authorRepository.existsById(999)).thenReturn(false);
+
+	        // Act & Assert: Should throw exception before reaching the delete call
+	        assertThrows(AuthorNotFoundException.class, () -> {
+	            authorService.deleteAuthor(999);
+	        });
+	        
+	        // Verify deleteById was NEVER called because the check failed
+	        verify(authorRepository, never()).deleteById(999);
+	    }
+
+	    /**
+	     * 3. Negative: Throw AuthorNotFoundException when updating an author who does not exist.
+	     */
+	    @Test
+	    void testUpdateAuthor_Negative_NotFound() {
+	        // Arrange: Mock existsById to return false for the author's ID
+	        when(authorRepository.existsById(101)).thenReturn(false);
+
+	        // Act & Assert: Verify exception
+	        assertThrows(AuthorNotFoundException.class, () -> {
+	            authorService.updateAuthor(sampleAuthor);
+	        });
+
+	        // Verify save was NEVER called
+	        verify(authorRepository, never()).save(any(Author.class));
+	    }
 }

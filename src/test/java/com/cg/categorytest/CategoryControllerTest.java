@@ -11,10 +11,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,41 +25,102 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)   // prevents 403 errors if security is enabled
 public class CategoryControllerTest {
 
-    @Autowired
+	@Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private CategoryService categoryService;
 
+    // -------------------------------------------------------------------------
+    // POSITIVE TEST CASES
+    // -------------------------------------------------------------------------
 
-
-
-    // 1) GET /category/new -> Should display add-category form
+    /**
+     * 1. Positive: Successfully view the list of categories.
+     */
     @Test
-    void newForm_shouldRenderAddView() throws Exception {
-        mockMvc.perform(get("/category/new"))
+    void testAllCategory_Positive() throws Exception {
+        // Arrange
+        when(categoryService.getAllCategories()).thenReturn(new ArrayList<>());
+        
+        // Act & Assert
+        mockMvc.perform(get("/category/list")
+                .with(csrf())) // This provides the dummy CSRF token for the template
                 .andExpect(status().isOk())
-                .andExpect(view().name("Category/category-add"))
-                .andExpect(model().attributeExists("categoryDTO"));
+                .andExpect(view().name("Category/category-list"))
+                .andExpect(model().attributeExists("categories"));
     }
 
-    // 2) POST /category/new -> Should save category and redirect to list
+    /**
+     * 2. Positive: Successfully add a new category with valid data.
+     * Matches @Size(min=3) and @Pattern (letters, spaces, &).
+     */
     @Test
-    void addCategory_shouldMapDTOToEntityAndSave_thenRedirect() throws Exception {
-        Category entity = new Category();
-        entity.setCategoryId(0);
-        entity.setCategoryName("Mystery");
-
-        when(categoryService.toEntity(any(CategoryDTO.class))).thenReturn(entity);
-        when(categoryService.addCategory(entity)).thenReturn(entity);
-
+    void testAddCategory_Positive() throws Exception {
         mockMvc.perform(post("/category/new")
-                        .param("categoryId", "0")
-                        .param("categoryName", "Mystery"))
+                .with(csrf()) // Required if Spring Security is active
+                .param("categoryName", "Science & Fiction")) 
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/category/list"));
 
-        verify(categoryService, times(1)).toEntity(any(CategoryDTO.class));
-        verify(categoryService, times(1)).addCategory(any(Category.class));
+        verify(categoryService, times(1)).addCategory(any());
+    }
+
+    /**
+     * 3. Positive: Successfully delete a category.
+     */
+    @Test
+    void testDeleteCategory_Positive() throws Exception {
+        mockMvc.perform(get("/category/delete/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/category/list"));
+
+        verify(categoryService).deleteCategory(1);
+    }
+
+    // -------------------------------------------------------------------------
+    // NEGATIVE TEST CASES (Validation & Logic)
+    // -------------------------------------------------------------------------
+
+    /**
+     * 1. Negative: Add Category fails because name is too short (triggers @Size).
+     */
+    @Test
+    void testAddCategory_Negative_TooShort() throws Exception {
+        mockMvc.perform(post("/category/new")
+                .with(csrf())
+                .param("categoryName", "IT")) // Only 2 chars, min is 3
+                .andExpect(status().isOk())
+                .andExpect(view().name("Category/category-add"))
+                .andExpect(model().attributeHasFieldErrors("categoryDTO", "categoryName"));
+    }
+
+    /**
+     * 2. Negative: Add Category fails due to illegal characters (triggers @Pattern).
+     */
+    @Test
+    void testAddCategory_Negative_InvalidPattern() throws Exception {
+        mockMvc.perform(post("/category/new")
+                .with(csrf())
+                .param("categoryName", "Category_123!")) // Numbers and ! are forbidden
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("categoryDTO", "categoryName"));
+    }
+
+    /**
+     * 3. Negative: Update Category fails because name is blank (triggers @NotBlank).
+     */
+    @Test
+    void testUpdateCategory_Negative_Blank() throws Exception {
+        mockMvc.perform(post("/category/update")
+                .with(csrf())
+                .param("categoryId", "1")
+                .param("categoryName", "")) // Blank name
+                .andExpect(status().isOk())
+                // Based on your code logic, it returns the "add" view on update error
+                .andExpect(view().name("Category/category-add")) 
+                .andExpect(model().attributeHasFieldErrors("categoryDTO", "categoryName"));
+        
+        verify(categoryService, never()).updateCategory(any());
     }
 }

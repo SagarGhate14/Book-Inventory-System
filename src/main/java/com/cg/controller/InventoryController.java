@@ -39,6 +39,7 @@ public class InventoryController {
         model.addAttribute("inventories", inventoryDTOList);
         return "inventory/inventory-list";
     }
+    
     @GetMapping("/add")
     public String showAddForm(Model model) {
     	List<Book> books = bookService.getAllBooks();
@@ -50,7 +51,12 @@ public class InventoryController {
 
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute("inventory") InventoryDTO inventoryDTO,BindingResult result,Model model) {
-    	
+    	 
+    	 if (result.hasErrors()) {
+    	        // Re-populate the books list for the dropdown
+    	        model.addAttribute("books", bookService.getAllBooks());
+    	        return "inventory/inventory-add"; 
+    	    }
     	
     	 
     	int safeQuantity = Math.max(0, inventoryDTO.getQuantity());
@@ -87,6 +93,8 @@ public class InventoryController {
     
     @PostMapping("/update")
     public String updateInventory(@Valid @ModelAttribute("inventoryDTO") InventoryDTO inventoryDTO,BindingResult result, RedirectAttributes redirectAttributes) {
+    	
+   
     	 
     	Inventory existingWithBook = inventoryService.findBookById(inventoryDTO.getBookId());
     	 

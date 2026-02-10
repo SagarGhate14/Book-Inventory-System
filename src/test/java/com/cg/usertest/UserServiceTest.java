@@ -1,8 +1,11 @@
 package com.cg.usertest;
 
+import com.cg.dto.UserDTO;
 import com.cg.entity.User;
 import com.cg.repository.UserRepository;
 import com.cg.service.UserService;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,59 +22,132 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Mock
-    private UserRepository userRepository;
+	 @Mock
+	    private UserRepository userRepository;
 
-    @Mock
-    private BCryptPasswordEncoder passwordEncoder;
+	    @Mock
+	    private BCryptPasswordEncoder passwordEncoder;
 
-    @InjectMocks
-    private UserService userService;
+	    @InjectMocks
+	    private UserService userService;
 
-    @Test
-    void saveUser_ShouldEncryptPasswordAndSave() {
-        // Arrange
-        User user = new User();
-        user.setPassword("rawPassword");
-        
-        when(passwordEncoder.encode("rawPassword")).thenReturn("encryptedPassword");
-        when(userRepository.save(any(User.class))).thenReturn(user);
+	    private User sampleUser;
+	    private UserDTO sampleDTO;
 
-        // Act
-        User savedUser = userService.saveUser(user);
+	    @BeforeEach
+	    void setUp() {
+	        // Prepare sample User entity
+	        sampleUser = new User();
+	        sampleUser.setUserId(101);
+	        sampleUser.setUserName("JohnDoe");
+	        sampleUser.setEmail("john@example.com");
+	        sampleUser.setRole("ADMIN");
+	        sampleUser.setPassword("RawPassword123");
 
-        // Assert
-        assertEquals("encryptedPassword", savedUser.getPassword());
-        verify(passwordEncoder, times(1)).encode("rawPassword");
-        verify(userRepository, times(1)).save(user);
-    }
+	        // Prepare sample User DTO
+	        sampleDTO = new UserDTO();
+	        sampleDTO.setUserId(101);
+	        sampleDTO.setUserName("JohnDoe");
+	        sampleDTO.setEmail("john@example.com");
+	        sampleDTO.setRole("ADMIN");
+	        sampleDTO.setPassword("RawPassword123");
+	    }
 
-    @Test
-    void getAllUsers_ShouldReturnList() {
-        // Arrange
-        when(userRepository.findAll()).thenReturn(List.of(new User(), new User()));
+	    // -------------------------------------------------------------------------
+	    // POSITIVE TEST CASES
+	    // -------------------------------------------------------------------------
 
-        // Act
-        List<User> result = userService.getAllUsers();
+	    /**
+	     * 1. Positive: Successfully save a user.
+	     * Verifies that the password is encrypted BEFORE saving to repository.
+	     */
+	    @Test
+	    void testSaveUser_Positive() {
+	        // Arrange: Mock encoder and repository
+	        when(passwordEncoder.encode("RawPassword123")).thenReturn("Encoded_Hash_XYZ");
+	        when(userRepository.save(any(User.class))).thenReturn(sampleUser);
 
-        // Assert
-        assertEquals(2, result.size());
-        verify(userRepository, times(1)).findAll();
-    }
+	        // Act
+	        User result = userService.saveUser(sampleUser);
 
-    @Test
-    void getUserById_ShouldReturnUser_WhenIdExists() {
-        // Arrange
-        User user = new User();
-        user.setUserId(1);
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
+	        // Assert
+	        assertNotNull(result);
+	        assertEquals("Encoded_Hash_XYZ", result.getPassword());
+	        verify(passwordEncoder, times(1)).encode("RawPassword123");
+	        verify(userRepository, times(1)).save(sampleUser);
+	    }
 
-        // Act
-        User result = userService.getUserById(1);
+	    /**
+	     * 2. Positive: Successfully find a user by a valid ID.
+	     */
+	    @Test
+	    void testGetUserById_Positive() {
+	        // Arrange
+	        when(userRepository.findById(101)).thenReturn(Optional.of(sampleUser));
 
-        // Assert
-        assertNotNull(result);
-        assertEquals(1, result.getUserId());
-        verify(userRepository).findById(1);
-    }
+	        // Act
+	        User result = userService.getUserById(101);
+
+	        // Assert
+	        assertNotNull(result);
+	        assertEquals("JohnDoe", result.getUserName());
+	        verify(userRepository).findById(101);
+	    }
+
+	    /**
+	     * 3. Positive: Verify the toDTO mapping logic.
+	     */
+	    @Test
+	    void testToDTO_Positive() {
+	        // Act
+	        UserDTO resultDTO = userService.toDTO(sampleUser);
+
+	        // Assert
+	        assertNotNull(resultDTO);
+	        assertEquals(101, resultDTO.getUserId());
+	        assertEquals("ADMIN", resultDTO.getRole());
+	    }
+
+	    // -------------------------------------------------------------------------
+	    // NEGATIVE TEST CASES
+	    // -------------------------------------------------------------------------
+
+	    /**
+	     * 1. Negative: Throw NoSuchElementException when ID is not found.
+	     * Based on service code: userRepository.findById(id).get()
+	     */
+	    @Test
+	    void testGetUserById_Negative_NotFound() {
+	        // Arrange
+	        when(userRepository.findById(999)).thenReturn(Optional.empty());
+
+	        // Act & Assert
+	        assertThrows(java.util.NoSuchElementException.class, () -> {
+	            userService.getUserById(999);
+	        });
+	    }
+
+	    /**
+	     * 2. Negative: Handle null input in toEntity conversion gracefully.
+	     */
+	    @Test
+	    void testToEntity_Negative_NullInput() {
+	        // Act
+	        User result = userService.toEntity(null);
+
+	        // Assert
+	        assertNull(result);
+	    }
+
+	    /**
+	     * 3. Negative: Ensure toDTOList returns null if input entity list is null.
+	     */
+	    @Test
+	    void testToDTOList_Negative_NullInput() {
+	        // Act
+	        List<UserDTO> result = userService.toDTOList(null);
+
+	        // Assert
+	        assertNull(result);
+	    }
 }
