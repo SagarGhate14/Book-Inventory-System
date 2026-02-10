@@ -85,25 +85,20 @@ public class InventoryController {
         return "redirect:/inventories/list";
     }
     
-    @PostMapping("/edit")
-    public String updateInventory(@Valid @ModelAttribute InventoryDTO inventoryDTO, RedirectAttributes redirectAttributes, BindingResult result) {
+    @PostMapping("/update")
+    public String updateInventory(@Valid @ModelAttribute("inventoryDTO") InventoryDTO inventoryDTO,BindingResult result, RedirectAttributes redirectAttributes) {
     	 
-
-        Inventory currentInventory = inventoryService.getInventoryById(inventoryDTO.getInventoryId());
-        Inventory existingWithBook = inventoryService.findBookById(inventoryDTO.getBookId());
-
+    	Inventory existingWithBook = inventoryService.findBookById(inventoryDTO.getBookId());
+    	 
         // Duplicate check
         if (existingWithBook != null && !existingWithBook.getInventoryId().equals(inventoryDTO.getInventoryId())) {
             redirectAttributes.addFlashAttribute("error", "This book is already assigned to another inventory slot.");
             return "redirect:/inventories/list";
         }
-
-        // Update and Save
-        currentInventory.setQuantity(inventoryDTO.getQuantity());
-        currentInventory.setBook(bookService.findIdByBook(inventoryDTO.getBookId()));
-        currentInventory.setStatus(inventoryDTO.getQuantity() > 0 ? "AVAILABLE" : "OUT_OF_STOCK");
-
-        inventoryService.saveInventory(currentInventory);
+ 
+  //       Update and Save
+ 
+        inventoryService.updateInventory(inventoryDTO.getInventoryId(), inventoryDTO);
         redirectAttributes.addFlashAttribute("success", "Inventory updated successfully!");
         return "redirect:/inventories/list";
     }

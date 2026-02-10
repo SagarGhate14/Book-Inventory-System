@@ -20,6 +20,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
     @Query("DELETE FROM Inventory i WHERE i.id = :id")
     void deleteByInventoryId(@Param("id") int id);
 	
-	@Query("SELECT i FROM Inventory i WHERE i.book.bookId = :bookId")
+	
 	 Optional<Inventory> findByBook_BookId(int bookId);
 }

@@ -20,6 +20,8 @@ public class InventoryService implements IInventoryService {
 
     @Autowired
     private InventoryRepository inventoryRepository;
+    @Autowired
+    private BookService bookService;
 
    
     @Override
@@ -47,7 +49,8 @@ public class InventoryService implements IInventoryService {
         Inventory inv = inventoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
         inv.setQuantity(dto.getQuantity());
-       // inv.setStatus(dto.getQuantity() > 0 ? "Available" : "Out of Stock");
+        inv.setBook(bookService.findIdByBook(dto.getBookId()));
+        inv.setStatus(dto.getQuantity() > 0 ? "AVAILABLE" : "OUT_OF_STOCK");
         inventoryRepository.save(inv);
     }
 

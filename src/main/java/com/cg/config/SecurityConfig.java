@@ -21,7 +21,7 @@ public class SecurityConfig {
 	    http
 	        .authorizeHttpRequests(auth -> auth
 	            // 1. PUBLIC ACCESS (Added /favicon.ico and static resources)
-	            .requestMatchers("/login", "/users/new", "/users/add","/users/verify-corp","/users/newAdmin").permitAll()
+	            .requestMatchers("/login", "/users/new", "/users/add","/users/verify-corp","/users/newAdmin","/users/addAdmin").permitAll()
 	            
 	            
 	            // 2. ADMIN ONLY

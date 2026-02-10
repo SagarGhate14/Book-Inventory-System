@@ -78,8 +78,20 @@ public class UserController {
       userService.saveUser(user);
         return "redirect:/users/list";
     }
-
-
+    
+    @PostMapping("/addAdmin")
+    public String saveAdmin(@Valid @ModelAttribute("userDTO") UserDTO userDTO,BindingResult result) {
+    	if (result.hasErrors()) {
+	        // 2. If errors exist, stop and return the EDIT form
+	        return "user/admin-add"; 
+	    }
+    	
+      User user = userService.toEntity(userDTO);
+      userService.saveUser(user);
+        return "redirect:/users/list";
+    }
+    
+    
     // DELETE USER
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable int id) {

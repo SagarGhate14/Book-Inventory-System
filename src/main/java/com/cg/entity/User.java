@@ -2,6 +2,7 @@ package com.cg.entity;
 
 import java.util.List;
 
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +15,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -22,17 +26,25 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 
 	private int userId;
-	@Column
-	private String userName;
-	@Column
-	private String email;
 	
-	@Column
-	private String password;
-	
-	@Column
-	private String role;
+	  @NotBlank(message = "Username is required")
+	    @Size(min = 3, max = 50)
+	    @Column(nullable = false, unique = true, length = 50)
+	    private String userName;
 
+	    @NotBlank(message = "Email is required")
+	    @Email(message = "Please provide a valid email address")
+	    @Column(nullable = false, unique = true, length = 100)
+	    private String email;
+
+	    @NotBlank(message = "Password is required")
+	    @Size(min = 8, message = "Password must be at least 8 characters")
+	    @Column(nullable = false)
+	    private String password;
+
+	    @NotBlank(message = "Role is required")
+	    @Column(nullable = false)
+	    private String role;
 	
 
 	

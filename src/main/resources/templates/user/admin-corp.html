@@ -151,7 +151,11 @@
             <i class="bi bi-check-circle me-2"></i>
             <span th:text="${success}">Verification successful.</span>
         </div>
-        -->
+        --><div th:if="${error}" class="alert alert-danger d-flex align-items-center mb-4" 
+     style="border-radius: 10px; border: none; background-color: #fff1f2; color: #e11d48;">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <span th:text="${error}" class="small fw-bold">Error message here</span>
+</div>
 
         <!-- FULL FORM -->
         <form th:action="@{/users/verify-corp}" method="post">

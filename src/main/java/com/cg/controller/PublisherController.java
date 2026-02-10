@@ -75,6 +75,7 @@ public class PublisherController {
 		return "redirect:/publishers/list";
 	}
 	
+	
 	@GetMapping("/delete/{id}")
 	public String deletePublisher(@PathVariable("id") int pId) {
 		publisherService.deletePublisher(pId);

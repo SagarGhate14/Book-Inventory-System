@@ -1,177 +1,185 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Edit Inventory - CG Library</title>
-    <!-- Modern Google Font -->
-    <link href="https://fonts.googleapis.com" rel="stylesheet">
-    <!-- Bootstrap 5.3 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net">
-    <style>
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --bg-light: #f8f9fc;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edit Inventory - CG Library</title>
+<!-- Modern Google Font -->
+<link href="https://fonts.googleapis.com" rel="stylesheet">
+<!-- Bootstrap 5.3 CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net">
+<style>
+:root { 
+	-primary-color: #4361ee; 
+	-secondary-color: #3f37c9; 
+	-bg-light: #f8f9fc;
+}
 
-        body { 
-            background-color: var(--bg-light); 
-            font-family: 'Inter', sans-serif;
-            color: #333;
-        }
+body {
+	background-color: var(- -bg-light);
+	font-family: 'Inter', sans-serif;
+	color: #333;
+}
 
-        .navbar {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+.navbar {
+	background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
 
-        .navbar-brand { font-weight: 700; letter-spacing: -0.5px; }
+.navbar-brand {
+	font-weight: 700;
+	letter-spacing: -0.5px;
+}
 
-        .form-card {
-            border: none;
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-            max-width: 500px;
-            margin: 3rem auto;
-        }
+.form-card {
+	border: none;
+	border-radius: 12px;
+	background: #ffffff;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+	max-width: 500px;
+	margin: 3rem auto;
+}
 
-        .form-label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
-            color: #64748b;
-        }
+.form-label {
+	font-weight: 600;
+	font-size: 0.85rem;
+	text-transform: uppercase;
+	letter-spacing: 0.025em;
+	color: #64748b;
+}
 
-        .input-group-text {
-            background-color: #f8fafc;
-            border-color: #e2e8f0;
-            color: #94a3b8;
-        }
+.input-group-text {
+	background-color: #f8fafc;
+	border-color: #e2e8f0;
+	color: #94a3b8;
+}
 
-        .form-control, .form-select {
-            border-color: #e2e8f0;
-            padding: 0.6rem 1rem;
-        }
+.form-control, .form-select {
+	border-color: #e2e8f0;
+	padding: 0.6rem 1rem;
+}
 
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-        }
+.form-control:focus, .form-select:focus {
+	border-color: var(- -primary-color);
+	box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
 
-        .btn-update {
-            background-color: #0d6efd; /* Use primary blue for update */
-            border: none;
-            font-weight: 600;
-            padding: 0.75rem;
-            border-radius: 8px;
-            transition: all 0.2s;
-            color: white;
-        }
+.btn-update {
+	background-color: #0d6efd; /* Use primary blue for update */
+	border: none;
+	font-weight: 600;
+	padding: 0.75rem;
+	border-radius: 8px;
+	transition: all 0.2s;
+	color: white;
+}
 
-        .btn-update:hover {
-            background-color: #0b5ed7;
-            transform: translateY(-1px);
-            color: white;
-        }
+.btn-update:hover {
+	background-color: #0b5ed7;
+	transform: translateY(-1px);
+	color: white;
+}
 
-        .btn-back {
-            color: #64748b;
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
+.btn-back {
+	color: #64748b;
+	font-weight: 500;
+	text-decoration: none;
+	transition: color 0.2s;
+}
 
-        .btn-back:hover { color: #1e293b; }
+.btn-back:hover {
+	color: #1e293b;
+}
 
-        .icon-circle {
-            width: 64px;
-            height: 64px;
-            background-color: #fff7ed; /* Light orange for edit */
-            color: #f59e0b; /* Orange icon */
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            margin-bottom: 1.5rem;
-        }
-    </style>
+.icon-circle {
+	width: 64px;
+	height: 64px;
+	background-color: #fff7ed; /* Light orange for edit */
+	color: #f59e0b; /* Orange icon */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	margin-bottom: 1.5rem;
+}
+</style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">📚 <span class="ms-2">CG Library</span></a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
-                <a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
-                <a class="nav-link active" th:href="@{/inventories/list}">Inventory</a>
-            </div>
-        </div>
-    </nav>
+	<!-- Navigation Bar -->
+	<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+		<div class="container">
+			<a class="navbar-brand" href="#">📚 <span class="ms-2">CG
+					Library</span></a>
+			<div class="navbar-nav ms-auto">
+				<a class="nav-link text-white-50" th:href="@{/authors/list}">Authors</a>
+				<a class="nav-link text-white-50" th:href="@{/books/list}">Books</a>
+				<a class="nav-link active" th:href="@{/inventories/list}">Inventory</a>
+			</div>
+		</div>
+	</nav>
 
-    <div class="container">
-        <div class="card form-card p-4 p-md-5">
-            <div class="text-center">
-                <div class="icon-circle">
-                    <i class="bi bi-pencil-square fs-2"></i>
-                </div>
-                <h3 class="fw-bold mb-1" style="color: #1e293b;">Edit Inventory</h3>
-                <p class="text-muted small mb-4">Modify existing stock quantity and status.</p>
-            </div>
+	<div class="container">
+		<div class="card form-card p-4 p-md-5">
+			<div class="text-center">
+				<div class="icon-circle">
+					<i class="bi bi-pencil-square fs-2"></i>
+				</div>
+				<h3 class="fw-bold mb-1" style="color: #1e293b;">Edit Inventory</h3>
+				<p class="text-muted small mb-4">Modify existing stock quantity
+					and status.</p>
+			</div>
 
-            <!-- Form bound to existing Inventory object -->
-            <form th:action="@{/inventories/edit}" th:object="${inventory}" method="post">
-            
-             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                
-                <!-- Hidden ID field to ensure we update, not create new -->
-                <input type="hidden" th:field="*{inventoryId}" />
+			<!-- Form bound to existing Inventory object -->
+			<form th:action="@{/inventories/update}" th:object="${inventory}"
+				method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+				<!-- Hidden ID field to ensure we update, not create new -->
+				<input type="hidden" th:field="*{inventoryId}" />
 
-                <!-- Select Book (Read Only in Edit mode usually recommended) -->
-                <div class="mb-4">
-                    <label class="form-label mb-2">Book Title</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-book"></i></span>
-                        <!-- We use bookId to bind back to the DTO -->
-                        <select class="form-select" th:field="*{bookId}" required>
-                            <option th:each="book : ${books}" 
-                                    th:value="${book.bookId}" 
-                                    th:text="${book.title}"
-                                    th:selected="${book.bookId == inventory.bookId}">
-                            </option>
-                        </select>
-                    </div>
-                </div>
+				<!-- Select Book (Read Only in Edit mode usually recommended) -->
+				<div class="mb-4">
+					<label class="form-label mb-2">Book Title</label>
+					<div class="input-group">
+						<span class="input-group-text"><i class="bi bi-book"></i></span>
+						<!-- We use bookId to bind back to the DTO -->
+						<select class="form-select" th:field="*{bookId}" required>
+							<option th:each="book : ${books}" th:value="${book.bookId}"
+								th:text="${book.title}"
+								th:selected="${book.bookId == inventory.bookId}"></option>
+						</select>
+					</div>
+				</div>
 
-                <!-- Quantity -->
-                <div class="mb-4">
-                    <label class="form-label mb-2">Stock Quantity</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-hash"></i></span>
-                        <input type="number" th:field="*{quantity}" class="form-control" 
-                               placeholder="Update amount" required min="0">
-                    </div>
-                </div>
+				<!-- Quantity -->
+				<div class="mb-4">
+					<label class="form-label mb-2">Stock Quantity</label>
+					<div class="input-group">
+						<span class="input-group-text"><i class="bi bi-hash"></i></span> <input
+							type="number" th:field="*{quantity}" class="form-control"
+							placeholder="Update amount" required min="0">
+					</div>
+				</div>
 
-                <div class="d-grid gap-3">
-                    <button type="submit" class="btn btn-update text-white">
-                        <i class="bi bi-arrow-repeat me-2"></i>Update Stock Record
-                    </button>
-                    <a th:href="@{/inventories/list}" class="text-center btn-back small">
-                        <i class="bi bi-arrow-left me-1"></i> Cancel Changes
-                    </a>
-                </div>
-            </form>
-        </div>
-    </div>
+				<div class="d-grid gap-3">
+					<button type="submit" class="btn btn-update text-white">
+						<i class="bi bi-arrow-repeat me-2"></i>Update Stock Record
+					</button>
+					<a th:href="@{/inventories/list}"
+						class="text-center btn-back small"> <i
+						class="bi bi-arrow-left me-1"></i> Cancel Changes
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net"></script>
+	<!-- Bootstrap JS Bundle -->
+	<script src="https://cdn.jsdelivr.net"></script>
 </body>
 </html>

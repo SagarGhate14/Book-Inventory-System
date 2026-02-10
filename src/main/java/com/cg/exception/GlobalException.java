@@ -1,10 +1,14 @@
 package com.cg.exception;
 
 import org.springframework.dao.DataIntegrityViolationException;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.http.HttpStatus;
 
 @ControllerAdvice
 public class GlobalException {
@@ -50,6 +54,12 @@ public class GlobalException {
         
         // 3. Redirect back to the authors list (or wherever they were)
         return "redirect:/authors/list"; 
+    }
+    
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleNoResourceFound(NoResourceFoundException ex) {
+        // Do nothing. This prevents the "CRASH DETECTED" log for missing icons.
     }
 
 

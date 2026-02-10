@@ -136,7 +136,7 @@
                            class="form-control"
                            placeholder="John Doe"
                            required>
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">
+                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">
                         Please enter a valid name.
                     </div>
                 </div>
@@ -149,7 +149,7 @@
                            class="form-control"
                            placeholder="john@example.com"
                            required>
-                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                    <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
                         Please enter a valid email.
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                                class="form-control"
                                placeholder="••••••••"
                                required>
-                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
+                        <div class="text-danger small mt-1"  th:if="${#fields.hasErrors('password')}" th:errors="*{password}">
                             Please enter a valid password.
                         </div>
                     </div>
