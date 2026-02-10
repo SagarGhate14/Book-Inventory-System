@@ -2,6 +2,7 @@ package com.cg.usertest;
 
 import com.cg.dto.UserDTO;
 import com.cg.entity.User;
+import com.cg.exception.GlobalException;
 import com.cg.repository.UserRepository;
 import com.cg.service.UserService;
 
@@ -122,10 +123,12 @@ class UserServiceTest {
 	        when(userRepository.findById(999)).thenReturn(Optional.empty());
 
 	        // Act & Assert
-	        assertThrows(java.util.NoSuchElementException.class, () -> {
+	        // Expect your custom exception instead of NoSuchElementException
+	        assertThrows(GlobalException.UserNotFoundException.class, () -> {
 	            userService.getUserById(999);
 	        });
 	    }
+
 
 	    /**
 	     * 2. Negative: Handle null input in toEntity conversion gracefully.

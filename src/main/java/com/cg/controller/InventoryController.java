@@ -49,13 +49,14 @@ public class InventoryController {
 
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute("inventory") InventoryDTO inventoryDTO,BindingResult result,Model model) {
-    	 
+    	System.out.println("Step 1: Entered Save Method");
     	 if (result.hasErrors()) {
     	        // Re-populate the books list for the dropdown
+    		 result.getAllErrors().forEach(System.out::println);
     	        model.addAttribute("books", bookService.getAllBooks());
     	        return "inventory/inventory-add"; 
     	    }
-    	
+    	 System.out.println("Step 3: Entered Save Method");
     	 
     	int safeQuantity = Math.max(0, inventoryDTO.getQuantity());
         

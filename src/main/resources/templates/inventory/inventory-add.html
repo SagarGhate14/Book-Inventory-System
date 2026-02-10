@@ -80,6 +80,7 @@
 
             <!-- Single Form - Ensure th:object matches your controller -->
             <form th:action="@{/inventories/save}" th:object="${inventory}" method="post">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 
                 <!-- Select Book -->
                 <div class="mb-4">

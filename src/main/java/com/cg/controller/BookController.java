@@ -48,6 +48,8 @@ public class BookController {
 	
 	@GetMapping("/add")
 	public String addBook(Model model) {
+		BookDTO freshBook = new BookDTO();
+	    // Verify these are null here
 		model.addAttribute("bookDTO",new BookDTO());
 		model.addAttribute("categories",categoryService.getAllCategories());
 		model.addAttribute("authors",authorService.getAllAuthors());

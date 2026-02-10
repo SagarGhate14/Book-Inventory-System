@@ -9,11 +9,7 @@ public class InventoryDTO {
 
     private Integer inventoryId;
 
-    @NotBlank(message = "Status cannot be blank")
-    @Pattern(
-        regexp = "ACTIVE|INACTIVE|OUT_OF_STOCK",
-        message = "Status must be one of: ACTIVE, INACTIVE, OUT_OF_STOCK"
-    )
+   
     private String status;
 
     @Min(value = 0, message = "Quantity cannot be negative")
@@ -21,7 +17,8 @@ public class InventoryDTO {
 
     @NotNull(message = "A book must be associated with this inventory")
     private Integer bookId;
-    @NotBlank(message = "Book title cannot be blank")
+    
+    
     private String bookTitle;
 
     public InventoryDTO() {

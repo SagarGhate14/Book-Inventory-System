@@ -4,6 +4,7 @@ package com.cg.booktest;
 
 import com.cg.dto.BookDTO;
 import com.cg.entity.*;
+import com.cg.exception.GlobalException;
 import com.cg.repository.BookRepository;
 import com.cg.repository.InventoryRepository;
 import com.cg.service.BookService;
@@ -127,11 +128,12 @@ class BookServiceTest {
         // Arrange: Return empty Optional
         when(bookRepository.findById(999)).thenReturn(Optional.empty());
 
-        // Act & Assert: Verify the expected exception
-        assertThrows(java.util.NoSuchElementException.class, () -> {
+        // Act & Assert: Change the expected class to match your Service
+        assertThrows(GlobalException.BookNotFoundException.class, () -> {
             bookService.findIdByBook(999);
         });
     }
+
 
     /**
      * 2. Negative: Test toDTOList with a null input.

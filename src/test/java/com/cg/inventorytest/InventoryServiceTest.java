@@ -3,6 +3,7 @@ package com.cg.inventorytest;
 import com.cg.dto.InventoryDTO;
 import com.cg.entity.Book;
 import com.cg.entity.Inventory;
+import com.cg.exception.GlobalException;
 import com.cg.repository.InventoryRepository;
 import com.cg.service.BookService;
 import com.cg.service.InventoryService;
@@ -133,11 +134,13 @@ public class InventoryServiceTest {
         // Arrange
         when(inventoryRepository.findById(999)).thenReturn(Optional.empty());
 
-        // Act & Assert: Current implementation uses .get() on Optional
-        assertThrows(java.util.NoSuchElementException.class, () -> {
+        // Act & Assert
+        // Change from java.util.NoSuchElementException to your custom exception
+        assertThrows(GlobalException.InventoryNotFoundException.class, () -> {
             inventoryService.getInventoryById(999);
         });
     }
+
 
     /**
      * 3. Negative: Verify toEntityList returns empty when given null.
