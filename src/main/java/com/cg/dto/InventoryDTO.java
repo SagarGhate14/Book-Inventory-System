@@ -6,73 +6,71 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class InventoryDTO {
-	private Integer inventoryId;
-	
-	
+
+    private Integer inventoryId;
+
+    @NotBlank(message = "Status cannot be blank")
+    @Pattern(
+        regexp = "ACTIVE|INACTIVE|OUT_OF_STOCK",
+        message = "Status must be one of: ACTIVE, INACTIVE, OUT_OF_STOCK"
+    )
     private String status;
 
-   
+    @Min(value = 0, message = "Quantity cannot be negative")
     private int quantity;
 
     @NotNull(message = "A book must be associated with this inventory")
     private Integer bookId;
-    
-    
-	 private String bookTitle;
+    @NotBlank(message = "Book title cannot be blank")
+    private String bookTitle;
 
-	public InventoryDTO() {
-	}
+    public InventoryDTO() {
+    	
+    }
 
-	public InventoryDTO(int inventoryId, String status, int quantity) {
-		this.inventoryId = inventoryId;
-		this.status = status;
-		this.quantity = quantity;
-	}
+    public InventoryDTO(int inventoryId, String status, int quantity) {
+        this.inventoryId = inventoryId;
+        this.status = status;
+        this.quantity = quantity;
+    }
 
-	public int getInventoryId() {
-		return inventoryId;
-	}
+    public Integer getInventoryId() {
+        return inventoryId;
+    }
 
-	public void setInventoryId(int inventoryId) {
-		this.inventoryId = inventoryId;
-	}
+    public void setInventoryId(Integer inventoryId) {
+        this.inventoryId = inventoryId;
+    }
 
-	public String getStatus() {
-		return status;
-	}
-	
+    public String getStatus() {
+        return status;
+    }
 
-	public String getBookTitle() {
-		return bookTitle;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	public void setBookTitle(String bookTitle) {
-		this.bookTitle = bookTitle;
-	}
+    public int getQuantity() {
+        return quantity;
+    }
 
-	public void setInventoryId(Integer inventoryId) {
-		this.inventoryId = inventoryId;
-	}
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+    public Integer getBookId() {
+        return bookId;
+    }
 
-	public int getQuantity() {
-		return quantity;
-	}
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
+    }
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+    public String getBookTitle() {
+        return bookTitle;
+    }
 
-	public Integer getBookId() {
-		return bookId;
-	}
-
-	public void setBookId(Integer bookId) {
-		this.bookId = bookId;
-	}
-
-		
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
+    }
 }

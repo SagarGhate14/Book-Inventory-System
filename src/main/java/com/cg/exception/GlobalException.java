@@ -28,9 +28,6 @@ public class GlobalException {
 		return "error/custom-error";
 	}
 
-
-
-
     // 3. Global Fallback
     @ExceptionHandler(Exception.class)
     public String handleGeneral(Exception ex, Model model) {
@@ -42,17 +39,43 @@ public class GlobalException {
         return "error/custom-error";
     }
     
+    
     @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
-    public String handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex, RedirectAttributes ra) {
-        // 1. Create the friendly message
-        String message = "Cannot delete: This record is linked to existing books. Delete the books first!";
+    public String handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex, RedirectAttributes ra, jakarta.servlet.http.HttpServletRequest request) {
+        String message = "Cannot delete: This record is linked to other data. Please remove dependencies first!";
+        String redirectPath = "/books/list"; // Default fallback
         
-        // 2. Add it as a Flash Attribute (this creates the popup)
+        String errorMessage = ex.getMostSpecificCause().getMessage().toLowerCase();
+        String requestUri = request.getRequestURI();
+
+        // 1. Determine the entity from the URL path or DB error message
+        
+         if (requestUri.contains("/authors") || errorMessage.contains("author")) {
+            message = "Cannot delete Author: This author still has books registered!";
+            redirectPath = "/authors/list";
+        }
+         else if(requestUri.contains("/publishers") || errorMessage.contains("publisher")) {
+            message = "Cannot delete Publisher: This publisher has active books in the library!";
+            redirectPath = "/publishers/list";
+        } 
+        else if (requestUri.contains("/category") || errorMessage.contains("category")) {
+            message = "Cannot delete Category: Books are still assigned to this category!";
+            redirectPath = "/category/list";
+        } 
+        else if (requestUri.contains("/inventories") || errorMessage.contains("inventory")) {
+            message = "Cannot delete Inventory: This record is currently linked to an active book!";
+            redirectPath = "/inventories/list";
+        } 
+        
+
+        // 2. Add as Flash Attribute for the popup
         ra.addFlashAttribute("error", message);
         
-        // 3. Redirect back to the authors list (or wherever they were)
-        return "redirect:/books/list"; 
+        // 3. Redirect back to the specific entity list
+        return "redirect:" + redirectPath;
     }
+
+    
     
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
