@@ -71,7 +71,7 @@ public class GlobalException {
             redirectPath = "/category/list";
         } 
         else if (requestUri.contains("/inventories") || errorMessage.contains("inventory")) {
-            message = "Cannot delete Inventory: This record is currently linked to an active book!";
+            message = "Cannot add Inventory: This record is inventory already exist!";
             redirectPath = "/inventories/list";
         } 
         
