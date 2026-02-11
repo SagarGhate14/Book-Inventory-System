@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.cg.dto.UserDTO;
 import com.cg.entity.User;
 import com.cg.exception.GlobalException;
+import com.cg.exception.UserNotFoundException;
 import com.cg.repository.UserRepository;
 
 @Service
@@ -32,7 +33,7 @@ public class UserService implements IUserService {
     @Override
     public User getUserById(int id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new GlobalException.UserNotFoundException(id));
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
 

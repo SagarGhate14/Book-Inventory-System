@@ -1,9 +1,10 @@
 package com.cg.servicetest;
 
 import com.cg.dto.CategoryDTO;
+
 import com.cg.entity.Category;
-import com.cg.exception.GlobalException.BadRequestException;
-import com.cg.exception.GlobalException.CategoryNotFoundException;
+import com.cg.exception.BadRequestException;
+import com.cg.exception.CategoryNotFoundException;
 import com.cg.repository.CategoryRepository;
 import com.cg.service.CategoryService;
 

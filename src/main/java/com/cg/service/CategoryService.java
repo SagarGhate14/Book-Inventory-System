@@ -1,17 +1,18 @@
 package com.cg.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.cg.dto.CategoryDTO;
 import com.cg.entity.Category;
+import com.cg.exception.BadRequestException;
+import com.cg.exception.CategoryNotFoundException;
 import com.cg.exception.GlobalException;
 import com.cg.repository.CategoryRepository;
 
-// ✅ Static imports from your GlobalException file
-import static com.cg.exception.GlobalException.CategoryNotFoundException;
-import static com.cg.exception.GlobalException.BadRequestException;
+
 
 @Service
 public class CategoryService implements ICategoryService {
@@ -35,7 +36,7 @@ public class CategoryService implements ICategoryService {
     @Override
     public Category getCategoryById(int id) {
         return categoryRepo.findById(id)
-                .orElseThrow(() -> new GlobalException.CategoryNotFoundException(id));
+                .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
 

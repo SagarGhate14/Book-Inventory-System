@@ -3,7 +3,9 @@ package com.cg.servicetest;
 
 
 import com.cg.dto.BookDTO;
+
 import com.cg.entity.*;
+import com.cg.exception.BookNotFoundException;
 import com.cg.exception.GlobalException;
 import com.cg.repository.BookRepository;
 import com.cg.repository.InventoryRepository;
@@ -129,7 +131,7 @@ class BookServiceTest {
         when(bookRepository.findById(999)).thenReturn(Optional.empty());
 
         // Act & Assert: Change the expected class to match your Service
-        assertThrows(GlobalException.BookNotFoundException.class, () -> {
+        assertThrows(BookNotFoundException.class, () -> {
             bookService.findIdByBook(999);
         });
     }

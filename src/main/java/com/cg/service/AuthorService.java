@@ -1,13 +1,14 @@
 package com.cg.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.cg.dto.AuthorDTO;
 import com.cg.entity.Author;
+import com.cg.exception.AuthorNotFoundException;
 import com.cg.repository.AuthorRepository;
 
-import static com.cg.exception.GlobalException.AuthorNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

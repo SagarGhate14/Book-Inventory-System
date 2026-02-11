@@ -3,6 +3,7 @@ package com.cg.servicetest;
 import com.cg.dto.UserDTO;
 import com.cg.entity.User;
 import com.cg.exception.GlobalException;
+import com.cg.exception.UserNotFoundException;
 import com.cg.repository.UserRepository;
 import com.cg.service.UserService;
 
@@ -124,7 +125,7 @@ class UserServiceTest {
 
 	        // Act & Assert
 	        // Expect your custom exception instead of NoSuchElementException
-	        assertThrows(GlobalException.UserNotFoundException.class, () -> {
+	        assertThrows(UserNotFoundException.class, () -> {
 	            userService.getUserById(999);
 	        });
 	    }

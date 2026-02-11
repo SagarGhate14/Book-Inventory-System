@@ -1,6 +1,7 @@
 package com.cg.service;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;
+import com.cg.exception.BadRequestException;
 import com.cg.exception.GlobalException;
+import com.cg.exception.PublisherNotFoundException;
 import com.cg.repository.PublisherRepository;
 
-// ✅ Using static inner exceptions from GlobalException
-import static com.cg.exception.GlobalException.PublisherNotFoundException;
-import static com.cg.exception.GlobalException.BadRequestException;
+
 
 @Service
 public class PublisherService implements IPublisherService {
@@ -58,7 +59,7 @@ public class PublisherService implements IPublisherService {
     @Override
     public Publisher findById(int pId) {
         return publisherRepository.findById(pId)
-                .orElseThrow(() -> new GlobalException.PublisherNotFoundException(pId));
+                .orElseThrow(() -> new PublisherNotFoundException(pId));
     }
 
 

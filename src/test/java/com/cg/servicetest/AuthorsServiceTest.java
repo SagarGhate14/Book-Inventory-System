@@ -1,8 +1,10 @@
 package com.cg.servicetest;
 
-import com.cg.dto.AuthorDTO;
+
+
 import com.cg.entity.Author;
-import com.cg.exception.GlobalException.AuthorNotFoundException;
+import com.cg.exception.AuthorNotFoundException;
+import com.cg.exception.CategoryNotFoundException;
 import com.cg.repository.AuthorRepository;
 import com.cg.service.AuthorService;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

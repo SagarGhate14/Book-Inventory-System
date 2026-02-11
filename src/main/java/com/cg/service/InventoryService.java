@@ -2,6 +2,7 @@ package com.cg.service;
 
 import com.cg.entity.Inventory;
 import com.cg.exception.GlobalException;
+import com.cg.exception.InventoryNotFoundException;
 import com.cg.dto.InventoryDTO;
 import com.cg.repository.InventoryRepository;
 
@@ -32,7 +33,7 @@ public class InventoryService implements IInventoryService {
     @Override
     public Inventory getInventoryById(int id) {
         return inventoryRepository.findById(id)
-                .orElseThrow(() -> new GlobalException.InventoryNotFoundException(id));
+                .orElseThrow(() -> new InventoryNotFoundException(id));
     }
 
 

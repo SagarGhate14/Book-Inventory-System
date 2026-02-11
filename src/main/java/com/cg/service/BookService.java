@@ -16,6 +16,7 @@ import com.cg.entity.Author;
 import com.cg.entity.Book;
 import com.cg.entity.Category;
 import com.cg.entity.Publisher;
+import com.cg.exception.BookNotFoundException;
 import com.cg.exception.GlobalException;
 import com.cg.repository.BookRepository;
 
@@ -51,7 +52,7 @@ public class BookService implements IBookService{
 	@Override
 	public Book findIdByBook(int bId) {
 	    return bookRepository.findById(bId)
-	            .orElseThrow(() -> new GlobalException.BookNotFoundException(bId));
+	            .orElseThrow(() -> new BookNotFoundException(bId));
 	}
 
 

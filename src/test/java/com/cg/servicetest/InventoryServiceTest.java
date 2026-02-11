@@ -4,6 +4,7 @@ import com.cg.dto.InventoryDTO;
 import com.cg.entity.Book;
 import com.cg.entity.Inventory;
 import com.cg.exception.GlobalException;
+import com.cg.exception.InventoryNotFoundException;
 import com.cg.repository.InventoryRepository;
 import com.cg.service.BookService;
 import com.cg.service.InventoryService;
@@ -136,7 +137,7 @@ public class InventoryServiceTest {
 
         // Act & Assert
         // Change from java.util.NoSuchElementException to your custom exception
-        assertThrows(GlobalException.InventoryNotFoundException.class, () -> {
+        assertThrows(InventoryNotFoundException.class, () -> {
             inventoryService.getInventoryById(999);
         });
     }

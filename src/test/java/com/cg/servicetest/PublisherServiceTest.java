@@ -1,9 +1,9 @@
 package com.cg.servicetest;
 
-import com.cg.dto.PublisherDTO;
+
 import com.cg.entity.Publisher;
-import com.cg.exception.GlobalException.BadRequestException;
-import com.cg.exception.GlobalException.PublisherNotFoundException;
+import com.cg.exception.AuthorNotFoundException;
+import com.cg.exception.PublisherNotFoundException;
 import com.cg.repository.PublisherRepository;
 import com.cg.service.PublisherService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,7 +104,7 @@ public class PublisherServiceTest {
     @Test
     void testSavePublisher_Negative_NullInput() {
         // Act & Assert
-        assertThrows(BadRequestException.class, () -> {
+        assertThrows(com.cg.exception.BadRequestException.class, () -> {
             publisherService.savePublisher(null);
         });
         verify(publisherRepository, never()).save(any());
