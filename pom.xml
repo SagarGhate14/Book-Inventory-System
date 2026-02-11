@@ -89,6 +89,7 @@
 	</dependencies>
 
 	<build>
+	<finalName>app</finalName>
 		<plugins>
 			<!-- Spring Boot Build -->
 			<plugin>

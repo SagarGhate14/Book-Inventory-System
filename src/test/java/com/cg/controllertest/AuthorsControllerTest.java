@@ -17,6 +17,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,7 +54,7 @@ public class AuthorsControllerTest {
      
     @Test
     void testDeleteAuthor_Positive() throws Exception {
-        mockMvc.perform(get("/authors/delete/1"))
+        mockMvc.perform(delete("/authors/delete/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/authors/list"));
 

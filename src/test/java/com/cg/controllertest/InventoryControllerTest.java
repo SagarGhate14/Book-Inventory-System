@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -90,7 +92,7 @@ class InventoryControllerTest {
      */
     @Test
     void testDeleteInventory_Positive() throws Exception {
-        mockMvc.perform(get("/inventories/delete/1"))
+        mockMvc.perform(delete("/inventories/delete/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/inventories/list"));
 
@@ -116,7 +118,7 @@ class InventoryControllerTest {
         when(inventoryService.findBookById(anyInt())).thenReturn(existing);
 
         // Act & Assert
-        mockMvc.perform(post("/inventories/update")
+        mockMvc.perform(put("/inventories/update")
                 .with(csrf())
                 .param("inventoryId", "1")
                 .param("status", "Available")

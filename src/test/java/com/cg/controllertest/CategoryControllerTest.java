@@ -17,8 +17,10 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = CategoryController.class)
@@ -69,7 +71,7 @@ public class CategoryControllerTest {
      */
     @Test
     void testDeleteCategory_Positive() throws Exception {
-        mockMvc.perform(get("/category/delete/1"))
+        mockMvc.perform(delete("/category/delete/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/category/list"));
 
@@ -110,7 +112,7 @@ public class CategoryControllerTest {
      */
     @Test
     void testUpdateCategory_Negative_Blank() throws Exception {
-        mockMvc.perform(post("/category/update")
+        mockMvc.perform(put("/category/update")
                 .with(csrf())
                 .param("categoryId", "1")
                 .param("categoryName", "")) // Blank name

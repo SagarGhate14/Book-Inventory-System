@@ -20,8 +20,10 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PublisherController.class)
@@ -72,7 +74,7 @@ class PublisherControllerTest {
 	     */
 	    @Test
 	    void testDeletePublisher_Positive() throws Exception {
-	        mockMvc.perform(get("/publishers/delete/1"))
+	        mockMvc.perform(delete("/publishers/delete/1"))
 	                .andExpect(status().is3xxRedirection())
 	                .andExpect(redirectedUrl("/publishers/list"));
 
@@ -117,7 +119,7 @@ class PublisherControllerTest {
 	    void testUpdatePublisher_Negative_LongName() throws Exception {
 	        String longName = "A".repeat(101); // Exceeds max 100
 	        
-	        mockMvc.perform(post("/publishers/update")
+	        mockMvc.perform(put("/publishers/update")
 	                .with(csrf())
 	                .param("publisherId", "1")
 	                .param("publisherName", longName)

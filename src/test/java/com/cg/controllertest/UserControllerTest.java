@@ -18,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -72,7 +73,7 @@ class UserControllerTest {
      */
     @Test
     void testDeleteUser_Positive() throws Exception {
-        mockMvc.perform(get("/users/delete/1"))
+        mockMvc.perform(delete("/users/delete/1"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/users/list"));
 
