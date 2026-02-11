@@ -44,13 +44,11 @@ class BookControllerTest {
     @MockBean
     private PublisherService publisherService;
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully retrieve the list of all books.
-     */
+    
+     // 1. Positive: Successfully retrieve the list of all books.
+     
     @Test
     void testGetAllBooks_Positive() throws Exception {
         // Arrange
@@ -65,9 +63,9 @@ class BookControllerTest {
                 .andExpect(model().attributeExists("booksDTO"));
     }
 
-    /**
-     * 2. Positive: Successfully save a book when all fields are valid.
-     */
+    
+     // 2. Positive: Successfully save a book when all fields are valid.
+     
     @Test
     void testSaveBook_Positive() throws Exception {
         // Act: Perform POST with all required valid parameters
@@ -84,9 +82,9 @@ class BookControllerTest {
         verify(bookService, times(1)).saveBook(any(), any(), any(), any());
     }
 
-    /**
-     * 3. Positive: Successfully delete a book by ID.
-     */
+    
+      // Positive: Successfully delete a book by ID.
+     
     @Test
     void testDeleteBook_Positive() throws Exception {
         // Act & Assert
@@ -98,13 +96,11 @@ class BookControllerTest {
         verify(bookService, times(1)).deleteBook(1);
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES (Validation Failures)
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Fail to save because title is blank (triggers @NotBlank).
-     */
+    
+     // Negative: Fail to save because title is blank (triggers @NotBlank).
+     
     @Test
     void testSaveBook_Negative_BlankTitle() throws Exception {
         // Act: Send empty title
@@ -119,9 +115,9 @@ class BookControllerTest {
                 .andExpect(model().attributeHasFieldErrors("bookDTO", "title")); // Verify specific error
     }
 
-    /**
-     * 2. Negative: Fail to save because price is negative (triggers @DecimalMin).
-     */
+    
+    // Negative: Fail to save because price is negative (triggers @DecimalMin).
+     
     @Test
     void testSaveBook_Negative_InvalidPrice() throws Exception {
         // Act: Send negative price
@@ -138,9 +134,8 @@ class BookControllerTest {
         verify(bookService, never()).saveBook(any(), any(), any(), any());
     }
 
-    /**
-     * 3. Negative: Fail to save because required IDs are missing (triggers @NotNull).
-     */
+    // Negative: Fail to save because required IDs are missing (triggers @NotNull).
+     
     @Test
     void testSaveBook_Negative_MissingIds() throws Exception {
         // Act: Send title and price but omit dropdown IDs (author, category, publisher)

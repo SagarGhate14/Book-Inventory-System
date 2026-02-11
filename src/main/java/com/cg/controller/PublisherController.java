@@ -30,6 +30,8 @@ public class PublisherController {
 	@Autowired
 	private PublisherService publisherService;
 	
+	
+	//Get all the publishers
 	@GetMapping("/list")
 	public String getAllPublishers(Model model){
        List<Publisher> publishers = publisherService.getAllPublishers();
@@ -39,12 +41,14 @@ public class PublisherController {
 		
 	}
 	
+	//Get the new publisher page
 	@GetMapping("/new")
 	public String addPublisher(Model model) {
 		 model.addAttribute("publisherDTO",new PublisherDTO());
 		 return "publisher/publisher-add";
 	}
       
+	//Save the new publisher
 	@PostMapping("/add")
 	public String savePublisher(@Valid @ModelAttribute PublisherDTO publisherDTO,BindingResult result) {
 		if (result.hasErrors()) {
@@ -57,6 +61,8 @@ public class PublisherController {
 		publisherService.savePublisher(publisher);
 		return "redirect:/publishers/list";
 	}
+	
+	//Get the edit publisher page
 	@GetMapping("/update/{id}")
 	public String updatePublisher(Model model,@PathVariable("id") int pId) {
 		Publisher publisher = publisherService.findById(pId);
@@ -65,6 +71,7 @@ public class PublisherController {
 		return "publisher/publisher-edit";
 	}
 	
+	//Update the publisher 
 	@PutMapping("/update")
 	public String updatedPublisher(@Valid @ModelAttribute PublisherDTO publisherDTO,BindingResult result) {
 		if (result.hasErrors()) {
@@ -77,7 +84,7 @@ public class PublisherController {
 		return "redirect:/publishers/list";
 	}
 	
-	
+	//Delete the publisher
 	@DeleteMapping("/delete/{id}")
 	public String deletePublisher(@PathVariable("id") int pId) {
 		publisherService.deletePublisher(pId);

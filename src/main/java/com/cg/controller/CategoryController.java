@@ -22,6 +22,7 @@ public class CategoryController {
     @Autowired
      CategoryService categoryService;
     
+    //Get all the categories
     @GetMapping("/list")
     public String allCategory(Model model) {
     	List<Category> categories = categoryService.getAllCategories();
@@ -30,14 +31,14 @@ public class CategoryController {
     	return "Category/category-list";
     }
     
- // Get all categories
+    //Get the new Category page
     @GetMapping("/new")
     public String getAllCategories(Model model) {
         model.addAttribute("categoryDTO", new CategoryDTO());
         return "Category/category-add";
     }
  
-    // Add Category
+    // Save the new Category
     @PostMapping("/new")
     public String addCategory(@Valid @ModelAttribute CategoryDTO categoryDTO,BindingResult result) {
     	if (result.hasErrors()) {
@@ -51,6 +52,7 @@ public class CategoryController {
         
     }
     
+    //Get the Category edit page
    @GetMapping("/update/{id}")
    public String updateCategory(@PathVariable int id,Model model) {
 	   Category existing = categoryService.getCategoryById(id);
@@ -58,7 +60,8 @@ public class CategoryController {
 	   model.addAttribute("categoryDTO",categoryDTO);
 	   return "category/category-edit";
    }
-    // Update category
+   
+    // Update the category
     @PutMapping("/update")
     public String updateCategory(@Valid @ModelAttribute CategoryDTO categoryDTO,BindingResult result) {
     	if (result.hasErrors()) {

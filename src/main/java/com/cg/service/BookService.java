@@ -30,13 +30,14 @@ public class BookService implements IBookService{
 	@Autowired
 	
 	
+	//Get all the books from db
 	@Override
 	public List<Book> getAllBooks() {
 		return bookRepository.findAll();
 	}
 
 	
-
+   //Save the new Book in db
 	@Override
 	public Book saveBook(Book book,Author author,Publisher publisher,Category category) {
 		 book.setAuthor(author);
@@ -44,20 +45,21 @@ public class BookService implements IBookService{
 		 book.setCategory(category);
 		return bookRepository.save(book);
 	}
-
+ 
+	//Delete the book by Id
 	@Override
 	public void deleteBook(int bId) {
            bookRepository.deleteById(bId);		
 	}
+	
+	//Find the book by Id
 	@Override
 	public Book findIdByBook(int bId) {
 	    return bookRepository.findById(bId)
 	            .orElseThrow(() -> new BookNotFoundException(bId));
 	}
 
-
-
-
+	//Update the book 
 	@Override
 	public Book updateBook(Book book,Author author,Publisher publisher,Category category) {
 		book.setAuthor(author);
@@ -67,6 +69,7 @@ public class BookService implements IBookService{
 	}
 	
 	
+	//Converting the DTO to Entity
 	
 	public Book toEntity(BookDTO dto) {
 	    if (dto == null) {
@@ -77,13 +80,11 @@ public class BookService implements IBookService{
 	    entity.setBookId(dto.getBookId());
 	    entity.setTitle(dto.getTitle());
 	    entity.setPrice(dto.getPrice());
-	    
-	    // Note: Author, Publisher, and Category entities are usually 
-	    // fetched from DB and set in the Service layer based on the IDs.
-	    
+    
 	    return entity;
 	}
 	 
+	//Converting entityList to DTOList
 	
 	public List<BookDTO> toDTOList(List<Book> books) {
 	    List<BookDTO> dtoList = new ArrayList<>();
@@ -101,17 +102,15 @@ public class BookService implements IBookService{
 	    }
 	
 	
-	// Inside your BookService.java
+	// Converting entity to DTO
+	
 	public BookDTO toDTO(Book book) {
 	    BookDTO dto = new BookDTO();
 	    dto.setBookId(book.getBookId());
 	    dto.setTitle(book.getTitle());
 	    dto.setPrice(book.getPrice());
-	 // Inside your Service mapping logic
 	    dto.setInventory(book.getInventory());
-
-	    
-	    // Ensure these match the NEW capitalized names from Step 1
+	 
 	    if (book.getAuthor() != null) {
 	        dto.setAuthorId(book.getAuthor().getAuthorId());
 	        dto.setAuthorName(book.getAuthor().getAuthorName());
@@ -128,12 +127,6 @@ public class BookService implements IBookService{
 	    return dto;
 	}
 	
-	
-	
 
-        
-     
-	
-	
 
 }

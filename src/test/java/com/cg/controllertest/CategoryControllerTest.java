@@ -51,10 +51,8 @@ public class CategoryControllerTest {
                 .andExpect(model().attributeExists("categories"));
     }
 
-    /**
-     * 2. Positive: Successfully add a new category with valid data.
-     * Matches @Size(min=3) and @Pattern (letters, spaces, &).
-     */
+    // Positive: Successfully add a new category with valid data.
+     
     @Test
     void testAddCategory_Positive() throws Exception {
         mockMvc.perform(post("/category/new")
@@ -66,9 +64,8 @@ public class CategoryControllerTest {
         verify(categoryService, times(1)).addCategory(any());
     }
 
-    /**
-     * 3. Positive: Successfully delete a category.
-     */
+    // Positive: Successfully delete a category.
+     
     @Test
     void testDeleteCategory_Positive() throws Exception {
         mockMvc.perform(delete("/category/delete/1"))
@@ -78,13 +75,10 @@ public class CategoryControllerTest {
         verify(categoryService).deleteCategory(1);
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES (Validation & Logic)
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Add Category fails because name is too short (triggers @Size).
-     */
+    // Negative: Add Category fails because name is too short (triggers @Size).
+     
     @Test
     void testAddCategory_Negative_TooShort() throws Exception {
         mockMvc.perform(post("/category/new")
@@ -95,9 +89,8 @@ public class CategoryControllerTest {
                 .andExpect(model().attributeHasFieldErrors("categoryDTO", "categoryName"));
     }
 
-    /**
-     * 2. Negative: Add Category fails due to illegal characters (triggers @Pattern).
-     */
+    // Negative: Add Category fails due to illegal characters (triggers @Pattern).
+     
     @Test
     void testAddCategory_Negative_InvalidPattern() throws Exception {
         mockMvc.perform(post("/category/new")
@@ -107,9 +100,8 @@ public class CategoryControllerTest {
                 .andExpect(model().attributeHasFieldErrors("categoryDTO", "categoryName"));
     }
 
-    /**
-     * 3. Negative: Update Category fails because name is blank (triggers @NotBlank).
-     */
+   // Negative: Update Category fails because name is blank (triggers @NotBlank).
+     
     @Test
     void testUpdateCategory_Negative_Blank() throws Exception {
         mockMvc.perform(put("/category/update")

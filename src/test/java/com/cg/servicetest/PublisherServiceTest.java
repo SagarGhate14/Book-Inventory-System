@@ -39,13 +39,10 @@ public class PublisherServiceTest {
         samplePublisher.setAddress("London, UK");
     }
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully save a publisher.
-     */
+    // Positive: Successfully save a publisher.
+     
     @Test
     void testSavePublisher_Positive() {
         // Arrange
@@ -60,9 +57,8 @@ public class PublisherServiceTest {
         verify(publisherRepository, times(1)).save(samplePublisher);
     }
 
-    /**
-     * 2. Positive: Successfully find a publisher by valid ID.
-     */
+    // Positive: Successfully find a publisher by valid ID.
+     
     @Test
     void testFindById_Positive() {
         // Arrange
@@ -77,9 +73,8 @@ public class PublisherServiceTest {
         verify(publisherRepository, times(1)).findById(10);
     }
 
-    /**
-     * 3. Positive: Successfully update an existing publisher.
-     */
+    // Positive: Successfully update an existing publisher.
+     
     @Test
     void testUpdatePublisher_Positive() {
         // Arrange: Mock existence check and save operation
@@ -94,13 +89,10 @@ public class PublisherServiceTest {
         verify(publisherRepository, times(1)).save(samplePublisher);
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Throw BadRequestException when saving a null publisher.
-     */
+    // Negative: Throw BadRequestException when saving a null publisher.
+     
     @Test
     void testSavePublisher_Negative_NullInput() {
         // Act & Assert
@@ -110,9 +102,8 @@ public class PublisherServiceTest {
         verify(publisherRepository, never()).save(any());
     }
 
-    /**
-     * 2. Negative: Throw PublisherNotFoundException when deleting a non-existent ID.
-     */
+    // Negative: Throw PublisherNotFoundException when deleting a non-existent ID.
+     
     @Test
     void testDeletePublisher_Negative_NotFound() {
         // Arrange
@@ -125,9 +116,8 @@ public class PublisherServiceTest {
         verify(publisherRepository, never()).deleteById(99);
     }
 
-    /**
-     * 3. Negative: Throw PublisherNotFoundException when finding a non-existent ID.
-     */
+    // Negative: Throw PublisherNotFoundException when finding a non-existent ID.
+     
     @Test
     void testFindById_Negative_NotFound() {
         // Arrange

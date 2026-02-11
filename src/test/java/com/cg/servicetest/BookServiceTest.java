@@ -59,13 +59,10 @@ class BookServiceTest {
         sampleBook.setPrice(450.0);
     }
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully save a book and verify associations are set correctly.
-     */
+   // Positive: Successfully save a book and verify associations are set correctly.
+     
     @Test
     void testSaveBook_Positive() {
         // Arrange: Mock repository to return the book when saved
@@ -82,9 +79,8 @@ class BookServiceTest {
         verify(bookRepository, times(1)).save(sampleBook);
     }
 
-    /**
-     * 2. Positive: Successfully find a book by its ID.
-     */
+    // Positive: Successfully find a book by its ID.
+    
     @Test
     void testFindIdByBook_Positive() {
         // Arrange
@@ -98,9 +94,8 @@ class BookServiceTest {
         assertEquals("Effective Java", foundBook.getTitle());
     }
 
-    /**
-     * 3. Positive: Verify the Entity to DTO mapping logic (toDTO).
-     */
+    // Positive: Verify the Entity to DTO mapping logic (toDTO).
+     
     @Test
     void testToDTO_Positive() {
         // Arrange: Link entities to the book
@@ -117,14 +112,10 @@ class BookServiceTest {
         assertEquals(1, dto.getCategoryId());
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Handle searching for a non-existent book ID.
-     * (Current implementation uses .get() on Optional, which throws NoSuchElementException)
-     */
+   // Negative: Handle searching for a non-existent book ID.
+     
     @Test
     void testFindIdByBook_Negative_NotFound() {
         // Arrange: Return empty Optional
@@ -137,10 +128,8 @@ class BookServiceTest {
     }
 
 
-    /**
-     * 2. Negative: Test toDTOList with a null input.
-     * Service should return an empty list instead of throwing NullPointerException.
-     */
+    // Negative: Test toDTOList with a null input.
+     
     @Test
     void testToDTOList_Negative_NullInput() {
         // Act
@@ -151,10 +140,8 @@ class BookServiceTest {
         assertTrue(result.isEmpty(), "Result should be an empty list for null input");
     }
 
-    /**
-     * 3. Negative: Test toDTO when related entities (Author/Publisher) are missing.
-     * Logic should not crash with NullPointerException.
-     */
+    // Negative: Test toDTO when related entities (Author/Publisher) are missing.
+    
     @Test
     void testToDTO_Negative_MissingRelations() {
         // Arrange: Book has no Author or Publisher set (they are null)

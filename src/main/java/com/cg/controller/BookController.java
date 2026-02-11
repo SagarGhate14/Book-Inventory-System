@@ -40,6 +40,8 @@ public class BookController {
 	@Autowired
 	private PublisherService publisherService;
 	
+	
+	//Get all the books
 	@GetMapping("/list")
 	public String getAllBooks(Model model) {
 		List<Book> books = bookService.getAllBooks();
@@ -48,9 +50,10 @@ public class BookController {
 		 return "book/books-list";
 	}
 	
+	//Get the new book page
 	@GetMapping("/add")
 	public String addBook(Model model) {
-	    // Verify these are null here
+	   
 		model.addAttribute("bookDTO",new BookDTO());
 		model.addAttribute("categories",categoryService.getAllCategories());
 		model.addAttribute("authors",authorService.getAllAuthors());
@@ -58,10 +61,11 @@ public class BookController {
 		return "book/book-add";
 	}
 	
+	//Save the new book
 	@PostMapping("/save")
 	public String saveBook(@Valid @ModelAttribute("bookDTO") BookDTO bookDTO,BindingResult result,Model model) {
 		 if (result.hasErrors()) {
-		        // RE-ADD ALL LISTS! Without these, the <select> tags will crash line 40+
+		      
 		        model.addAttribute("categories", categoryService.getAllCategories());
 		        model.addAttribute("authors", authorService.getAllAuthors());
 		        model.addAttribute("publishers", publisherService.getAllPublishers());
@@ -77,6 +81,8 @@ public class BookController {
 		return "redirect:/books/list";
 	}
 	
+	
+	//Get the book edit page
 	@GetMapping("/edit/{id}")
 	public String editBook(@PathVariable("id") int id,Model model) {
 		Book book = bookService.findIdByBook(id);
@@ -87,10 +93,11 @@ public class BookController {
 		return "book/book-edit";
 	}
 	
+	//Update the book page
 	@PutMapping("/update")
 	public String updateBook(@Valid @ModelAttribute BookDTO bookDTO,BindingResult result,Model model) {
 		 if (result.hasErrors()) {
-		        // RE-ADD ALL LISTS! Without these, the <select> tags will crash line 40+
+		     
 		        model.addAttribute("categories", categoryService.getAllCategories());
 		        model.addAttribute("authors", authorService.getAllAuthors());
 		        model.addAttribute("publishers", publisherService.getAllPublishers());
@@ -106,6 +113,7 @@ public class BookController {
 		return "redirect:/books/list";
 	}
 	
+	//Delete the book 
 	@DeleteMapping("/delete/{id}")
 	public String deleteBook(@PathVariable("id") int bId) {
 		bookService.deleteBook(bId);

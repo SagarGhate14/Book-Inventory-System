@@ -36,13 +36,10 @@ class PublisherControllerTest {
 	    @MockBean
 	    private PublisherService publisherService;
 
-	    // -------------------------------------------------------------------------
 	    // POSITIVE TEST CASES
-	    // -------------------------------------------------------------------------
 
-	    /**
-	     * 1. Positive: Successfully list all publishers.
-	     */
+	    // Positive: Successfully list all publishers.
+	    
 	    @Test
 	    void testGetAllPublishers_Positive() throws Exception {
 	        when(publisherService.getAllPublishers()).thenReturn(new ArrayList<>());
@@ -54,9 +51,8 @@ class PublisherControllerTest {
 	                .andExpect(model().attributeExists("publisherDTO"));
 	    }
 
-	    /**
-	     * 2. Positive: Successfully save a publisher with valid data.
-	     */
+	   // Positive: Successfully save a publisher with valid data.
+	     
 	    @Test
 	    void testSavePublisher_Positive() throws Exception {
 	        mockMvc.perform(post("/publishers/add")
@@ -81,13 +77,10 @@ class PublisherControllerTest {
 	        verify(publisherService).deletePublisher(1);
 	    }
 
-	    // -------------------------------------------------------------------------
 	    // NEGATIVE TEST CASES
-	    // -------------------------------------------------------------------------
 
-	    /**
-	     * 1. Negative: Fail to add publisher because Name is too short (triggers @Size).
-	     */
+	    // Negative: Fail to add publisher because Name is too short (triggers @Size).
+	     
 	    @Test
 	    void testSavePublisher_Negative_ShortName() throws Exception {
 	        mockMvc.perform(post("/publishers/add")
@@ -99,9 +92,8 @@ class PublisherControllerTest {
 	                .andExpect(model().attributeHasFieldErrors("publisherDTO", "publisherName"));
 	    }
 
-	    /**
-	     * 2. Negative: Fail to add publisher because Address is missing (triggers @NotBlank).
-	     */
+	   // Negative: Fail to add publisher because Address is missing (triggers @NotBlank).
+	     
 	    @Test
 	    void testSavePublisher_Negative_BlankAddress() throws Exception {
 	        mockMvc.perform(post("/publishers/add")
@@ -112,9 +104,8 @@ class PublisherControllerTest {
 	                .andExpect(model().attributeHasFieldErrors("publisherDTO", "address"));
 	    }
 
-	    /**
-	     * 3. Negative: Update fails because name is too long (triggers @Size max 100).
-	     */
+	    // Negative: Update fails because name is too long (triggers @Size max 100).
+	     
 	    @Test
 	    void testUpdatePublisher_Negative_LongName() throws Exception {
 	        String longName = "A".repeat(101); // Exceeds max 100

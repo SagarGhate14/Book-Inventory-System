@@ -40,13 +40,10 @@ public class CategoryServiceTest {
         sampleCategory.setCategoryName("Programming");
     }
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully add a category.
-     */
+// Positive: Successfully add a category.
+     
     @Test
     void testAddCategory_Positive() {
         // Arrange
@@ -61,9 +58,8 @@ public class CategoryServiceTest {
         verify(categoryRepo, times(1)).save(sampleCategory);
     }
 
-    /**
-     * 2. Positive: Successfully get a category by valid ID.
-     */
+    // Positive: Successfully get a category by valid ID.
+     
     @Test
     void testGetCategoryById_Positive() {
         // Arrange
@@ -77,9 +73,8 @@ public class CategoryServiceTest {
         assertEquals("Programming", found.getCategoryName());
     }
 
-    /**
-     * 3. Positive: Verify DTO conversion logic (toDTO).
-     */
+   // Positive: Verify DTO conversion logic (toDTO).
+     
     @Test
     void testToDTO_Positive() {
         // Act
@@ -91,13 +86,10 @@ public class CategoryServiceTest {
         assertEquals("Programming", dto.getCategoryName());
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Throw BadRequestException when adding a null category.
-     */
+    // Negative: Throw BadRequestException when adding a null category.
+     
     @Test
     void testAddCategory_Negative_NullInput() {
         // Act & Assert
@@ -108,9 +100,8 @@ public class CategoryServiceTest {
         verify(categoryRepo, never()).save(any());
     }
 
-    /**
-     * 2. Negative: Throw CategoryNotFoundException when ID does not exist for deletion.
-     */
+    // Negative: Throw CategoryNotFoundException when ID does not exist for deletion.
+     
     @Test
     void testDeleteCategory_Negative_NotFound() {
         // Arrange: Mock existence check to return false
@@ -125,9 +116,8 @@ public class CategoryServiceTest {
         verify(categoryRepo, never()).deleteById(99);
     }
 
-    /**
-     * 3. Negative: Throw CategoryNotFoundException when updating a non-existent category.
-     */
+    // Negative: Throw CategoryNotFoundException when updating a non-existent category.
+     
     @Test
     void testUpdateCategory_Negative_NotFound() {
         // Arrange: Repository says this ID doesn't exist

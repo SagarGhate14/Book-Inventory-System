@@ -24,19 +24,20 @@ public class UserService implements IUserService {
       private BCryptPasswordEncoder passwordEncoder;
 
 
-
+   //Get all the users from db
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    //Find the user by Id
     @Override
     public User getUserById(int id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
 
-
+    //Save the User in db
     @Override
     public User saveUser(User user) {
     	
@@ -44,14 +45,14 @@ public class UserService implements IUserService {
         return userRepository.save(user);
     }
     
-    
-   
-
+    //Delete User by Id
     @Override
     public void deleteUser(int id) {
         userRepository.deleteById(id);
     }
     
+    
+    //Converting DTO to Entity
     public User toEntity(UserDTO dto) {
         if (dto == null) {
             return null;
@@ -62,12 +63,12 @@ public class UserService implements IUserService {
         entity.setUserName(dto.getUserName());
         entity.setEmail(dto.getEmail());
         entity.setRole(dto.getRole());
-        // Password handling is usually kept separate for security
         entity.setPassword(dto.getPassword()); 
         
         return entity;
     }
     
+    //Converting entity to DTO
     public UserDTO toDTO(User entity) {
         if (entity == null) {
             return null;
@@ -78,12 +79,11 @@ public class UserService implements IUserService {
         dto.setUserName(entity.getUserName());
         dto.setEmail(entity.getEmail());
         dto.setRole(entity.getRole());
-        // For security, you might choose to omit the password in the DTO
         
         return dto;
     }
     
-    
+    //Converting DTOList to entityList
     public List<User> toEntityList(List<UserDTO> dtoList) {
         if (dtoList == null) {
             return null;
@@ -96,6 +96,7 @@ public class UserService implements IUserService {
         return entityList;
     }
     
+    //Converting entityList to DTOList
     public List<UserDTO> toDTOList(List<User> entityList) {
         if (entityList == null) {
             return null;

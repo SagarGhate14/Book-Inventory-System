@@ -55,14 +55,12 @@ class UserServiceTest {
 	        sampleDTO.setPassword("RawPassword123");
 	    }
 
-	    // -------------------------------------------------------------------------
 	    // POSITIVE TEST CASES
-	    // -------------------------------------------------------------------------
 
-	    /**
-	     * 1. Positive: Successfully save a user.
-	     * Verifies that the password is encrypted BEFORE saving to repository.
-	     */
+	    
+	     // Positive: Successfully save a user.
+	     // Verifies that the password is encrypted BEFORE saving to repository.
+	     
 	    @Test
 	    void testSaveUser_Positive() {
 	        // Arrange: Mock encoder and repository
@@ -79,9 +77,8 @@ class UserServiceTest {
 	        verify(userRepository, times(1)).save(sampleUser);
 	    }
 
-	    /**
-	     * 2. Positive: Successfully find a user by a valid ID.
-	     */
+	    // Positive: Successfully find a user by a valid ID.
+	     
 	    @Test
 	    void testGetUserById_Positive() {
 	        // Arrange
@@ -96,9 +93,8 @@ class UserServiceTest {
 	        verify(userRepository).findById(101);
 	    }
 
-	    /**
-	     * 3. Positive: Verify the toDTO mapping logic.
-	     */
+	    // Positive: Verify the toDTO mapping logic.
+	     
 	    @Test
 	    void testToDTO_Positive() {
 	        // Act
@@ -110,14 +106,10 @@ class UserServiceTest {
 	        assertEquals("ADMIN", resultDTO.getRole());
 	    }
 
-	    // -------------------------------------------------------------------------
 	    // NEGATIVE TEST CASES
-	    // -------------------------------------------------------------------------
 
-	    /**
-	     * 1. Negative: Throw NoSuchElementException when ID is not found.
-	     * Based on service code: userRepository.findById(id).get()
-	     */
+	    // Negative: Throw NoSuchElementException when ID is not found.
+	    
 	    @Test
 	    void testGetUserById_Negative_NotFound() {
 	        // Arrange
@@ -131,9 +123,8 @@ class UserServiceTest {
 	    }
 
 
-	    /**
-	     * 2. Negative: Handle null input in toEntity conversion gracefully.
-	     */
+	    //  Negative: Handle null input in toEntity conversion gracefully.
+	     
 	    @Test
 	    void testToEntity_Negative_NullInput() {
 	        // Act
@@ -143,9 +134,8 @@ class UserServiceTest {
 	        assertNull(result);
 	    }
 
-	    /**
-	     * 3. Negative: Ensure toDTOList returns null if input entity list is null.
-	     */
+	    // Negative: Ensure toDTOList returns null if input entity list is null.
+	     
 	    @Test
 	    void testToDTOList_Negative_NullInput() {
 	        // Act

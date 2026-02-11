@@ -40,13 +40,10 @@ class InventoryControllerTest {
     @MockBean
     private BookService bookService;
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully view the inventory list.
-     */
+    //Positive: Successfully view the inventory list.
+     
     @Test
     void testGetAllInventories_Positive() throws Exception {
         when(inventoryService.getAllInventories()).thenReturn(new ArrayList<>());
@@ -58,9 +55,9 @@ class InventoryControllerTest {
                 .andExpect(model().attributeExists("inventories"));
     }
 
-    /**
-     * 2. Positive: Successfully save inventory when all inputs are valid.
-     */
+    
+   // Successfully save inventory when all inputs are valid.
+     
     @Test
     void testSaveInventory_Positive() throws Exception {
         // 1. Arrange: Create a real Inventory object to be returned by the mock
@@ -87,9 +84,9 @@ class InventoryControllerTest {
 
 
 
-    /**
-     * 3. Positive: Successfully delete an inventory record.
-     */
+    
+     //Positive: Successfully delete an inventory record.
+     
     @Test
     void testDeleteInventory_Positive() throws Exception {
         mockMvc.perform(delete("/inventories/delete/1"))
@@ -99,16 +96,13 @@ class InventoryControllerTest {
         verify(inventoryService).deleteInventory(1);
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES
-    // -------------------------------------------------------------------------
 
 
 
-    /**
-     * 1. Negative: Update fails because of a duplicate book assignment.
-     * Your controller logic checks if a book is already assigned to a different slot.
-     */
+    // Negative: Update fails because of a duplicate book assignment.
+    // controller logic checks if a book is already assigned to a different slot.
+    
     @Test
     void testUpdate_Negative_DuplicateBook() throws Exception {
         // Arrange: Mock existing inventory with a DIFFERENT ID to trigger duplicate check

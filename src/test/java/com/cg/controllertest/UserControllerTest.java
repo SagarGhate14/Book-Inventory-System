@@ -35,13 +35,10 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully verify Corporate ID and redirect to Admin Add page.
-     */
+    // Positive: Successfully verify Corporate ID and redirect to Admin Add page.
+     
     @Test
     void testVerifyCorp_Positive() throws Exception {
         mockMvc.perform(post("/users/verify-corp")
@@ -51,9 +48,8 @@ class UserControllerTest {
                 .andExpect(redirectedUrl("/users/add"));
     }
 
-    /**
-     * 2. Positive: Successfully save a User with valid password, email, and role.
-     */
+   // Positive: Successfully save a User with valid password, email, and role.
+     
     @Test
     void testSaveUser_Positive() throws Exception {
         mockMvc.perform(post("/users/add")
@@ -68,9 +64,8 @@ class UserControllerTest {
         verify(userService, times(1)).saveUser(any());
     }
 
-    /**
-     * 3. Positive: Successfully delete a user by ID.
-     */
+    // Positive: Successfully delete a user by ID.
+     
     @Test
     void testDeleteUser_Positive() throws Exception {
         mockMvc.perform(delete("/users/delete/1"))
@@ -80,13 +75,10 @@ class UserControllerTest {
         verify(userService).deleteUser(1);
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Fail Corporate ID verification (triggers Flash Attribute error).
-     */
+    // Negative: Fail Corporate ID verification (triggers Flash Attribute error).
+     
     @Test
     void testVerifyCorp_Negative_WrongId() throws Exception {
         mockMvc.perform(post("/users/verify-corp")
@@ -97,9 +89,8 @@ class UserControllerTest {
                 .andExpect(redirectedUrl("/users/newAdmin"));
     }
 
-    /**
-     * 2. Negative: Fail to save user because password lacks uppercase/digit (triggers @Pattern).
-     */
+    // Negative: Fail to save user because password lacks uppercase/digit (triggers @Pattern).
+     
     @Test
     void testSaveUser_Negative_WeakPassword() throws Exception {
         mockMvc.perform(post("/users/add")
@@ -113,9 +104,8 @@ class UserControllerTest {
                 .andExpect(model().attributeHasFieldErrors("userDTO", "password"));
     }
 
-    /**
-     * 3. Negative: Fail to save user because role is invalid (triggers @Pattern).
-     */
+    // Negative: Fail to save user because role is invalid (triggers @Pattern).
+     
     @Test
     void testSaveUser_Negative_InvalidRole() throws Exception {
         mockMvc.perform(post("/users/add")

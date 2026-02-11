@@ -22,11 +22,13 @@ public class PublisherService implements IPublisherService {
     @Autowired
     private PublisherRepository publisherRepository;
 
+    //Get all the publishers
     @Override
     public List<Publisher> getAllPublishers() {
         return publisherRepository.findAll();
     }
 
+    //Save the new publisher in db
     @Override
     public Publisher savePublisher(Publisher publisher) {
         if (publisher == null) {
@@ -35,6 +37,7 @@ public class PublisherService implements IPublisherService {
         return publisherRepository.save(publisher);
     }
 
+    //update the publisher
     @Override
     public Publisher updatePublisher(Publisher publisher) {
         if (publisher == null) {
@@ -47,6 +50,7 @@ public class PublisherService implements IPublisherService {
         return publisherRepository.save(publisher);
     }
 
+    //Delete the publisher by Id
     @Override
     public void deletePublisher(int pId) {
         // Verify existence before deleting
@@ -56,6 +60,7 @@ public class PublisherService implements IPublisherService {
         publisherRepository.deleteById(pId);
     }
 
+    //Find the publisher By Id
     @Override
     public Publisher findById(int pId) {
         return publisherRepository.findById(pId)
@@ -63,8 +68,7 @@ public class PublisherService implements IPublisherService {
     }
 
 
-    /* --- MAPPING HELPERS (Logic Unchanged) --- */
-
+    //Converting DTO to entity
     public Publisher toEntity(PublisherDTO dto) {
         if (dto == null) return null;
         Publisher entity = new Publisher();
@@ -73,7 +77,8 @@ public class PublisherService implements IPublisherService {
         entity.setAddress(dto.getAddress());
         return entity;
     }
-
+ 
+    //Converting entity to DTO
     public PublisherDTO toDTO(Publisher entity) {
         if (entity == null) return null;
         PublisherDTO dto = new PublisherDTO();
@@ -83,6 +88,7 @@ public class PublisherService implements IPublisherService {
         return dto;
     }
 
+    //Converting DTOList to EntityList
     public List<Publisher> toEntityList(List<PublisherDTO> dtoList) {
         if (dtoList == null) return new ArrayList<>();
         List<Publisher> entities = new ArrayList<>();
@@ -92,6 +98,7 @@ public class PublisherService implements IPublisherService {
         return entities;
     }
 
+    //Converting EntityList to DTOList
     public List<PublisherDTO> toDTOList(List<Publisher> entityList) {
         if (entityList == null) return new ArrayList<>();
         List<PublisherDTO> dtos = new ArrayList<>();

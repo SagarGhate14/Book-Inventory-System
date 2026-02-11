@@ -22,13 +22,14 @@ public class AuthorController {
     @Autowired
     AuthorService authorService;
 
-    
+    //add new author
     @GetMapping("/new")
     public String addAuthor(Model model) {
         model.addAttribute("author", new AuthorDTO());
         return "author/author-add";
     }
 
+    //save new author
     @PostMapping("/add")
     public String addAuthor(@Valid @ModelAttribute("author") AuthorDTO authorDTO,BindingResult result) {
     	if (result.hasErrors()) {
@@ -40,6 +41,7 @@ public class AuthorController {
         return "redirect:/authors/list";
     }
     
+    //Get all the authors
     @GetMapping("/list")
     public String listAuthors(Model model) {
         List<Author> authors = authorService.getAllAuthors();
@@ -48,6 +50,7 @@ public class AuthorController {
         return "author/author-list";
     }
     
+    //Get the edited author page
     @GetMapping("/edit/{id}")
     public String updateAuthor(@PathVariable("id") int id, Model model) {
     	
@@ -61,6 +64,7 @@ public class AuthorController {
         return "author/author-edit";
     }
     
+    //Update the Author details
     @PutMapping("update")
     public String updatedAuthor(@Valid @ModelAttribute("authorDTO") AuthorDTO authordto,BindingResult result) {
     	
@@ -73,6 +77,7 @@ public class AuthorController {
         return "redirect:/authors/list";
     }
     
+    //Delete the author
     @DeleteMapping("/delete/{id}")
     public String deleteAuthor(@PathVariable int id) {
         authorService.deleteAuthor(id);

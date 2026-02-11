@@ -20,6 +20,8 @@ public class CategoryService implements ICategoryService {
     @Autowired
     private CategoryRepository categoryRepo;
 
+    
+    //Save the new category in db
     @Override
     public Category addCategory(Category category) {
         if (category == null) {
@@ -28,18 +30,20 @@ public class CategoryService implements ICategoryService {
         return categoryRepo.save(category);
     }
 
+    //Get all the categories from db
     @Override
     public List<Category> getAllCategories() {
         return categoryRepo.findAll();
     }
 
+    //find the category by Id
     @Override
     public Category getCategoryById(int id) {
         return categoryRepo.findById(id)
                 .orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
-
+      //update the category
     @Override
     public Category updateCategory(Category category) {
         if (category == null) {
@@ -51,6 +55,7 @@ public class CategoryService implements ICategoryService {
         return categoryRepo.save(category);
     }
 
+    //Delete the category by Id
     @Override
     public void deleteCategory(int id) {
         if (!categoryRepo.existsById(id)) {
@@ -59,8 +64,8 @@ public class CategoryService implements ICategoryService {
         categoryRepo.deleteById(id);
     }
 
-    /* --- MAPPING HELPERS (Logic Unchanged) --- */
-
+  
+      //Converting entity to DTO
     public CategoryDTO toDTO(Category category) {
         if (category == null) return null;
         CategoryDTO dto = new CategoryDTO();
@@ -69,6 +74,7 @@ public class CategoryService implements ICategoryService {
         return dto;
     }
 
+    //Converting DTO to entity
     public Category toEntity(CategoryDTO dto) {
         if (dto == null) return null;
         Category entity = new Category();
@@ -77,6 +83,7 @@ public class CategoryService implements ICategoryService {
         return entity;
     }
 
+    //Converting entityList to DTOList
     public List<CategoryDTO> toDTOList(List<Category> categories) {
         List<CategoryDTO> dtoList = new ArrayList<>();
         if (categories == null) return dtoList;

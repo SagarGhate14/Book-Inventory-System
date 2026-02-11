@@ -24,12 +24,13 @@ public class InventoryService implements IInventoryService {
     private BookService bookService;
 
    
+    //Get all the inventories
     @Override
     public List<Inventory> getAllInventories() {
         return inventoryRepository.findAll();
     }
 
-    // 2. Using MANUAL OPTIONAL CHECK with IF-ELSE
+    // Get the inventory by Id
     @Override
     public Inventory getInventoryById(int id) {
         return inventoryRepository.findById(id)
@@ -37,13 +38,14 @@ public class InventoryService implements IInventoryService {
     }
 
 
+    //Save the inventory in db
     @Override
     public void saveInventory(Inventory inventory) {
 
         inventoryRepository.save(inventory);
     }
 
-    
+    //update the inventory
     @Override
     @Transactional 
     public void updateInventory(int id, InventoryDTO dto) {
@@ -55,17 +57,19 @@ public class InventoryService implements IInventoryService {
         inventoryRepository.save(inv);
     }
 
-    // 5. Using DIRECT METHOD CALL
+    // Using DIRECT METHOD CALL , Delete By Id
     @Override
     @Transactional
     public void deleteInventory(int id) {
         inventoryRepository.deleteByInventoryId(id);
     }
     
+    //Find the book by Id
     public Inventory findBookById(Integer bookId) {
     	return inventoryRepository.findByBook_BookId(bookId).orElse(null);
     }
     
+    //Converting entity to DTO
     public InventoryDTO toDTO(Inventory entity) {
         if (entity == null) return null;
         
@@ -76,17 +80,16 @@ public class InventoryService implements IInventoryService {
         
         if (entity.getBook() != null) {
             dto.setBookId(entity.getBook().getBookId());
-            dto.setBookTitle(entity.getBook().getTitle()); // MAP THE TITLE HERE
+            dto.setBookTitle(entity.getBook().getTitle()); 
         }
         return dto;
     }
 
-    
+    //Converting DTO to entity
     public Inventory toEntity(InventoryDTO dto) {
         if (dto == null) return null;
         
         Inventory entity = new Inventory();
-       // entity.setInventoryId(dto.getInventoryId());
         entity.setQuantity(dto.getQuantity());
         
         // Handling String to Enum conversion
@@ -94,11 +97,10 @@ public class InventoryService implements IInventoryService {
             entity.setStatus(dto.getStatus().toUpperCase());
         }
         
-        // Relationship fields (Book/User) are usually handled during 
-        // the Save process in the Controller/Service
         return entity;
     }
     
+    //Converting entityList to DTOList
     public List<InventoryDTO> toDTOList(List<Inventory> entities) {
         List<InventoryDTO> dtoList = new ArrayList<>();
         
@@ -110,6 +112,7 @@ public class InventoryService implements IInventoryService {
         return dtoList;
     }
 
+    //Converting DTOList to entityList
     public List<Inventory> toEntityList(List<InventoryDTO> dtos) {
         List<Inventory> entityList = new ArrayList<>();
         
@@ -120,9 +123,6 @@ public class InventoryService implements IInventoryService {
         
         return entityList;
     }
-
-
-
 
 
 }

@@ -57,13 +57,10 @@ public class InventoryServiceTest {
         sampleDTO.setStatus("Available");
     }
 
-    // -------------------------------------------------------------------------
     // POSITIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Positive: Successfully save an inventory record.
-     */
+    // Positive: Successfully save an inventory record.
+     
     @Test
     void testSaveInventory_Positive() {
         // Act
@@ -73,10 +70,8 @@ public class InventoryServiceTest {
         verify(inventoryRepository, times(1)).save(sampleInventory);
     }
 
-    /**
-     * 2. Positive: Successfully update an existing inventory record.
-     * Verifies that quantity, status, and book linkage are updated.
-     */
+    // Positive: Successfully update an existing inventory record.
+    
     @Test
     void testUpdateInventory_Positive() {
         // Arrange
@@ -92,9 +87,8 @@ public class InventoryServiceTest {
         verify(inventoryRepository, times(1)).save(sampleInventory);
     }
 
-    /**
-     * 3. Positive: Verify the Entity to DTO conversion (toDTO).
-     */
+    // Positive: Verify the Entity to DTO conversion (toDTO).
+     
     @Test
     void testToDTO_Positive() {
         // Act
@@ -106,13 +100,10 @@ public class InventoryServiceTest {
         assertEquals("Java Programming", result.getBookTitle());
     }
 
-    // -------------------------------------------------------------------------
     // NEGATIVE TEST CASES
-    // -------------------------------------------------------------------------
 
-    /**
-     * 1. Negative: Handle update for a non-existent inventory ID.
-     */
+    // Negative: Handle update for a non-existent inventory ID.
+     
     @Test
     void testUpdateInventory_Negative_NotFound() {
         // Arrange: Repository returns empty for ID 99
@@ -127,9 +118,8 @@ public class InventoryServiceTest {
         verify(inventoryRepository, never()).save(any());
     }
 
-    /**
-     * 2. Negative: Handle searching for an inventory record that doesn't exist.
-     */
+    // Negative: Handle searching for an inventory record that doesn't exist.
+     
     @Test
     void testGetInventoryById_Negative_NotFound() {
         // Arrange
@@ -143,9 +133,8 @@ public class InventoryServiceTest {
     }
 
 
-    /**
-     * 3. Negative: Verify toEntityList returns empty when given null.
-     */
+    // Negative: Verify toEntityList returns empty when given null.
+     
     @Test
     void testToDTOList_Negative_NullInput() {
         // Act

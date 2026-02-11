@@ -19,21 +19,23 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
-
+      //Save author in db
     public void saveAuthor(Author author) {
         authorRepository.save(author);
     }
 
+    //Get all the authors
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
 
-    
+    //finding author by ID
     public Author getAuthorById(int id) {
         return authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException(id));
     }
 
+    //Delete author by Id
     public void deleteAuthor(int id) {
         if (!authorRepository.existsById(id)) {
             throw new AuthorNotFoundException(id);
@@ -41,6 +43,7 @@ public class AuthorService {
         authorRepository.deleteById(id);
     }
 
+    //Update the author
     public Author updateAuthor(Author author) {
         int id = author.getAuthorId();
         if (!authorRepository.existsById(id)) {
@@ -50,7 +53,7 @@ public class AuthorService {
     }
 
     
-
+     // converting entity to DTO
     public AuthorDTO toDTO(Author author) {
         if (author == null) return null;
         return new AuthorDTO(
@@ -61,6 +64,7 @@ public class AuthorService {
         );
     }
 
+    //converting DTO to entity
     public Author toEntity(AuthorDTO dto) {
         if (dto == null) return null;
         Author author = new Author();
@@ -71,6 +75,7 @@ public class AuthorService {
         return author;
     }
 
+    //Converting entityList to DTOList
     public List<AuthorDTO> toDTOList(List<Author> entities) {
         List<AuthorDTO> authorsDTO = new ArrayList<>();
         if (entities == null) return authorsDTO;

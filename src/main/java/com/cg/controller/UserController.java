@@ -37,11 +37,14 @@ public class UserController {
         model.addAttribute("usersDTO", usersDTO);
         return "user/user-list"; 
     }
+    
+    //CORP_ID page 
     @GetMapping("/newAdmin")
     public String newAdmin() {
     	return "user/admin-corp";
     }
     
+    //Checks the CORP_ID
     @PostMapping("/verify-corp")
     public String verify(@RequestParam("corpId") String inputCorpId, RedirectAttributes redirectAttributes) {
     	 if(corpId.equals(inputCorpId)) {
@@ -53,20 +56,21 @@ public class UserController {
     	 }
     }
     
+    //Admin add page
     @GetMapping("/add")
     public String addAdmin(Model model) {
     	model.addAttribute("userDTO",new UserDTO());
     	return "user/admin-add";
     }
 
-    // OPEN ADD FORM
+    // Staff add page
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());
         return "user/user-add";
     }
 
-    // SAVE USER
+    // SAVE Staff
     @PostMapping("/add")
     public String saveUser(@Valid @ModelAttribute("userDTO") UserDTO userDTO,BindingResult result) {
     	if (result.hasErrors()) {
@@ -79,6 +83,7 @@ public class UserController {
         return "redirect:/users/list";
     }
     
+    //Save Admin
     @PostMapping("/addAdmin")
     public String saveAdmin(@Valid @ModelAttribute("userDTO") UserDTO userDTO,BindingResult result) {
     	if (result.hasErrors()) {

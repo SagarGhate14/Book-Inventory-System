@@ -45,9 +45,8 @@ public class AuthorsServiceTest {
 
 	    // --- POSITIVE TEST CASES ---
 
-	    /**
-	     * 1. Positive: Successfully retrieve an author when a valid ID exists.
-	     */
+	    // Positive: Successfully retrieve an author when a valid ID exists.
+	     
 	    @Test
 	    void testGetAuthorById_Positive() {
 	        // Arrange: Tell the mock repository to return the sample author for ID 101
@@ -62,9 +61,8 @@ public class AuthorsServiceTest {
 	        verify(authorRepository, times(1)).findById(101);
 	    }
 
-	    /**
-	     * 2. Positive: Successfully retrieve all authors from the database.
-	     */
+	    // Positive: Successfully retrieve all authors from the database.
+	     
 	    @Test
 	    void testGetAllAuthors_Positive() {
 	        // Arrange: Mock the list returned by the repository
@@ -79,9 +77,8 @@ public class AuthorsServiceTest {
 	        verify(authorRepository, times(1)).findAll();
 	    }
 
-	    /**
-	     * 3. Positive: Successfully update an existing author.
-	     */
+	    // Positive: Successfully update an existing author.
+	     
 	    @Test
 	    void testUpdateAuthor_Positive() {
 	        // Arrange: Mock existence check and save operation
@@ -99,9 +96,8 @@ public class AuthorsServiceTest {
 
 	    // --- NEGATIVE TEST CASES ---
 
-	    /**
-	     * 1. Negative: Throw AuthorNotFoundException when searching for a non-existent ID.
-	     */
+	    // Negative: Throw AuthorNotFoundException when searching for a non-existent ID.
+	     
 	    @Test
 	    void testGetAuthorById_Negative_NotFound() {
 	        // Arrange: Mock repository to return empty for ID 999
@@ -113,9 +109,8 @@ public class AuthorsServiceTest {
 	        });
 	    }
 
-	    /**
-	     * 2. Negative: Throw AuthorNotFoundException when attempting to delete a non-existent author.
-	     */
+	    // Negative: Throw AuthorNotFoundException when attempting to delete a non-existent author.
+	     
 	    @Test
 	    void testDeleteAuthor_Negative_NotFound() {
 	        // Arrange: Mock existsById to return false
@@ -130,9 +125,8 @@ public class AuthorsServiceTest {
 	        verify(authorRepository, never()).deleteById(999);
 	    }
 
-	    /**
-	     * 3. Negative: Throw AuthorNotFoundException when updating an author who does not exist.
-	     */
+	   //  Negative: Throw AuthorNotFoundException when updating an author who does not exist.
+	     
 	    @Test
 	    void testUpdateAuthor_Negative_NotFound() {
 	        // Arrange: Mock existsById to return false for the author's ID

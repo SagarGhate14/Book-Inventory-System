@@ -28,16 +28,17 @@ public class InventoryController {
     @Autowired
     private BookService bookService;
 
+    //Get all the inventories
     @GetMapping("/list")
     public String getAllInventories(Model model) {
         // Fetch and convert to DTOs
         List<Inventory> inventoryList = inventoryService.getAllInventories();
         List<InventoryDTO> inventoryDTOList = inventoryService.toDTOList(inventoryList);     
-        // Key Name: "inventories" must match the th:each in HTML
         model.addAttribute("inventories", inventoryDTOList);
         return "inventory/inventory-list";
     }
     
+    //Get the new inventory page
     @GetMapping("/add")
     public String showAddForm(Model model) {
     	List<Book> books = bookService.getAllBooks();
@@ -47,6 +48,7 @@ public class InventoryController {
         return "inventory/inventory-add";
     }
 
+    //Save the new inventory
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute("inventory") InventoryDTO inventoryDTO,BindingResult result,Model model) {
     	 if (result.hasErrors()) {
@@ -61,11 +63,10 @@ public class InventoryController {
         Inventory inventory = inventoryService.toEntity(inventoryDTO);
         inventory.setQuantity(safeQuantity);
         
-        // 2. Set Status using the exact strings the DB expects
-        // Note: Use the exact strings found in your 'SHOW CREATE TABLE' command
+      
         inventory.setStatus(safeQuantity > 0 ? "AVAILABLE" : "OUT_OF_STOCK");
 
-        // 3. Link Book
+
         Book book = bookService.findIdByBook(inventoryDTO.getBookId());
         inventory.setBook(book);
 
@@ -73,6 +74,7 @@ public class InventoryController {
         return "redirect:/inventories/list";
     }
 
+    //Get the edit inventory page
     @GetMapping("/edit/{id}")
     public String update(@PathVariable("id") int id,Model model) {
         Inventory inventory = inventoryService.getInventoryById(id);
@@ -82,12 +84,14 @@ public class InventoryController {
         return "inventory/inventory-edit";
     }
 
+    //Delete the inventory 
     @DeleteMapping("/delete/{id}")
     public String delete(@PathVariable("id") int id) {
         inventoryService.deleteInventory(id);
         return "redirect:/inventories/list";
     }
     
+    //Update the inventory
     @PutMapping("/update")
     public String updateInventory(@Valid @ModelAttribute("inventoryDTO") InventoryDTO inventoryDTO,BindingResult result, RedirectAttributes redirectAttributes) {
     	 	 
