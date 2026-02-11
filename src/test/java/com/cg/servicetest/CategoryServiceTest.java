@@ -1,4 +1,4 @@
-package com.cg.categorytest;
+package com.cg.servicetest;
 
 import com.cg.dto.CategoryDTO;
 import com.cg.entity.Category;

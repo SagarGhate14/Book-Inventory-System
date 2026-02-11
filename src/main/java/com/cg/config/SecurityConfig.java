@@ -8,7 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class SecurityConfig {
 	
 	@Bean
@@ -46,8 +46,11 @@ public class SecurityConfig {
 	            .logoutSuccessUrl("/login?logout")
 	            .invalidateHttpSession(true) 
 	            .permitAll()
-	        );
-	        
+	        )
+	        .exceptionHandling(exception -> exception
+	                .accessDeniedPage("/403") // This is the crucial line
+	            );
+	       
 	    return http.build();
 	}
 }

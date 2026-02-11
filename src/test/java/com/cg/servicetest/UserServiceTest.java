@@ -1,4 +1,4 @@
-package com.cg.usertest;
+package com.cg.servicetest;
 
 import com.cg.dto.UserDTO;
 import com.cg.entity.User;

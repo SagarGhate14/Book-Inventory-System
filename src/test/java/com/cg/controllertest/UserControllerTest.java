@@ -1,4 +1,4 @@
-package com.cg.usertest;
+package com.cg.controllertest;
 
 import com.cg.controller.UserController;
 import com.cg.dto.UserDTO;

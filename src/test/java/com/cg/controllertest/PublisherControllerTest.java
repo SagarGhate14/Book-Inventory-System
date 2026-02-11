@@ -1,4 +1,4 @@
-package com.cg.publishertest;
+package com.cg.controllertest;
 
 import com.cg.controller.PublisherController;
 import com.cg.dto.PublisherDTO;

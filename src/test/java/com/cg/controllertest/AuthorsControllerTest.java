@@ -1,4 +1,4 @@
-package com.cg.authortest;
+package com.cg.controllertest;
 
 import com.cg.controller.AuthorController;
 import com.cg.dto.AuthorDTO;

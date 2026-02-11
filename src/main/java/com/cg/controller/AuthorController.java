@@ -49,11 +49,8 @@ public class AuthorController {
     }
     
     @GetMapping("/edit/{id}")
-    public String updateAuthor(@PathVariable("id") int id,BindingResult result, Model model) {
-    	if (result.hasErrors()) {
-            // DO NOT redirect. Return the view directly to keep the errors.
-            return "inventory/inventory-edit"; 
-        }
+    public String updateAuthor(@PathVariable("id") int id, Model model) {
+    	
     	
         Author author = authorService.getAuthorById(id);
         AuthorDTO authorDTO = authorService.toDTO(author);
@@ -64,7 +61,7 @@ public class AuthorController {
         return "author/author-edit";
     }
     
-    @PostMapping("update")
+    @PutMapping("update")
     public String updatedAuthor(@Valid @ModelAttribute("authorDTO") AuthorDTO authordto,BindingResult result) {
     	
     	 if (result.hasErrors()) {
@@ -76,7 +73,7 @@ public class AuthorController {
         return "redirect:/authors/list";
     }
     
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteAuthor(@PathVariable int id) {
         authorService.deleteAuthor(id);
         return "redirect:/authors/list";

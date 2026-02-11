@@ -1,4 +1,4 @@
-package com.cg.publishertest;
+package com.cg.servicetest;
 
 import com.cg.dto.PublisherDTO;
 import com.cg.entity.Publisher;

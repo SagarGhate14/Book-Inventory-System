@@ -137,7 +137,9 @@
 
         <form th:action="@{/authors/update}" th:object="${authorDTO}" method="post" class="needs-validation" novalidate>
             <!-- Hidden ID -->
+             <input type="hidden" name="_method" value="PUT" />
             <input type="hidden" th:field="*{authorId}" />
+           
 
             <div class="mb-4">
                 <label for="authorName" class="form-label">Full Name</label>

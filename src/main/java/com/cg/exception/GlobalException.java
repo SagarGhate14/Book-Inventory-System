@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 
 @ControllerAdvice
 public class GlobalException {
@@ -54,6 +55,13 @@ public class GlobalException {
             message = "Cannot delete Author: This author still has books registered!";
             redirectPath = "/authors/list";
         }
+         else if (errorMessage.contains("duplicate") || errorMessage.contains("uk_") || errorMessage.contains("unique")) {
+        	    if (requestUri.contains("/inventories")) {
+        	        message = "Assignment Error: This book is already assigned to another inventory slot!";
+        	        redirectPath = "/inventories/list";
+        	    }
+        	}
+                
          else if(requestUri.contains("/publishers") || errorMessage.contains("publisher")) {
             message = "Cannot delete Publisher: This publisher has active books in the library!";
             redirectPath = "/publishers/list";
@@ -73,6 +81,14 @@ public class GlobalException {
         
         // 3. Redirect back to the specific entity list
         return "redirect:" + redirectPath;
+    }
+    
+    @ExceptionHandler(AccessDeniedException.class)
+    public String handleAccessDenied(AccessDeniedException ex, Model model) {
+        model.addAttribute("errorTitle", "Access Denied");
+        model.addAttribute("errorMessage", "You do not have permission to access this page or perform this action.");
+        model.addAttribute("statusCode", 403);
+        return "error/custom-error";
     }
 
     

@@ -1,4 +1,4 @@
-package com.cg.categorytest;
+package com.cg.controllertest;
 
 import com.cg.controller.CategoryController;
 import com.cg.dto.CategoryDTO;

@@ -1,4 +1,4 @@
-package com.cg.booktest;
+package com.cg.controllertest;
 
 import com.cg.controller.BookController;
 import com.cg.dto.BookDTO;

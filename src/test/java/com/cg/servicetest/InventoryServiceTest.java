@@ -1,4 +1,4 @@
-package com.cg.inventorytest;
+package com.cg.servicetest;
 
 import com.cg.dto.InventoryDTO;
 import com.cg.entity.Book;

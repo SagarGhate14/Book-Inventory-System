@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cg.dto.BookDTO;
@@ -48,7 +50,6 @@ public class BookController {
 	
 	@GetMapping("/add")
 	public String addBook(Model model) {
-		BookDTO freshBook = new BookDTO();
 	    // Verify these are null here
 		model.addAttribute("bookDTO",new BookDTO());
 		model.addAttribute("categories",categoryService.getAllCategories());
@@ -86,7 +87,7 @@ public class BookController {
 		return "book/book-edit";
 	}
 	
-	@PostMapping("/update")
+	@PutMapping("/update")
 	public String updateBook(@Valid @ModelAttribute BookDTO bookDTO,BindingResult result,Model model) {
 		 if (result.hasErrors()) {
 		        // RE-ADD ALL LISTS! Without these, the <select> tags will crash line 40+
@@ -105,7 +106,7 @@ public class BookController {
 		return "redirect:/books/list";
 	}
 	
-	@GetMapping("/delete/{id}")
+	@DeleteMapping("/delete/{id}")
 	public String deleteBook(@PathVariable("id") int bId) {
 		bookService.deleteBook(bId);
 		return "redirect:/books/list";

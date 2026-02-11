@@ -1,4 +1,4 @@
-package com.cg.authortest;
+package com.cg.servicetest;
 
 import com.cg.dto.AuthorDTO;
 import com.cg.entity.Author;

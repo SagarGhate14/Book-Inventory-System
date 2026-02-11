@@ -50,10 +50,6 @@ public class CategoryController {
        return "redirect:/category/list";
         
     }
- 
- 
-
-// 
     
    @GetMapping("/update/{id}")
    public String updateCategory(@PathVariable int id,Model model) {
@@ -63,7 +59,7 @@ public class CategoryController {
 	   return "category/category-edit";
    }
     // Update category
-    @PostMapping("/update")
+    @PutMapping("/update")
     public String updateCategory(@Valid @ModelAttribute CategoryDTO categoryDTO,BindingResult result) {
     	if (result.hasErrors()) {
 	        // 2. If errors exist, stop and return the EDIT form
@@ -77,9 +73,9 @@ public class CategoryController {
         }
         return "redirect:/category/list";
     }
-// 
+    
     // Delete category
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public String deleteCategory(@PathVariable int id) {
          categoryService.deleteCategory(id);
          return "redirect:/category/list";
