@@ -57,18 +57,10 @@ public class InventoryController {
     	        model.addAttribute("books", bookService.getAllBooks());
     	        return "inventory/inventory-add"; 
     	    }
-    	 
-    	int safeQuantity = Math.max(0, inventoryDTO.getQuantity());
-        
+    	         
         Inventory inventory = inventoryService.toEntity(inventoryDTO);
-        inventory.setQuantity(safeQuantity);
+
         
-      
-        inventory.setStatus(safeQuantity > 0 ? "AVAILABLE" : "OUT_OF_STOCK");
-
-
-        Book book = bookService.findIdByBook(inventoryDTO.getBookId());
-        inventory.setBook(book);
 
         inventoryService.saveInventory(inventory);
         return "redirect:/inventories/list";

@@ -55,9 +55,8 @@ public class User {
 
 
 
-	public User(int userId, String userName, String email, String password, String role) {
-		super();
-		this.userId = userId;
+	public User(String userName, String email, String password, String role) {
+
 		this.userName = userName;
 		this.email = email;
 		this.password = password;
@@ -72,20 +71,13 @@ public class User {
 	}
 
 
-
-
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 
-
-
-
 	public String getUserName() {
 		return userName;
 	}
-
-
 
 
 	public void setUserName(String userName) {
@@ -93,13 +85,9 @@ public class User {
 	}
 
 
-
-
 	public String getEmail() {
 		return email;
 	}
-
-
 
 
 	public void setEmail(String email) {
@@ -107,13 +95,9 @@ public class User {
 	}
 
 
-
-
 	public String getPassword() {
 		return password;
 	}
-
-
 
 
 	public void setPassword(String password) {
@@ -121,22 +105,14 @@ public class User {
 	}
 
 
-
-
 	public String getRole() {
 		return role;
 	}
-
-
 
 
 	public void setRole(String role) {
 		this.role = role;
 	}
 
-
-	
-
-	
 	
 }

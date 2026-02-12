@@ -2,6 +2,7 @@ package com.cg.service;
 
 
 import com.cg.dto.InventoryDTO;
+import com.cg.entity.Book;
 import com.cg.entity.Inventory;
 
 import java.util.List;

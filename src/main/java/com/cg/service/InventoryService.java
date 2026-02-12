@@ -1,5 +1,6 @@
 package com.cg.service;
 
+import com.cg.entity.Book;
 import com.cg.entity.Inventory;
 import com.cg.exception.GlobalException;
 import com.cg.exception.InventoryNotFoundException;
@@ -41,7 +42,8 @@ public class InventoryService implements IInventoryService {
     //Save the inventory in db
     @Override
     public void saveInventory(Inventory inventory) {
-
+    	Book book = bookService.findIdByBook(inventory.getBook().getBookId());
+               inventory.setBook(book);
         inventoryRepository.save(inventory);
     }
 
@@ -90,12 +92,12 @@ public class InventoryService implements IInventoryService {
         if (dto == null) return null;
         
         Inventory entity = new Inventory();
+        int quantity =dto.getQuantity();
+        entity.setStatus(quantity > 0 ? "AVAILABLE" : "OUT_OF_STOCK");
         entity.setQuantity(dto.getQuantity());
-        
-        // Handling String to Enum conversion
-        if (dto.getStatus() != null) {
-            entity.setStatus(dto.getStatus().toUpperCase());
-        }
+        Book book = new Book();
+        book.setBookId(dto.getBookId()); 
+        entity.setBook(book);
         
         return entity;
     }
@@ -110,18 +112,6 @@ public class InventoryService implements IInventoryService {
         }
         
         return dtoList;
-    }
-
-    //Converting DTOList to entityList
-    public List<Inventory> toEntityList(List<InventoryDTO> dtos) {
-        List<Inventory> entityList = new ArrayList<>();
-        
-        for (InventoryDTO d : dtos) {
-            Inventory e = toEntity(d);
-            entityList.add(e);
-        }
-        
-        return entityList;
     }
 
 

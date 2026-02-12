@@ -28,9 +28,7 @@ public class Category {
 		
 	}
 
-	public Category(int categoryId, String categoryName, List<Book> books) {
-		super();
-		this.categoryId = categoryId;
+	public Category(String categoryName, List<Book> books) {
 		this.categoryName = categoryName;
 		this.books = books;
 	}
@@ -65,10 +63,4 @@ public class Category {
 		this.books = books;
 	}
 
-	@Override
-	public String toString() {
-		return "Category [categoryId=" + categoryId + ", categoryName=" + categoryName + ", books=" + books + "]";
-	}
-      
-	
 }

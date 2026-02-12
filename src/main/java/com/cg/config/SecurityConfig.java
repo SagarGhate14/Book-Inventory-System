@@ -25,7 +25,7 @@ public class SecurityConfig {
 	            
 	            
 	            // 2. ADMIN ONLY
-	            .requestMatchers("/users/list","users/delete/**").hasRole("ADMIN")
+	            .requestMatchers("/users/list","/users/delete/**").hasRole("ADMIN")
 	            .requestMatchers("/books/edit/**", "/books/delete/**").hasRole("ADMIN")
 	            .requestMatchers("/authors/edit/**","/authors/delete/**").hasRole("ADMIN")
 	            .requestMatchers("/category/edit/**","/category/delete/**").hasRole("ADMIN")

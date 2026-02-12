@@ -11,7 +11,7 @@ public class Inventory {
 	private Integer inventoryId;
 
 	@Column
-	private String status; // Changed from enum to String
+	private String status; 
 
 	@Column
 	private int quantity;
@@ -25,9 +25,7 @@ public class Inventory {
 	}
 
 
-	public Inventory(Integer inventoryId, String status, int quantity, Book book) {
-		super();
-		this.inventoryId = inventoryId;
+	public Inventory(String status, int quantity, Book book) {
 		this.status = status;
 		this.quantity = quantity;
 		this.book = book;
@@ -73,11 +71,6 @@ public class Inventory {
 		this.book = book;
 	}
 
-	
-	
-
-
-	
 	
 	
 }

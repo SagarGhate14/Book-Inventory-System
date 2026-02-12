@@ -38,10 +38,8 @@ public class Book {
 
 	}
 
-	public Book(int bookId, String title, double price, Author author, Publisher publisher, Category category,
+	public Book(String title, double price, Author author, Publisher publisher, Category category,
 			Inventory inventory) {
-		super();
-		this.bookId = bookId;
 		this.title = title;
 		this.price = price;
 		this.author = author;
@@ -104,12 +102,6 @@ public class Book {
 
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
-	}
-
-	@Override
-	public String toString() {
-		return "Book [bookId=" + bookId + ", title=" + title + ", price=" + price + ", author=" + author
-				+ ", publisher=" + publisher + ", category=" + category + ", inventory=" + inventory + "]";
 	}
 
 }

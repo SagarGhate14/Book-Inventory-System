@@ -31,9 +31,8 @@ public class Publisher {
 		
 	}
 
-	public Publisher(int publisherId, String publisherName, String address, List<Book> books) {
-		super();
-		this.publisherId = publisherId;
+	public Publisher(String publisherName, String address, List<Book> books) {
+
 		this.publisherName = publisherName;
 		this.address = address;
 		this.books = books;
@@ -71,13 +70,5 @@ public class Publisher {
 		this.books = books;
 	}
 
-	@Override
-	public String toString() {
-		return "Publisher [publisherId=" + publisherId + ", publisherName=" + publisherName + ", address=" + address
-				+ ", books=" + books + "]";
-	}
-	
-
-	
 
 }

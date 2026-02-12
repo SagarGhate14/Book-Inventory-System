@@ -65,7 +65,7 @@ public class AuthorController {
     }
     
     //Update the Author details
-    @PutMapping("update")
+    @PutMapping("/update")
     public String updatedAuthor(@Valid @ModelAttribute("authorDTO") AuthorDTO authordto,BindingResult result) {
     	
     	 if (result.hasErrors()) {

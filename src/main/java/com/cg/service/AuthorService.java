@@ -14,28 +14,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AuthorService {
+public class AuthorService implements IAuthorService{
 
     @Autowired
     private AuthorRepository authorRepository;
 
       //Save author in db
+    @Override
     public void saveAuthor(Author author) {
         authorRepository.save(author);
     }
 
     //Get all the authors
+    @Override
     public List<Author> getAllAuthors() {
         return authorRepository.findAll();
     }
 
     //finding author by ID
+    @Override
     public Author getAuthorById(int id) {
         return authorRepository.findById(id)
                 .orElseThrow(() -> new AuthorNotFoundException(id));
     }
 
     //Delete author by Id
+    @Override
     public void deleteAuthor(int id) {
         if (!authorRepository.existsById(id)) {
             throw new AuthorNotFoundException(id);
@@ -44,6 +48,7 @@ public class AuthorService {
     }
 
     //Update the author
+    @Override
     public Author updateAuthor(Author author) {
         int id = author.getAuthorId();
         if (!authorRepository.existsById(id)) {

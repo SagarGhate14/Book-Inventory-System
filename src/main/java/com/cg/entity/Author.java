@@ -27,9 +27,7 @@ public Author() {
 	
 }
 
-public Author(int authorId, String authorName, String authorEmail, String authorCountry, List<Book> books) {
-	super();
-	this.authorId = authorId;
+public Author( String authorName, String authorEmail, String authorCountry, List<Book> books) {
 	this.authorName = authorName;
 	this.authorEmail = authorEmail;
 	this.authorCountry = authorCountry;
@@ -74,12 +72,6 @@ public List<Book> getBooks() {
 
 public void setBooks(List<Book> books) {
 	this.books = books;
-}
-
-@Override
-public String toString() {
-	return "Author [authorId=" + authorId + ", authorName=" + authorName + ", authorEmail=" + authorEmail
-			+ ", authorCountry=" + authorCountry + ", books=" + books + "]";
 }
 
 
